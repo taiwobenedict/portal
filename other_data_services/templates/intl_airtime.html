@@ -1,0 +1,93 @@
+{% extends "basenew.html" %} 
+{% block title %}Purchase International Airtime/Data{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Purchase Your International Airtime</h6>
+            <div class="drpdown no-arrow show">
+                <a class="font-weight-bold text-danger d-md-none" href="#note">Must Read</a>
+            </div>
+        </div>            
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-6">
+                    <ul class="messages list-unstyled" id="notific"></ul>
+                    <form role="form" id="customerIntlAirtimeNumber">
+                      <div class="form-group">
+                          <label for="intl_airtimeNumber">Phone Number to Recharge </label>
+                          <input type="number" class="form-control" name="intl_airtimeNumber" id="intl_airtimeNumber" placeholder="E.g 233558285196" onkeyup="checkIntlAirtimeNo();" required>
+                          <small class="form-text text-muted"><span id="intl_airtimeHelp"></span><span class="text-danger">Ensure that the phone number is in international format without the + e.g. 233558285196 is a Ghana mobile number</span></small>
+                      </div>
+                      <div class="form-group">
+                          <button style="display: none;" class="btn btn-primary btn-lg btn-block" id="chkIntlAirtime" onclick="checkCustomerVtpass(event)">Verify Number</button>
+                      </div>
+                    </form>
+                    <form role="form" id="customerPurchaseIntlAirtime" style="display:none;" onsubmit="purchaseIntlAirtimeData(event)">
+                      <div class="form-group">
+                          <label for="intl_airtime_no">IntlAirtime Number to Recharge </label>
+                          <input  class="form-control" name="intl_airtimeNo" id="intl_airtimeNo"  placeholder="E.g 12323232" required readonly>
+                      </div>
+                      <div class="form-group">
+                        <label for="intl_country">Country </label>
+                        <input  class="form-control" name="intl_country" id="intl_country"  placeholder="E.g 12323232" required readonly>
+                        <input type="text" id="intl_code" hidden />
+                      </div>
+
+                      <div class="form-group">
+                        <label for="intl_product_type">Product Type</label>
+                        <select class="form-control" name="intl_product_type" onchange="getOperators()" id="intl_product_type">
+                        </select>
+                        {% comment %} <input  class="form-control" name="intl_product_type" id="intl_product_type"  placeholder="E.g 12323232" required> {% endcomment %}
+                      </div>
+                      <div class="form-group">
+                        <label for="intl_network">Operator</label>
+                        <select class="form-control" name="intl_network" onchange="getVariationCodes()" id="intl_network">
+                        </select>
+                        <input type='text' id="intl_network_name" hidden />
+                      </div>
+                      <div class="form-group">
+                        <label for="intl_services">Services</label>
+                        <div id="">
+                          <select class="form-control" name="intl_services" id="intl_services" onchange="getAllAmount()"></select>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="intl_amount">Amount</label>
+                        <div id="amount_field"></div>
+                        <div id="amount_select_field">
+                          
+                        </div>
+                      </div>
+                      <div class="form-group">
+                          <button class="btn btn-primary btn-lg btn-block" id="purchaseIntlAirtime" >Proceed</button>
+                      </div>
+                    </form>
+                </div>
+                <div class="col-lg-6">
+                  <h4 id="note"><strong>International Airtime PURCHASE</strong></h4>
+                  <p>
+                    <li>Verify Number</li>
+                    <li>Choose Recharge Amount</li>
+                    <li>Enter your Recharge Amount</li>
+                    <li>Enter the Phone number to recharge</li>
+                  </p>
+                  <p>
+                    <!-- <strong>How it works:</strong>
+                    The data will come as airtime which would be automatically converted to the expected bundle but this is determined by the mobile operator. In case it does not auto-convert then you can manually convert. 
+                    A recipient that has already borrowed airtime will not receive the data top up because the airtime would have been deducted before conversion. 
+                    <br><strong> To Check Data balance: *123*10# or *140#, Etisalat: *228#, MTN: *131*4# GLO: *127*0# </strong>  -->
+                  </p>
+                  <p><strong>The more you recharge, the more bonus point you gathered</strong></p>
+                </div>
+            </div>
+            <!-- /.row (nested) -->
+        </div>
+
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+{% endblock %}
+{% block footer_scripts %}
+{% include 'scriptIntlAirtime.html' %}
+{% endblock footer_scripts %}

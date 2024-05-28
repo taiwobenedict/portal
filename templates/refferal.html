@@ -1,0 +1,53 @@
+{% extends "basenew.html" %}{% load humanize %} {% block title %}Persons You Reffered{% endblock %}{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Persons You Reffered</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table width="100%" class="table table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr width="100%">
+                                <th>S/N</th>
+                                <th>Username</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Active</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% if historys %}
+                            {% for i in historys %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.user.username}}</td>
+                                <td>{{i.phone}}</td>
+                                <td>{{i.user.email}}</td>
+                                <td>{{i.user.is_active}}</td>
+                                <td>{{i.user.date_joined}}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                        <tr class="">
+                            <td>Sorry, No Referral Yet.</td>
+                        </tr>
+                        {% endif %}
+
+
+                    </tbody>
+                </table>
+<!--                 {% include "partials/paginations.html" %} -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+{% endblock %}
+{% block footer_scripts %}
+{% include 'partials/table_scripts.html' %}
+{% endblock footer_scripts %}

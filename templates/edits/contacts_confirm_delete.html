@@ -1,0 +1,32 @@
+{% extends "basenew.html" %} 
+{% block title %}Delete Contact{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Delete {{ delcontact.name_contacts}} </h6>
+        </div>            
+        <div class="card-body">
+            <div class="row">
+                <div class='col-lg-6'>
+                    {% if messages %}
+                    <ul class="messages list-unstyled">
+                        {% for message in messages %}
+                        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    <form method="post">{% csrf_token %}
+                            <h3> Are you sure you want to delete "<b>{{ delcontact }}</b>" ?</h3>
+                        <input type="submit" value="Delete" class="btn btn-danger btn-lg btn-block"/>
+                    </form>
+                </div>
+                <!-- /.row (nested) -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+{% endblock %}

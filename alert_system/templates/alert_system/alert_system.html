@@ -1,0 +1,58 @@
+
+{% if alert_present == True %}
+  {% if user_alert == "display" %}
+  <script>
+    bootbox.dialog({
+      title: "{{alert_sys.title}}",
+      message: `{{alert_sys.content | safe}}`,
+      size: 'large',
+      buttons: {
+        ok: {
+          label: "Okay",
+          className: 'btn-primary',
+          callback: function () {
+            $(document).ready(function(){
+              $.ajax({
+                  type:"GET",
+                  url: "{% if alert_sys %}{% url 'alert_system:process_alert' pk=alert_sys.pk %}{% endif %}",
+                  success: function (data) {
+                    console.log("alert read has successfully been updated")
+                  }
+
+                })
+            });
+          }
+        }
+      }
+    });
+  </script>
+  {% else %}
+    {% if alert_sys.display_times >= user_alert.read_count %}
+    <script>
+      bootbox.dialog({
+        title: "{{alert_sys.title}}",
+        message: `{{alert_sys.content | safe}}`,
+        size: 'large',
+        buttons: {
+          ok: {
+            label: "Okay",
+            className: 'btn-info',
+            callback: function () {
+              $(document).ready(function(){
+                $.ajax({
+                    type:"GET",
+                    url: "{% if alert_sys %}{% url 'alert_system:process_alert' pk=alert_sys.pk %}{% endif %}",
+                    success: function (data) {
+                      console.log("alert read has successfully been updated")
+                    }
+
+                  })
+              });
+            }
+          }
+        }
+      });
+    </script>
+    {% endif %}
+  {% endif %}
+{% endif %}

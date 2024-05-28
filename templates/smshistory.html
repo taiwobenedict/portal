@@ -1,0 +1,66 @@
+{% extends "basenew.html" %} {% block title %}SMS HISTORY{% endblock %}
+    {% block extracss %}
+<!--   <link href="/static/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+ -->    {% endblock extracss %}
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">SMS HISTORY</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table width="100%" class="table table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Sender</th>
+                            <th>Message</th>
+                            <th>Recipients</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Report</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Sender</th>
+                            <th>Message</th>
+                            <th>Recipients</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Report</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        {% if historys %}
+                            {% for object in historys %}
+                            <tr>
+                                <td>{{ object.sender }}</td>
+                                <td>{{ object.messagecontent | truncatewords:10}}</td>
+                                <td>{{ object.recipients | truncatechars:200}} </td>
+                                <td>{{ object.timestamp|date:"d-M-Y" }}</td>
+                                <td>{{ object.status | safe }}</td>
+                                <td><a href ="{% url 'smsangosend:smsindivireport' pk=object.id %}">Detail Report</a></td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td>Sorry, no history Yet.</td>
+                            </tr>
+                        {% endif %}
+
+                    </tbody>
+                </table>
+<!--                 {% include "partials/paginations.html" %} -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+{% endblock %}
+{% block footer_scripts %}
+{% include 'partials/table_scripts.html' %}
+{% endblock footer_scripts %}

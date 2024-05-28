@@ -1,0 +1,68 @@
+{% extends "basenew.html" %} 
+{% block title %}Purchase SMILE{% endblock %}
+{% block content %}
+{% include 'scriptSmile.html' %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Purchase Your SMILE DATA</h6>
+            <div class="drpdown no-arrow show">
+                <a class="font-weight-bold text-danger d-md-none" href="#note">Must Read</a>
+            </div>
+        </div>            
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-6">
+                    <ul class="messages list-unstyled" id="notific"></ul>
+                    <form role="form" id="customerSmileNumber">
+                      <div class="form-group">
+                          <label for="smileNumber">Phone Number to Recharge </label>
+                          <input  class="form-control" name="smileNumber" id="smileNumber" placeholder="E.g 12323232" onkeyup="checkSmileNo();" required>
+                          <small class="form-text text-muted"><span id="smileHelp"></span></small>
+                      </div>
+                      <div class="form-group">
+                          <button style="display:none" class="btn btn-primary btn-lg btn-block" id="chkSmile" onclick="checkCustomer(event)">Verify Number</button>
+                      </div>
+                    </form>
+                    <form role="form" id="customerPurchaseSmile" style="display:none;">
+                      <div class="form-group">
+                          <label for="smile_no">Smile Number to Recharge </label>
+                          <input  class="form-control" name="smileNo" id="smileNo"  placeholder="E.g 12323232" required readonly>
+                      </div>
+                      <div class="form-group">
+                          <label for="smilePlan"> Choose Smile Plan</label>
+                          <select class="form-control" name="smilePlan" id="smilePlan" required>
+                            <option></option>
+                            {%  for i in smileOptions %}
+                            <option>{{i}}</option>
+                            {% endfor %}
+                          </select>
+                      </div>
+                      <div class="form-group">
+                          <button class="btn btn-primary btn-lg btn-block" id="purchaseSmile" onclick="purchaseSmileData(event)">Purchase Data</button>
+                      </div>
+                    </form>
+                </div>
+                <div class="col-lg-6">
+                  <h4 id="note"><strong>SMILE PURCHASE</strong></h4>
+                  <p>
+                    <li>Choose your SMILE</li>
+                    <li>Enter your Recharge Amount</li>
+                    <li>Enter the Phone number to recharge</li>
+                  </p>
+                  <p>
+                    <!-- <strong>How it works:</strong>
+                    The data will come as airtime which would be automatically converted to the expected bundle but this is determined by the mobile operator. In case it does not auto-convert then you can manually convert. 
+                    A recipient that has already borrowed airtime will not receive the data top up because the airtime would have been deducted before conversion. 
+                    <br><strong> To Check Data balance: *123*10# or *140#, Etisalat: *228#, MTN: *131*4# GLO: *127*0# </strong>  -->
+                  </p>
+                  <p><strong>The more you recharge, the more bonus point you gathered</strong></p>
+                </div>
+            </div>
+            <!-- /.row (nested) -->
+        </div>
+
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+{% endblock %}

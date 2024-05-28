@@ -1,0 +1,204 @@
+{% extends "basenew.html" %}{% load humanize %}{% block title %}TRANSACTIONS{% endblock %} {% block content %}
+<style>
+    @media screen {
+  #printSection {
+      display: none;
+  }
+}
+
+@media print {
+  body * {
+    visibility:hidden;
+    color:black;
+  }
+  #printSection, #printSection * {
+    visibility:visible;
+  }
+  #printSection {
+    position:absolute;
+    left:0;
+    top:0;
+  }
+}
+
+.logo-print {
+    width: 100%;
+    height: 50px;
+    /* display: list-item; */
+    /* list-style-image: url(/media/logo-site2_ruDeYef.png); */
+    background: url(/media/logo-site2_ruDeYef.png);
+    list-style-position: inside;
+    background-size: 200px;
+    background-repeat: no-repeat;
+    background-position-x: center;
+}
+
+
+</style>
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">TRANSACTIONS</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table width="100%" class="table table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr width="100%">
+                                <th>S/N</th>
+                                <th>Order ID</th>
+                                <th>Actual Amount</th>
+                                <th>Paid Amount</th>
+                                <th>Old Balance</th>
+                                <th>New Balance</th>
+                                <th>Network</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>#</th>
+                                {% if user.is_superuser %}
+                                <th>Admin Action</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% if historys %}
+                            {% for i in historys %}
+                            <tr id="tb_{{i.id}}_{{i.bill_type}}">
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.reference}}</td>
+                                <td>{{i.actual_amount|intcomma}}</td>
+                                <td>{{i.paid_amount|intcomma}}</td>
+                                <td>{{i.old_balance|intcomma}}</td>
+                                <td>{{i.new_balance|intcomma}}</td>
+                                <td>{{i.bill_type}}</td>
+                                <td>{{i.bill_number}}</td>
+                                <td>{{i.status}}</td>
+                                <td>{{i.created_at}}</td>
+                                <td><button class="btn btn-primary" onclick="displayDetails('tb_{{i.id}}_{{i.bill_type}}')" data-toggle="modal" data-target="#exampleModal">view</button></td>
+                                {% if user.is_superuser %}
+                					{% if i.status == "FAILED" or i.status == "QUEUE" %}
+                                        <td><a href="{% url 'user_transactions:refund_transaction' %}?type=airtime&order_id={{i.reference}}" class="btn btn-primary">Refund</a></td>
+                                    {% else %}
+                                        <td>{% if i.status == "REFUNDED" %}REFUNDED{% elif i.status == "SUCCESS" %}SUCCESS{% endif %}</tr>
+                                    {% endif %}
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                        <tr class="">
+                            <td>Sorry, no history Yet.</td>
+                        </tr>
+                        {% endif %}
+
+
+                    </tbody>
+                </table>
+<!--                 {% include "partials/paginations.html" %} -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" id="printable" >
+        <div class="logo-print"></div>
+      <div class="modal-header bg-primary">
+        <h5 class="modal-title text-white" id="exampleModalLabel">Details</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row" id="table-data"></div>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="close text-center btn" id="btnPrint">Print</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    function displayDetails (val) {
+        let tableDis = document.querySelector("#" + val)
+        tableDis = tableDis.querySelectorAll("td")
+        console.log(tableDis, "tableDis")
+        let details = ''
+        let splitId = val.split("_")
+
+        if (splitId[2] == "ELECTRICITY"){
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": splitId[1],
+                "method": "GET",
+                "processData": false,
+            };
+            $.ajax(settings).done(function (response) {
+                data = response
+                console.log(data, "dsdgsddfdsfsfs")
+                if(response.status == "success"){
+                    $.each(data.details, function( key, value ) {
+                      details += '<div class="col-12 p-2">' + '<span class="pr-2 text-bold">' + key + ':</span> ' + value + '<hr/></div>'
+                    })
+                    document.querySelector("#table-data").innerHTML = details; 
+
+                } else {
+                    console.log("llll")
+                }
+            });
+
+        } else {
+            let items = ["Order ID", "Actual Amount", "Paid Amount", "Old Balance", "New Balance", "Network", "Phone", "Status", "Date"]
+            if (tableDis.length > 0){
+              for (let i = 0; i < tableDis.length; i++) {
+                // const ele = tableDis[i];
+                if (i != 0 && items[i - 1]){
+                  details += '<div class="col-12 p-2">' + '<span class="pr-2 text-bold">' + items[i -1]+ ':</span> ' + tableDis[i].innerHTML + '<hr/></div>'
+                }
+              }
+              details += ''
+              document.querySelector("#table-data").innerHTML = details; 
+            }
+        }
+    }
+    document.getElementById("btnPrint").onclick = function () {
+        printElement(document.getElementById("printable"));
+    }
+
+function printElement(elem) {
+    var domClone = elem.cloneNode(true);
+    
+    var $printSection = document.getElementById("printSection");
+    
+    if (!$printSection) {
+        var $printSection = document.createElement("div");
+        $printSection.id = "printSection";
+        document.body.appendChild($printSection);
+    }
+    
+    $printSection.innerHTML = '';
+    $printSection.appendChild(domClone);
+    window.print();
+}
+
+function printPageArea(areaID){
+    var printContent = document.getElementById(areaID);
+    var WinPrint = window.open('', '', 'width=900,height=650');
+    WinPrint.document.write(printContent.innerHTML);
+    WinPrint.document.close();
+    WinPrint.focus();
+    WinPrint.print();
+    WinPrint.close();
+}
+ </script>
+
+<!-- /.row -->
+{% endblock %}
+{% block footer_scripts %}
+{% include 'partials/table_scripts.html' %}
+{% endblock footer_scripts %}

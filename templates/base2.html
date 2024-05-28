@@ -1,0 +1,137 @@
+{% load dashboardconfig %}
+{% DashboardConfigs as config %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="keywords" content="{{ config.keywords }}"/>
+  <meta name="description" content="{{config.content_field}}" />
+    <meta name="author" content="OLA-EST INTEGRATED RESOURCES LIMITED">
+
+  <title>{{config.site_name}} | {% block title %} {% endblock %}</title>
+  {% if 'png' in config.get_logo_url %}
+  <link rel="icon" type="image/png" href="{{config.get_logo_url}}" />
+  {% else %}
+  <link rel="icon" type="image/jpeg" href="{{config.get_logo_url}}" />
+  {% endif %}
+
+  <!-- Custom fonts for this template-->
+  <link href="/static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+	<script src="/static/assets/js/plugin/webfont/webfont.min.js"></script>
+	<script>
+		WebFont.load({
+			google: {"families":["Lato:300,400,700,900"]},
+			custom: {"families":["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ['/static/assets/css/fonts.min.css']},
+			active: function() {
+				sessionStorage.fonts = true;
+			}
+		});
+	</script>
+	
+	<!-- CSS Files -->
+	<link rel="stylesheet" href="/static/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/static/assets/css/atlantis.css">
+  <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+  <link href="https://printjs-4de6.kxcdn.com/print.min.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+  .bg-login-image{
+    /*background-image: url('https://{{ domain }}/images/backgroundbanners_disjpg.jpg')!important;*/
+  }
+    @media only screen and (min-width:360px) and (max-width:768px){
+        .hiddn{
+           display:none!important; 
+        }
+    }
+    .navbar-default {
+        background-color: rgba(240, 173, 78, 0.49);
+        border-color: #e7e7e7;
+    }
+    .sidebar ul li a.active {
+        background-color: #1f0606;
+        color: #f0ad4e;
+    }
+    .nav>li>a:focus, .nav>li>a:hover {
+        text-decoration: none;
+        background-color: #1f0606;
+        color: white;
+    }
+    .bolded {
+        font-weight:bolder;
+    }
+    .sidebar-dark .nav-item.active .nav-link {
+    color: {{config.menu_color}};
+    }
+    .sidebar-dark .nav-item .nav-link i{
+    color: {{config.menu_color}};
+    }
+    .sidebar-dark .nav-item .nav-link {
+    color: {{config.menu_color}};
+    }
+    .sidebar-dark .sidebar-brand .text-warning{
+      color: {{config.menu_color}}!important;
+    }
+    .text-warning{
+      color: {{config.menu_color}}!important;
+    }
+    /*f6c23e*/
+    @media only screen and (max-width: 768px){
+      .hideshow{
+        display: none;
+      }
+    }
+    .form-control, .asColorPicker-input, .dataTables_wrapper select, .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--single .select2-search__field, .typeahead, .tt-query, .tt-hint {
+      border: 1px solid #dee2e6;
+      font-weight: 400;
+      font-size: 0.875rem;
+      border-radius: 4px;
+      height: 3rem;
+  }
+  .bg-gradient-primary {
+      {% comment %} background-color: {{config.gradient_background_color1}}!important;
+      background-image: -webkit-gradient(linear,left top,left bottom,color-stop(10%,{{config.gradient_background_color1}}),to({{config.gradient_background_color2}}))!important;
+      background-image: linear-gradient(180deg,{{config.gradient_background_color1}} 10%,{{config.gradient_background_color2}} 100%)!important;
+      background-size: cover; {% endcomment %}
+      background: linear-gradient(to right, {{config.gradient_background_color1}}, {{config.gradient_background_color2}}) !important;
+  }
+
+  .btn-primary {
+      color: #fff;
+      background-color: {{config.button_color1}}!important;
+      border-color: {{config.button_color1}}!important;
+  }
+
+  .btn-secondary {
+      color: #fff;
+      background-color: {{config.button_color2}}!important;
+      border-color: {{config.button_color2}}!important;
+  }
+  .btn-block{
+    width: 100%;
+  }
+
+</style>
+</head>
+
+<body class="bg-gradient-primary bg-gradient-secondary login">
+
+    {% block content%}{% endblock content %}
+
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="/static/vendor/jquery/jquery.min.js"></script>
+  <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="/static/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="/static/js/sb-admin-2.min.js"></script>
+
+</body>
+
+</html>

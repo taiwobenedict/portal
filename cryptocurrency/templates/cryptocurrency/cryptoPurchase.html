@@ -1,0 +1,61 @@
+{% extends "basenew.html" %} {% load bootstrap5 %}
+{% block title %}Purchase Voucher{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Purchase Voucher Here</h6>
+            <div class="drpdown no-arrow show">
+                <a class="font-weight-bold text-danger d-md-none" href="#note">Must Read</a>
+            </div>
+        </div>            
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-6">
+                  {%  bootstrap_messages %}
+                  <form role="form" action="{% url 'Cryptocurrency:cryptoPurchase' %}" method="POST">
+                      {% csrf_token %}
+                      <div class="form-group">
+                          <label for="currency">Select Currency</label>
+                          <select class="form-control" name="currency" id="currency" required>
+                            {% if crypto_currencies == "NO API WAS ACTIVATED" %}
+                            <option></option>
+                            {% else %}
+                            <option></option>
+                            {% for currency in crypto_currencies %}
+                            <option>{{currency}}</option>
+                            {% endfor %}
+                            {% endif %}
+                          </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="amount">Amount in Dollars ($)</label>
+                        <input class="form-control" name="amount" id="amount" required>
+                      </div>
+                      <div class="form-group">
+                          <button class="btn btn-primary btn-lg btn-block">Proceed</button>
+                      </div>
+                    </form>
+                    <div class="py-3 form-group" id="resultResult"></div>
+                </div>
+                <div class="col-lg-6">
+                  <h4 id="note"><strong>Voucher PURCHASE</strong></h4>
+                  <p>
+                    <li>Details</li>
+                  </p>
+                  <p>
+                    <!-- <strong>How it works:</strong>
+                    The data will come as airtime which would be automatically converted to the expected bundle but this is determined by the mobile operator. In case it does not auto-convert then you can manually convert. 
+                    A recipient that has already borrowed airtime will not receive the data top up because the airtime would have been deducted before conversion. 
+                    <br><strong> To Check Data balance: *123*10# or *140#, Etisalat: *228#, MTN: *131*4# GLO: *127*0# </strong>  -->
+                  </p>
+                  <p><strong>The more you purchase, the more bonus point you gathered</strong></p>
+                </div>
+            </div>
+            <!-- /.row (nested) -->
+        </div>
+
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+{% endblock %}

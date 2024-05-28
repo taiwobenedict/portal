@@ -1,0 +1,146 @@
+{% extends "basenew.html" %} 
+{% block title %}Purchase Your SME DATASHARE Here{% endblock %}
+{% block content %}
+<script type="text/javascript">
+function populate(s1,s2,s3){
+    var s1 = document.getElementById(s1);
+    var s2 = document.getElementById(s2);
+    var s3 = document.getElementById(s3);
+    s2.innerHTML = "";
+    s3.innerHTML = "";
+    if(s1.value == "15") {
+        var optionArray = ["||||","1000|1GB|1GB = N530|530", "2000|2GB|2GB = N1050|1050", "5000|5GB|5GB = N2400|2400",]
+        document.getElementById('form_id').action = "{% url 'rechargeapp:mtnsmedatatopup' %}";
+    } else if (s1.value == "2") {
+        var optionArray = ["|||||","250|250MB|250MB = N320|320|250", "350|500MB|500MB = N420|420|500", "650|1GB|1GB = N800|800|1000", "1000|1.5GB|1.5GB = N1100|1100|1500", "1250|2GB|2GB = N1450|1450|2000", "1900|3GB|3GB = N2200|2200|3000", "3100|5GB|5GB = N3400|3400|5000",]
+        document.getElementById('form_id').action = "{% url 'rechargeapp:etismedatatopup' %}";
+    }// else if (s1.value == "2400") {
+       // var optionArray = ["|","5000|5GB"]
+    //} //else if (s1.value == "2") {
+      //  var optionArray = ["|", "200|150MB-7days = N200", "1000|1GB-30days = N1000", "1200|1.5GB-30days = N1200", "2000|2.5GB-30days = N2000", "2500|3.5GB-30days = N2500"]
+    //}
+    for (var option in optionArray) {
+        var pair = optionArray[option].split("|");
+        var newOption = document.createElement("option");
+        //var newOption2 = document.createElement("option");
+        newOption.value = pair[3];
+        newOption.innerHTML = pair[2];
+        newOption.setAttribute("amtt", pair[0]);
+        newOption.setAttribute("amtt_size", pair[4]);
+        //newOption2.innerHTML = pair[1];
+        s2.options.add(newOption);    
+        //s3.options.add(newOption2);           
+    }
+}
+
+function getsize(s4, s5, s6, s7){
+    var datasiz = document.getElementById(s4).value;
+    var datTxt = document.getElementById(s4);
+    for (i = 0; i < datTxt.length; i++){
+        if (datTxt.options[i].value === datasiz){
+        document.getElementById(s5).value = datTxt.options[i].getAttribute('amtt');
+        document.getElementById(s6).options[0].text = datTxt.options[i].text;
+        document.getElementById(s6).options[0].value = datTxt.options[i].getAttribute('amtt');
+        document.getElementById(s7).value = datTxt.options[i].getAttribute('amtt_size');
+        }
+    }
+//    for 
+    //if (datasiz){
+      //  document.getElementById(s5).value = datasiz;
+      //  document.getElementById(s6).value = datasiz;
+    //}
+}
+
+let checkifpop = sessionStorage.getItem("popupshown", "yes")
+window.onload = function(){
+if (!checkifpop) {
+console.log(checkifpop);
+sessionStorage.setItem("popupshown", "yes")
+swal("Welcome!!!","To Check DataShare Balance \n \n For MTN use *461*2*3*2# \n \n For Etisalat use *229*9#");
+}
+}
+
+</script>
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Purchase Your DataBundle Here</h6>
+            <div class="drpdown no-arrow show">
+                <a class="font-weight-bold text-danger d-md-none" href="#note">Must Read</a>
+            </div>
+        </div>            
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-4">
+                    {% if messages %}
+                    <ul class="messages list-unstyled">
+                        {% for message in messages %}
+                        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    <form id="form_id" role="form" method="POST" enctype="multipart/form-data" action="{% url 'rechargeapp:mtnsmedatatopup' %}">
+                        {% csrf_token %}
+                        <div class='form-group'>
+                            <label for='Network'>Network</label>
+                            <select class="form-control" name="network" id="network" onchange="populate(this.id, 'amt', 'datasize')">
+                                <option></option>
+                                <option value="15">MTN</option>
+                                <option value="2" disaled>9mobile</option>
+                                <!-- <option value="1">Airtel</option>
+                                <option value="6">Glo</option> -->
+                            </select>
+                        </div>
+                        <div class='form-group'>
+                            <label for='amt'>Amount of SME Data Plan</label>
+                            <select id='amt' class="form-control" name="amt" required onchange="getsize(this.id, 'datasize', 'datasize1', 'amtt_size')">
+                            </select>
+                        </div>
+                        <div class='form-group'>
+                            <label for='datasize'>SME Data Size</label>
+                            <input id='datasize' class="form-control" name="data_size" value="" type="hidden">
+                            <input id='amtt_size' class="form-control" name="amtt_size" value="" type="hidden">
+                            <select id='datasize1' class="form-control" name="data_size1" type="text" disabled ><option></option></select>
+                        </div>
+                        <div class='form-group'>
+                            <label for='r_phone'>Phone Number to Receive the SME Share Data </label>
+                            <input  class="form-control" name="phone" id="phone" placeholder="E.g 08163524890", required>
+                            <!-- <small id="PhoneHelp" class="form-text text-muted"></small> -->
+                        </div>
+                        <div class='form-group'>
+                            <label for='use_credit'>Deduct Payment From Your Credits</label>
+                            <select class="form-control" name="usecredit" id="use_credit" required>
+                                <option></option>
+                                <option value="YES">Yes</option>
+                                <option value="NO" disabled>Direct Purchase Disabled Use credits to purchase</option>
+                            </select>
+                        </div>
+                        <div class='form-group'>
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Proceed to Topup SME Datashare </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-8" id="note">
+                    <p>
+                        <strong>SME DATA BUNDLE TOP-UP</strong>
+                        <h4>How it works:</h4>
+                        <br><strong>MTN Datashare Fast delivery with 90 days validity guraranteed. <br> To Check MTN Datashare Balance: *461*2*3*2#<br> MTN SME Data Share is available 24/7 daily</strong> 
+                        <br>
+                        <br><strong>9mobile Datashare Fast delivery with 30 days validity guraranteed. <br> To Check 9mobile Datashare Balance: *229*9#<br> 9mobile SME Data Share is available 24/7 daily</strong> 
+                    </p>
+                    <hr/>
+                    <h4><strong><u></u>MTN/9mobile SME DATA STATUS CHECK</u></strong></h4>
+                    <p>
+                        <h4>In case your credit/Money was deducted and not data was given please do the following</h4>
+                        <ul>
+                            <li>Check Your Balance: *461*2*3*2# for MTN or *229*9# for 9mobile </li>
+                            <li>Check The status of your transaction using the batch no <a href="{% url 'rechargeapp:mtnsmedata_status_check' %}">HERE</a></li>
+                            <li>Contact US using the contact page Immediately</li>
+                        </ul>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

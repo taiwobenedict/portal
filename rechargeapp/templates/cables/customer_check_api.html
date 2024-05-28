@@ -1,0 +1,54 @@
+{% extends "basenew.html" %} 
+{% block title %}DSTV/GOTV/STARTIMES{% endblock %}
+{% load bootstrap5 %}
+{% block content %}
+<script type="text/javascript">
+</script>
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">DSTV/GOTV/STARTIMES</h6>
+            <div class="drpdown no-arrow show">
+                <a class="font-weight-bold text-danger d-md-none" href="#note">Must Read</a>
+            </div>
+        </div>         
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-6">
+                    {% bootstrap_messages %}                    
+                    <form id ="edform" role="form" method="POST" enctype="multipart/form-data" action="{% url 'rechargeapp:customer_check' %}">
+                        {% csrf_token %}
+                        <div class='form-group'>
+                            <label for='Network' style='color:red;'>Enter Smart card no or ICU Info Below</label>
+                        </div>
+                        <div class='form-group'>
+                            <label for='cable_bill'>SELECT BILL TO PAY</label>
+                            <input id='cable_bill' class="form-control" name="cable_bill" value="{{obj.api_name}}" required readonly>
+                        </div>
+                        <div class='form-group'>
+                            <label for='smart_no'>Smart No</label>
+                            <input id='smart_no' class="form-control" name="smart_no" required>
+                        </div>
+                        <div class='form-group'>
+                            <label for='product_code'>Package</label>
+                            <select id='product_code' class="form-control" name="product_code"  required>
+                                {% if items %}
+                                {% for i in items %}
+                                <option value="{{code}}|{{i.site_service_code}}">{{i.what_user_sees}}</option>
+                                {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class='form-group'>
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Confirm Customer</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-6" id="note">
+                    {{obj.description|safe}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

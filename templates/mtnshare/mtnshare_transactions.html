@@ -1,0 +1,59 @@
+{% extends "basenew.html" %}{% load humanize %} {% block title %}YOUR PAYMENT BUNDLE TRANSACTIONS{% endblock %}{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">SCHEDULE SMS REPORT</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table width="100%" class="table table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr width="100%">
+                                <th>S/N</th>
+                                <th>Order ID</th>
+                                <th>Amount</th>
+                                <th>Network</th>
+                                <th>Data Size(MB)</th>
+                                <th>Phone</th>
+                                <th>Batch No</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% if historys %}
+                            {% for i in historys %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.ordernumber}}</td>
+                                <td>{{i.mtn_amount|intcomma}}</td>
+                                <td>{% if 'MTN' in i.ordernumber %}MTN{% else %}9mobile{% endif %}</td>
+                                <td>{{i.mtn_data_size}}</td>
+                                <td>{{i.mtn_number}}</td>
+                                <td>{{i.batchno}}</td>
+                                <td>{{i.status}}</td>
+                                <td>{{i.purchased_date}}</td>
+                            </tr>
+                           {% endfor %}
+                        {% else %}
+                        <tr class="">
+                            <td>Sorry, no history Yet.</td>
+                        </tr>
+                        {% endif %}
+
+
+                    </tbody>
+                </table>
+<!--                 {% include "partials/paginations.html" %} -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+{% endblock %}
+{% block footer_scripts %}
+{% include 'partials/table_scripts.html' %}
+{% endblock footer_scripts %}

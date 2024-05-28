@@ -1,0 +1,89 @@
+{% extends "basenew.html" %} 
+{% block title %}Purchase Your SME DATASHARE Here{% endblock %}
+{% block content %}
+<script type="text/javascript">
+function purchaseSMEData(event){
+  event.preventDefault()
+  var smeplan = document.querySelector("#smeplan").value;
+  var phone = document.querySelector("#phone").value;
+  var form = document.querySelector("#form_id")
+  var stringParams = 'phone='+phone+'&smeplan='+smeplan
+
+  var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "/api/v1/purchaseSme?api-token={{user.auth_token.key}}&"+stringParams,
+        "method": "POST",
+        "processData": false,
+    };
+    document.querySelector("#smeSubmit").textContent = "Processing";
+    document.querySelector("#smeSubmit").setAttribute("disabled", "disabled");
+    
+    //use label tag to get the firstElementchild and change the attribute of the firstElementChild
+    $.ajax(settings).done(function (response) {
+      data = response
+      if(response.status !== 201){
+        console.log(data)
+        document.querySelector("#notific").innerHTML = '<li class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>' + data.details +'</li>'
+        form.reset()
+        document.querySelector("#smeSubmit").textContent = "Proceed to Topup SME Datashare";
+      } else {
+        console.log(data)
+        document.querySelector("#notific").innerHTML = '<li class="alert alert-success alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>' + JSON.stringify(data.details) +'</li>'
+        form.reset()
+        document.querySelector("#smeSubmit").textContent = "Proceed to Topup SME Datashare";
+      }
+        document.querySelector("#smeSubmit").removeAttribute("disabled");
+      //var win = window.open('', )
+      //get data from the api and split into object and keys
+      //localStorage.setItem("address", data.address)
+    });
+}
+</script>
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Purchase Your MTN SME</h6>
+            <div class="drpdown no-arrow show">
+                <a class="font-weight-bold text-danger d-md-none" href="#note">Must Read</a>
+            </div>
+        </div>            
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-6">
+                    <ul class="messages list-unstyled" id="notific"></ul>
+                    <form id="form_id" role="form" onsubmit="purchaseSMEData(event);">
+                        {% csrf_token %}
+                        <div class='form-group'>
+                          <label for='datasize'>SME Data Size</label>
+                          <select id='smeplan' class="form-control" name="smeplan" type="text">
+                            <option></option>
+                            {% for i in smeOptions %}
+                              <option>{{i}}</option>
+                            {% endfor %}                            
+                          </select>
+                        </div>
+                        <div class='form-group'>
+                            <label for='r_phone'>Phone Number to Receive the SME Share Data </label>
+                            <input  class="form-control" name="phone" id="phone" placeholder="E.g 08163524890", required>
+                            <!-- <small id="PhoneHelp" class="form-text text-muted"></small> --><br/>
+                            <li> NOTE:<strong> MTN SME CHEAP DATA IS ALREADY DISCOUNTED FOR</strong></li>
+                        </div>
+                        <div class='form-group'>
+                            <button type="submit" id="smeSubmit" class="btn btn-primary btn-lg btn-block">Proceed to Topup SME Datashare </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-6" id="note">
+                    <p>
+                        <strong>SME DATA BUNDLE TOP-UP</strong>
+                        <h4>How it works:</h4>
+                        <br>Select SME Data <br> Enter Phone Number That Will Receive The Data <br> Validity 30Days <br> <strong>MTN Datashare Fast Delivery Guaranteed. <br> To Check MTN Datashare Balance: *461*4#<br> MTN SME Data Share is available 24/7 daily</strong> 
+                        <br>
+                    </p>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

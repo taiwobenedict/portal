@@ -1,0 +1,26 @@
+{% extends "basenew.html" %} 
+{% block title %}Success{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Success</h6>
+        </div>            
+        <div class="card-body">
+            <div class="row">
+                <div class='col-lg-6'>
+                    <h4>Your Operation/Recharge was Successful</h4>
+                    {% if spectranet %}
+                        <p>Copy Down the Pin Please</p>
+                        <h4>Pin : <strong>{{spectranet.customernumber}}</strong></h4>
+                        <h4>Serial Number:<strong>{{spectranet.invoice}}</strong></h4>
+                    {% endif %}
+                </div>
+                    <!-- /.col-lg-6 (nested) -->
+            </div>
+        </div>
+            <!-- /.card-body -->
+        <!-- /.col-lg-12 -->
+    </div>
+</div>
+{% endblock %}

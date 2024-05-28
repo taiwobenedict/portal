@@ -1,0 +1,372 @@
+{% load notifications %}
+{% load dashboardconfig ravepayconfig alert_system %}
+{% DashboardConfigs as config %}
+{% RavePayConfigs as raveconfig %}
+{% getNoteReadNotification as listNotification %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="{{ config.keywords }}"/>
+	<meta name="description" content="{{config.content_field}}" />
+  <meta name="author" content="OLA-EST INTEGRATED RESOURCES LIMITED">
+
+    <title>{% block title %}{% endblock %} | {{ config.site_name }}</title>
+
+    <!-- Custom CSS -->
+  <link href="/static/css/sb-admin-2.min.css" rel="stylesheet">
+ {% if 'png' in config.get_logo_url %}
+  <link rel="icon" type="image/png" href="{{config.get_logo_url}}" />
+  {% else %}
+  <link rel="icon" type="image/jpeg" href="{{config.get_logo_url}}" />
+  {% endif %}
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+<link href="https://printjs-4de6.kxcdn.com/print.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Custom Fonts -->
+  <link href="/static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    {% block head %}
+    {% endblock head %}
+    {% block extracss %}
+    {% endblock extracss %}
+<style>
+    @media only screen and (min-width:360px) and (max-width:768px){
+        .hiddn{
+           display:none!important; 
+        }
+    }
+    .navbar-default {
+        background-color: rgba(240, 173, 78, 0.49);
+        border-color: #e7e7e7;
+    }
+    .sidebar ul li a.active {
+        background-color: #1f0606;
+        color: #f0ad4e;
+    }
+    .nav>li>a:focus, .nav>li>a:hover {
+        text-decoration: none;
+        background-color: #1f0606;
+        color: white;
+    }
+    .bolded {
+        font-weight:bolder;
+    }
+    .sidebar-dark .nav-item.active .nav-link {
+    color: {{config.menu_color}};
+    }
+    .sidebar-dark .nav-item .nav-link i{
+    color: {{config.menu_color}};
+    }
+    .sidebar-dark .nav-item .nav-link {
+    color: {{config.menu_color}};
+    }
+    .sidebar-dark .sidebar-brand .text-warning{
+      color: {{config.menu_color}}!important;
+    }
+    .text-warning{
+      color: {{config.menu_color}}!important;
+    }
+    /*f6c23e*/
+    @media only screen and (max-width: 768px){
+      .hideshow{
+        display: none;
+      }
+    }
+
+  .bg-gradient-primary {
+      background-color: {{config.gradient_background_color1}}!important;
+      background-image: -webkit-gradient(linear,left top,left bottom,color-stop(10%,{{config.gradient_background_color1}}),to({{config.gradient_background_color2}}))!important;
+      background-image: linear-gradient(180deg,{{config.gradient_background_color1}} 10%,{{config.gradient_background_color2}} 100%)!important;
+      background-size: cover;
+  }
+
+  .btn-primary {
+      color: #fff;
+      background-color: {{config.button_color1}}!important;
+      border-color: {{config.button_color1}}!important;
+  }
+
+  .btn-secondary {
+      color: #fff;
+      background-color: {{config.button_color2}}!important;
+      border-color: {{config.button_color2}}!important;
+  }
+
+</style>
+<script>
+  const buttonDisable = (id) => {
+    btn = document.querySelector(`${id}`)
+    btn.setAttribute('disabled', 'disabled')
+  }
+</script>
+</head>
+
+<body id="page-top" class>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        {% include 'partials/sidebar.html' %}
+    <!-- End of Sidebar -->
+        <!-- Page Content -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+        <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                  <!-- Sidebar Toggle (Topbar) -->
+                  <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    <i class="fa fa-bars"></i>
+                  </button>
+
+                  <!-- Topbar Search -->
+                  <div class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                    <a class="btn btn-primary nav-link nav-link-text" style="padding: 0.5rem!important; top: 25%; color:#fff;" href="{% url 'smsangosend:toenteramount' %}"><i class="fas fa-bank fa-fw"></i> Fund Wallet !!!</a>  
+                  </div>
+
+                  <!-- Topbar Navbar -->
+                  <ul class="navbar-nav ml-auto">
+
+                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                    <li class="nav-item dropdown no-arrow d-sm-none">
+                      <a class="btn btn-primary nav-link nav-link-text" style="padding: 0.5rem!important; height: 2.137rem !important; top: 25%; color:#fff;" href="{% url 'smsangosend:toenteramount' %}"><i class="fas fa-bank fa-fw"></i> Fund Wallet !!!</a>                        
+                      <!-- Dropdown - Messages -->
+                      <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                        <form class="form-inline mr-auto w-100 navbar-search">
+<!--                           <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                              <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                              </button>
+                            </div>
+                          </div> -->
+                        </form>
+                      </div>
+                    </li>
+
+                    <!-- Nav Item - Alerts -->
+                    <li class="nav-item dropdown no-arrow mx-1">
+                      <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-bell fa-fw"></i>
+                        <!-- Counter - Alerts -->
+                        {% if not listNotification.count == 0 %}
+                        <span class="badge badge-danger badge-counter">{{listNotification.count}}</span>
+                        {% endif %}
+                      </a>
+                      <!-- Dropdown - Alerts -->
+                      <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                        <h6 class="dropdown-header">
+                          Alerts Center
+                        </h6>
+                        {% if listNotification %}
+                        {% for i in listNotification %}
+                        <a class="dropdown-item d-flex align-items-center" href="{% url 'notificationapp:alert_detail' pk=i.id %}">
+                          <div class="mr-3">
+                            <div class="icon-circle bg-primary">
+                              <i class="fas fa-file-alt text-white"></i>
+                            </div>
+                          </div>
+                          <div>
+                            <div class="small text-gray-500">{{i.createdAt}}</div>
+                            <span class="font-weight-bold">{{i.title}}<br/>{{i.content |truncatewords:10 | safe}}</span>
+                          </div>
+                        </a>
+                        {% endfor %}
+                        {% else %}
+                          <div class="mx-3 text-center">
+                            <div class="font-weight-bold">No New Alert(s)
+                            </div>
+                          </div>
+                        {% endif %}
+                        <a class="dropdown-item text-center small text-gray-500" href="{% url 'notificationapp:list_alert' %}">Show All Alerts</a>
+                      </div>
+                    </li>
+                    <div class="topbar-divider d-none d-sm-block"></div>
+
+                    <!-- Nav Item - User Information -->
+                    <li class="nav-item dropdown no-arrow">
+                      <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ user.username }}</span>
+                        {% if user.userprofile.profile_image %}
+                            <img src="{{user.userprofile.profile_image.url}}"  class="img-profile rounded-circle">
+                        {% else %}
+                            <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+                        {% endif %}
+                      </a>
+                      <!-- Dropdown - User Information -->
+                      <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="{% url 'smsangosend:profile_edit' %}">
+                          <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                          Profile
+                        </a>
+                        <a class="dropdown-item" href="{% url 'smsangosend:profile_edit' %}">
+                          <h5><span class="badge"><i class="fas fa-money-bill-wave fa-sm fa-fw mr-2 text-gray-400"></i> {{ user.smsbulkcredit.smscredit }} credits</span></h5>
+                        </a>
+                        {% if user.userprofile.phone %}
+                        <a class="dropdown-item" href="#">
+                          <i class="fas fa-phone fa-sm fa-fw mr-2 text-gray-400"></i>
+                          {{ user.userprofile.phone }} 
+                        </a>
+                        {% else %}
+                        <a class="dropdown-item" href="{% url 'smsangosend:profile_edit' %}" style="color:red;">
+                          <i class="fas fa-phone fa-sm fa-fw mr-2 text-red-300"></i>
+                          Update Phone
+                        </a>
+                        {% endif %}
+                        <a class="dropdown-item" href="{% url 'smsangosend:profile_edit' %}">
+                          <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                          Settings
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'smsangosend:logout' %}">
+                          <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                          Logout
+                        </a>
+                      </div>
+                    </li>
+                  </ul>
+
+                </nav>
+
+
+                <!-- /.row -->
+                {% block content %} {% endblock content %}
+
+            </div>
+            <!-- /.container-fluid -->
+
+            <!--Footer-->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                  <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; {{ config.site_name }} {% now 'Y' %} Developed By <a href="https://vtubusinessportal.com">VTU BUSINESS PORTAL</a></span>
+                  </div>
+                </div>
+            </footer>
+            <!-- end footer -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+
+    <script src="/static/vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+
+    <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootbox -->
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/3.0.4/metisMenu.min.js"></script>
+    <script src="/static/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="/static/js/sb-admin-2.js"></script>
+    <!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
+      <!-- Page level plugins -->
+    {% block footer_scripts %}
+    <script src="/static/vendor/chart.js/Chart.min.js"></script>
+    
+      <!-- Page level custom scripts -->
+    {% endblock footer_scripts %}
+    <script type="text/javascript" id="cookieinfo"
+      src="//cookieinfoscript.com/js/cookieinfo.min.js"
+      data-bg="#645862"
+      data-fg="#FFFFFF"
+      data-link="#F1D600"
+      data-cookie="CookieInfoScript"
+      data-text-align="left"
+        data-close-text="Got it!">
+    </script>
+<script>
+var x = document.querySelector('#sidebarToggleTop');
+const hideShow = () => {
+    let toggle = document.querySelector("#accordionSidebar.hideshow");
+    // console.log(toggle)
+    if (toggle !== null){
+        toggle.classList.remove('hideshow')
+        toggle.classList.remove('toggled')
+    } else {
+        document.querySelector("#accordionSidebar").classList.add('hideshow')
+    }
+}
+
+const togGle = (x) => {
+    if (x === null){
+        console.log('not seen')
+    } else{
+        x.addEventListener("click", hideShow, false)
+    }
+}
+
+togGle(x);
+</script>
+
+<script>
+//logout after inactivity
+(function() {
+    const idleDurationSecs = 900;
+    const redirectUrl = "{% url 'smsangosend:logout' %}";
+    let idleTimeout;
+
+    const resetIdleTimeout = function() {
+        if(idleTimeout) clearTimeout(idleTimeout);
+        idleTimeout = setTimeout(() => location.href = redirectUrl, idleDurationSecs * 1000);
+    };
+	
+	  //Key events for reset time
+    resetIdleTimeout();
+    window.onmousemove = resetIdleTimeout;
+    window.onkeypress = resetIdleTimeout;
+    window.click = resetIdleTimeout;
+    window.onclick = resetIdleTimeout;
+    window.touchstart = resetIdleTimeout;
+    window.onfocus = resetIdleTimeout;
+    window.onchange = resetIdleTimeout;
+    window.onmouseover = resetIdleTimeout;
+    window.onmouseout = resetIdleTimeout;
+    window.onmousemove = resetIdleTimeout;
+    window.onmousedown = resetIdleTimeout;
+    window.onmouseup = resetIdleTimeout;
+    window.onkeypress = resetIdleTimeout;
+    window.onkeydown = resetIdleTimeout;
+    window.onkeyup = resetIdleTimeout;
+    window.onsubmit = resetIdleTimeout;
+    window.onreset = resetIdleTimeout;
+    window.onselect = resetIdleTimeout;
+    window.onscroll = resetIdleTimeout;
+})();
+</script>
+
+
+<script>
+  const confirmForm = (formsId, buttonId) => {
+    var r = confirm("Do you want to proceed?");
+    if (r == true) {
+      if (formsId.includes('airtime')){
+        buttonDisable('#airtime_button');
+        let form = document.querySelector("#"+formsId).setAttribute("action", "{% url 'rechargeapp:airtimetopup' %}")
+        form.submit()
+      }
+    }
+  }
+</script>
+
+{% block footer_javascript %}
+{% endblock footer_javascript %}
+</body>
+
+</html>

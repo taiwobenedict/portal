@@ -1,0 +1,288 @@
+{% include "countries.html" %}
+<script type="text/javascript">
+  //var apikey = {{user.token.key}}
+
+  const callGetApi = async(url) => {
+    let result = await fetch(url)
+    return result.json();
+  }
+  
+  function checkIntlAirtimeNo(){
+    var s1 = document.querySelector("#intl_airtimeNumber").value;
+    if (!isNaN(s1)){
+      document.querySelector("#intl_airtimeHelp").innerHTML= '';
+      document.querySelector("#chkIntlAirtime").removeAttribute("style");
+    } else {
+      document.querySelector("#intl_airtimeHelp").innerHTML= '<b class="text-danger">(Only number inputs are allowed)<b/>';
+      document.querySelector("#chkIntlAirtime").style.display = "none";
+    }
+  }
+
+  function checkAmountRange(){
+    let val = $('#amount').val()
+    if (parseInt(val) > 100 || parseInt(val) < 1){
+      $("#purchaseIntlAirtime").hide()
+    } else {
+      $("#purchaseIntlAirtime").show()
+    }
+  }
+  
+  function checkCustomer(event){
+    event.preventDefault()
+    var s1 = document.querySelector("#intl_airtimeNumber").value;
+    var customerIntlAirtimeNumber = document.querySelector("#customerIntlAirtimeNumber")
+    document.querySelector("#chkIntlAirtime").textContent = "Processing";
+    console.log(s1)
+    var settings = {
+          "async": true,
+          "crossDomain": true,
+          "url": "/api/v1/verify_intl_number?api-token={{user.auth_token.key}}&number="+s1,
+          "method": "GET",
+          "processData": false,
+      };
+      //use label tag to get the firstElementchild and change the attribute of the firstElementChild
+    $.ajax(settings).done(function (response) {
+      data = response
+      console.log(data.response, "dsfaf", data.status)
+      if(data.status != 200 || data.status == 400){
+        //document.querySelector("#notific").innerHTML = '<li class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>' + JSON.stringify(data) +'</li>'
+        document.querySelector("#notific").innerHTML = '<li class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>Fetch Not Successful</li>'
+        customerIntlAirtimeNumber.reset()
+        document.querySelector("#chkIntlAirtime").textContent = "Verify Number";
+      } else {
+        console.log(data.details)
+        //document.querySelector("#notific").innerHTML = '<li class="alert alert-success alert-dismissible">' + JSON.stringify(data.details) +'</li>'
+        customerIntlAirtimeNumber.reset()
+        document.querySelector("#notific").innerHTML = '<li class="alert alert-success alert-dismissible">Successfully Fetched Data</li>';
+        document.querySelector("#customerIntlAirtimeNumber").style.display = 'none';
+        document.querySelector("#customerPurchaseIntlAirtime").style.display = 'block';
+        document.querySelector("#intl_airtimeNo").value = s1;
+        document.querySelector("#intl_country").value = data.details.info.country;
+        document.querySelector("#intl_network").value = data.details.info.operator;
+        if (data.details.products.length == 1){
+          $("#amount_select_field").hide()
+          document.querySelector("#amount_field").innerHTML = `<input class="form-control" type="number" id="amount" min="${data.details.products[0].min}" max="${data.details.products[0].max}" onchange="checkAmountRange()"><small class="text-danger">Currency is ${data.details.products[0].topup_currency} minimum is "${data.details.products[0].min}" and  maximum is "${data.details.products[0].max}"</small><input class="form-control" type="hidden" value="${data.details.products[0].id +"|"+ data.details.products[0].topup_currency+"|"+data.details.products[0].rate}" id="amount_build">`
+        } else {
+          let sel = $("#intl_amount")
+          sel.show()
+          $("#amount_field").hide()
+          sel.removeAttr('disable')
+          $.each(data.details.products, function (index, el) {
+              sel.append(`<option value="${el.id+"|"+el.topup_currency+"|"+el.topup_amount+"|"+el.price}">${el.topup_amount+el.topup_currency+' @ NGN'+ el.price}</option>`)
+          });
+        }
+      }
+    //document.querySelector("#checkMeter").textContent = "Process";
+  
+      //get data from the api and split into object and keys
+      //localStorage.setItem("address", data.address)
+    });
+  }
+  
+  async function purchaseIntlAirtimeData(event){
+    event.preventDefault()
+    var intl_airtimeNo = document.querySelector("#intl_airtimeNo").value;
+    var intl_country = document.querySelector("#intl_country").value;
+    var intl_network = document.querySelector("#intl_network").value;
+    var intl_services = document.querySelector("#intl_services").value;
+    var intl_code = document.querySelector("#intl_code").value;
+    var intl_network_name = intl_network.split("|")[1];
+    let operator_id = intl_network.split("|")[0];
+    let product_type_id = document.querySelector("#intl_product_type").value;
+
+    try{
+      let res = await callGetApi(" https://vtpass.com/api/service-variations?serviceID=foreign-airtime&operator_id=" + operator_id +"&product_type_id=" + product_type_id)
+      let amt = document.querySelector("#intl_amount").value
+     // product_id, number, amount, country, country_code, network, currency, rate, operator, variation_code 
+      if (res.response_description != "000"){
+        swal("Error retrieving an Variation Codes, select an operator first")
+      } else {
+        let getRate = res.content.variations.filter(item => item.variation_code == intl_services)
+  
+        //Rate
+        getRate = getRate[0]
+        var stringParams = `product_id=${product_type_id}&number=${intl_airtimeNo}&amount=${amt}&rate=${getRate.variation_rate}&currency=${res.content.currency}&network=${intl_network_name}&country=${intl_country}&country_code=${intl_code}&operator=${operator_id}&variation_code=${intl_services}`
+  
+        console.log(stringParams)
+    
+        document.querySelector("#purchaseIntlAirtime").textContent = "Processing";
+        document.querySelector("#purchaseIntlAirtime").setAttribute("disabled", "disabled");
+
+        let final = await fetch("/api/v1/purchase_intl_number?api-token={{user.auth_token.key}}&"+stringParams, {
+          method: "POST"
+        })
+        console.log("/api/v1/purchase_intl_number?api-token={{user.auth_token.key}}&"+stringParams)
+        final = await final.json()
+        console.log(final, "json")
+
+        if(final.status !== 201){
+          document.querySelector("#notific").innerHTML = '<li class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>' + final.details +'</li>'
+          document.querySelector("#customerIntlAirtimeNumber").style.display = 'block';
+          document.querySelector("#customerPurchaseIntlAirtime").style.display = 'none';
+          document.querySelector("#customerPurchaseIntlAirtime").reset();
+          document.querySelector("#purchaseIntlAirtime").textContent = "Purchase Data";
+          document.querySelector("#chkIntlAirtime").textContent = "Verify Number";
+        } else {
+          console.log(final)
+          document.querySelector("#notific").innerHTML = '<li class="alert alert-success alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>' + JSON.stringify(final.details) + ' <a href='+'{% url "other_data_services:int_airtime_trans" %}'+'>Check Details</a></li>'
+          document.querySelector("#customerIntlAirtimeNumber").style.display = 'block';
+          document.querySelector("#customerPurchaseIntlAirtime").style.display = 'none';
+          document.querySelector("#purchaseIntlAirtime").textContent = "Purchase Data";
+          document.querySelector("#chkIntlAirtime").textContent = "Verify Number";
+        }
+        document.querySelector("#purchaseIntlAirtime").removeAttribute("disabled");
+      }
+    } catch(e){
+      swal(e)
+      document.querySelector("#purchaseIntlAirtime").textContent = "Process";
+      document.querySelector("#purchaseIntlAirtime").removeAttribute("disabled")
+    }
+  }
+
+  //VTPASS CONFIG
+  async function checkCustomerVtpass(event){
+    event.preventDefault()
+    var s1 = document.querySelector("#intl_airtimeNumber").value;
+    var customerIntlAirtimeNumber = document.querySelector("#customerIntlAirtimeNumber")
+    document.querySelector("#chkIntlAirtime").textContent = "Processing";
+    let chkCountry = s1.slice(0, 3);
+
+    let chkRes = countries.filter(item => item.prefix == chkCountry )
+    console.log(chkRes)
+
+    if(!chkRes){
+      //document.querySelector("#notific").innerHTML = '<li class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>' + JSON.stringify(data) +'</li>'
+      document.querySelector("#notific").innerHTML = '<li class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>Fetch Not Successful</li>'
+      customerIntlAirtimeNumber.reset()
+      document.querySelector("#chkIntlAirtime").textContent = "Verify Number";
+    } else {
+      customerIntlAirtimeNumber.reset()
+      chkRes = chkRes[0]
+
+      try{
+        let pdt_type = await callGetApi("https://vtpass.com/api/get-international-airtime-product-types?code=" + chkRes.code)
+
+        if (pdt_type.response_description != '000'){
+          swal("Error Selecting a Product")
+        } else {
+          console.log(pdt_type)
+          let options = "<option>--Select a Product Type--</option>"
+          for(i=0; pdt_type.content.length > i; i++){
+            options += `<option value="${pdt_type.content[i].product_type_id}">${pdt_type.content[i].name}</option>` 
+          }
+          document.querySelector("#intl_product_type").innerHTML=options
+        }
+  
+        //document.querySelector("#notific").innerHTML = '<li class="alert alert-success alert-dismissible">' + JSON.stringify(data.details) +'</li>'
+        document.querySelector("#notific").innerHTML = '<li class="alert alert-success alert-dismissible">Number Looks Valid</li>';
+        document.querySelector("#customerIntlAirtimeNumber").style.display = 'none';
+        document.querySelector("#customerPurchaseIntlAirtime").style.display = 'block';
+        document.querySelector("#intl_airtimeNo").value = s1;
+        document.querySelector("#intl_country").value = chkRes.name + "-" + chkRes.currency;
+        document.querySelector("#intl_code").value = chkRes.code;
+        {% comment %} document.querySelector("#intl_network").value = data.details.info.operator; {% endcomment %}
+        {% comment %} if (data.details.products.length == 1){
+          $("#amount_select_field").hide()
+          document.querySelector("#amount_field").innerHTML = `<input class="form-control" type="number" id="amount" min="${data.details.products[0].min}" max="${data.details.products[0].max}" onchange="checkAmountRange()"><small class="text-danger">Currency is ${data.details.products[0].topup_currency} minimum is "${data.details.products[0].min}" and  maximum is "${data.details.products[0].max}"</small><input class="form-control" type="hidden" value="${data.details.products[0].id +"|"+ data.details.products[0].topup_currency+"|"+data.details.products[0].rate}" id="amount_build">`
+        } else {
+          let sel = $("#intl_amount")
+          sel.show()
+          $("#amount_field").hide()
+          sel.removeAttr('disable')
+          $.each(data.details.products, function (index, el) {
+              sel.append(`<option value="${el.id+"|"+el.topup_currency+"|"+el.topup_amount+"|"+el.price}">${el.topup_amount+el.topup_currency+' @ NGN'+ el.price}</option>`)
+          });
+        } {% endcomment %}
+        document.querySelector("#purchaseIntlAirtime").removeAttribute("disabled")
+      } catch(e){
+        swal(e)
+        document.querySelector("#purchaseIntlAirtime").setAttribute("disabled", "disabled")
+      }
+    }
+  }
+
+  const getOperators = async() => {
+    let code = document.querySelector("#intl_code").value
+    let product_type_id = document.querySelector("#intl_product_type").value
+
+    try{
+      let res = await callGetApi("https://vtpass.com/api/get-international-airtime-operators?code=" + code +"&product_type_id=" + product_type_id)
+
+      if (res.response_description != "000"){
+        swal("Error retrieving an Operator, select a product type first")
+      } else {
+        let options = "<option>--Select a Operator--</option>"
+        for(i=0; res.content.length > i; i++){
+          options += `<option value="${res.content[i].operator_id}|${res.content[i].name}">${res.content[i].name}</option>` 
+        }
+        document.querySelector("#intl_network").innerHTML=options
+      }
+      document.querySelector("#purchaseIntlAirtime").removeAttribute("disabled")
+    } catch(e){
+      swal("Operator not retrieveable, please check your network")
+      document.querySelector("#purchaseIntlAirtime").setAttribute("disabled", "disabled")
+    }
+
+  }
+
+  const getVariationCodes = async() => {
+    let operator_id = document.querySelector("#intl_network").value
+    let product_type_id = document.querySelector("#intl_product_type").value
+    try{
+      let res = await callGetApi(" https://vtpass.com/api/service-variations?serviceID=foreign-airtime&operator_id=" + operator_id.split("|")[0] +"&product_type_id=" + product_type_id)
+
+      if (res.response_description != "000"){
+        swal("Error retrieving Variation Codes, select an operator first")
+      } else {
+        localStorage.setItem("variations", JSON.stringify(res.content.variations))
+        let options = "<option>--Select a Variation--</option>"
+        for(i=0; res.content.variations.length > i; i++){
+          options += `<option value="${res.content.variations[i].variation_code}">${res.content.variations[i].name}</option>` 
+        }
+        document.querySelector("#intl_services").innerHTML=options
+      }
+      document.querySelector("#purchaseIntlAirtime").removeAttribute("disabled")
+    } catch(e){
+      swal("product is not available")
+      document.querySelector("#purchaseIntlAirtime").setAttribute("disabled", "disabled")
+    }
+
+  }
+
+  const getAllAmount = async() => {
+    let variations = JSON.parse(localStorage.getItem("variations") || "{}")
+    document.querySelector("#amount_field").innerHTML = ""
+    let var_code = document.querySelector("#intl_services").value
+    let act_var = variations.filter(item => item.variation_code == var_code)
+    act_var = act_var.length > 0 ? act_var[0] : null
+    let totalAmout = 0
+
+    if (act_var && act_var.charge_amount){
+      document.querySelector("#amount_select_field").innerHTML = `<input id="intl_amount" type="number" class="form-control" min="${act_var.variation_amount_min}" max="${act_var.variation_amount_max}" value="${act_var.charge_amount}" readonly/>`
+      totalAmout = parseFloat(act_var.charge_amount) * parseFloat(act_var.variation_rate)
+    } else {
+      document.querySelector("#amount_select_field").innerHTML = `<input id="intl_amount" type="number" class="form-control" min="${act_var.variation_amount_min}" max="${act_var.variation_amount_max}" value="" onkeyup="calcAmount()" />`
+      totalAmout = "Amount Entered * " + act_var.variation_rate 
+    }
+    document.querySelector("#amount_field").innerHTML = `
+    <b>
+      Minimum: ${act_var.variation_amount_min},
+      Maximum: ${act_var.variation_amount_max},
+      Rate: <span id="rate">${act_var.variation_rate}</span><br/>
+      <code class="py-2">Naira Amt: NGN <span id="totalAmt">${totalAmout}</span></code>
+    </b>`
+  }
+
+  const calcAmount = () => {
+    let rate = document.querySelector("#rate").textContent
+    let amt = document.querySelector("#intl_amount").value
+    if (!Number(amt)){
+      document.querySelector("#purchaseIntlAirtime").setAttribute("disabled", "disabled")
+    }
+    let calc = parseFloat(rate) * parseFloat(amt)
+    document.querySelector("#totalAmt").innerHTML = calc.toFixed(2).toString() //{% if commission %} + {{commission}} {% endif %}
+    document.querySelector("#purchaseIntlAirtime").removeAttribute("disabled")
+  }
+
+
+  </script>

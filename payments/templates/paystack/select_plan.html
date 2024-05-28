@@ -1,0 +1,171 @@
+{% extends "basenew.html" %} {% load bootstrap5 dashboardconfig banks humanize mathfilters %}{% block content %}
+<div class="container-fluid">
+      <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+              <h6 class="m-0 font-weight-bold text-primary">Fund Wallet</h6>
+              {% comment %} <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                  <div class="dropdown-header">Dropdown Header:</div>
+                  <a class="dropdown-item" href="#">Action</a>
+                  <a class="dropdown-item" href="#">Another action</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+              </div> {% endcomment %}
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-lg-8">
+                        {% bootstrap_messages %}
+
+                        <!-- Nav pills -->
+                        <ul class="nav nav-pills nav-justified container" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="pill" href="#paystacks">Fund via Paystack</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="pill" href="#rave_pay">Fund via RavePay</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="pill" href="#monnify">Fund via Monnify</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="pill" href="#banks">Fund via Bank</a>
+                            </li>
+                        </ul>
+                        <br/>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content tab-content-basic">
+                            <div class="tab-pane container active" id="paystacks">
+                                <form action="{% url 'smsangosend:payprice' %}" method="POST" class="form-group" id="paystack">
+                                {% csrf_token %}
+                                    <input name="amounttobuy" class="form-control" maxlength="4" min="100" max="{{config.amount_funding_limit_through_paysatack}}" placeholder="Enter Amount to Buy e.g {{config.amount_funding_limit_through_paysatack}}" type="number" required>
+                                    <small style="color:red;font-weight:bold;">
+                                        <ul>
+                                            <li>Please Note that a fee of {{config.amount_funding_percentage| mul:100}}% will be charged by the payment processor</li>
+                                            <li>You can only pay between #100 - #{{config.amount_funding_limit_through_paysatack}} per transaction to fund your Account</li>
+                                            <li>To deposit More than {{config.amount_funding_limit_through_paysatack}} 
+                                            <br> 
+                                          <!--  <strong style="color:blue!important;">Bank Name: {{config.bank_name}}<br>Account Name: {{config.account_name}}<br>Account No: {{config.bank_account_no}}
+                                            <br>OR
+                                            </strong>
+                                            {% if user.user_monnify_acc.status == 'ACTIVE' %}, Transfer to the Unique Account Number we created for you and your wallet will be credited max 1-2 miunutes.{% endif %}</li> 
+                                            <li>Thanks for you patronage</li>
+                                        </ul> -->
+                                    </small> 
+                                    <button class="btn btn-primary btn-user btn-block">Proceed -></button>
+                                </form>
+                            </div>
+                            <div class="tab-pane container" id="rave_pay">
+                                <form action="{% url 'rave_url:rave_page' %}" method="POST" class="form-group" id="paystack">
+                                {% csrf_token %}
+                                    <input name="amounttobuy" class="form-control" maxlength="4" min="100" max="{{raveconfig.funding_limit}}" placeholder="Enter Amount to Buy e.g {{raveconfig.funding_limit}}" type="number" required>
+                                    <small style="color:red;font-weight:bold;">
+                                        <ul>
+                                            <li>Please Note that a fee of {{raveconfig.rave_fee| mul:100}}% will be charged by the payment processor</li>
+                                            <li>You can only pay between #100 - #{{raveconfig.funding_limit}} per transaction to fund your Account</li>
+                                            <li>To deposit More than {{raveconfig.funding_limit}} 
+                                            <br> 
+                                            <strong style="color:blue!important;">Bank Name: {{config.bank_name}}<br>Account Name: {{config.account_name}}<br>Account No: {{config.bank_account_no}}
+                                            <br>OR
+                                            </strong>
+                                            {% if user.user_monnify_acc.status == 'ACTIVE' %}, Transfer to the Unique Account Number we created for you and your wallet will be credited max 1-2 miunutes.{% endif %}</li> 
+                                            <li>Thanks for you patronage</li>
+                                        </ul>
+                                    </small> 
+                                    <button class="btn btn-primary btn-user btn-block">Proceed -></button>
+                                </form>
+                            </div>
+                            <div class="tab-pane container" id="monnify">
+                                <form action="{% url 'monnify:payment_page' %}" method="POST" class="form-group" id="monnify">
+                                {% csrf_token %}
+                                    <input name="amounttobuy" class="form-control" maxlength="4" min="100" max="{{config.amount_funding_limit_through_paysatack}}" placeholder="Enter Amount to Buy e.g {{config.amount_funding_limit_through_paysatack}}" type="number" required>
+                                    <small style="color:red;font-weight:bold;">
+                                        <ul>
+                                            <li>Thanks for you patronage</li>
+                                        </ul>
+                                    </small> 
+                                    <button class="btn btn-primary btn-user btn-block">Proceed -></button>
+                                </form>
+                            </div>
+                            <div class="tab-pane container" id="banks">
+                                <h5 class="text-center"> <strong>Fund with Unique Account Number</strong></h5>
+                                <hr/>
+                                {% if not user.userprofile.kyc_verification_nin or not user.userprofile.kyc_verification %}
+                                    <a href="{% url 'api:kyc_template' %}" class="btn-danger btn btn-block p-2">Update KYC</a>
+                                {% endif %}
+                                <div class="text-center" id="uniqueAccount">
+                                    {% if user.user_monnify_acc.status == 'ACTIVE' %}
+                                        <h6 class="p-4 bg-info text-white">
+                                            <strong>
+                                                <span>ACCOUNT NAME: {{user.user_monnify_acc.accountName}}</span><br/>
+						<br/><hr>
+						{% format_banks user.id %} 
+                                            </strong>
+                                        </h6>
+                                    {% else %}
+                                        <h4> <button onclick="GenerateAccount(event);" id="generate" class="btn btn-primary btn-lg p-2"> Generate Unique Account </button></h4>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <p>The Funds can be use to perform the following activity/operation</p>
+                        <u>
+                            <li>Send SMS</li>
+                            <li>Airtime Top Up</li>
+                            <li>Data bundle Top Up</li>
+                            <li>Startimes Recharge</li>
+                            <li>GOtv/DStv Recharge</li>
+                            <li>More Services to Come</li>
+                        </u>
+                    </div>
+                    </div>
+                </div>
+    </div>
+</div>
+<script>
+    const GenerateAccount = (event) =>{
+        event.preventDefault();
+        var gene = document.querySelector('#generate')
+        gene.setAttribute('disabled', 'disabled')
+        gene.textContent = 'Generating';
+        $(document).ready(function(){
+            $.ajax({
+                type:"GET",
+                url: "{% url 'monnify:createAccMonnify' %}",
+                data:{},
+                dataType: 'json',
+                success: function (data) {
+                    if (data.status == 201) {
+                        console.log(data)
+                        gene.removeAttribute('disabled')
+                        gene.textContent = 'Generate Unique Account';
+                        window.location.reload();
+                    } else if(data.redirect){
+                        gene.removeAttribute('disabled')
+                        gene.textContent = 'Generate Unique Account';
+                        Swal.fire('Oops!!', data.message + "\n\n you will now be redirected to profile page to update the missing info", 'info');
+                        setTimeout(()=> {}, 14000)
+                        window.location.assign('/customer/profile-edit');
+		    } else {
+                        gene.removeAttribute('disabled')
+                        gene.textContent = 'Generate Unique Account';
+                        Swal.fire('Oops!!', data.message, 'info');
+                    }
+                }
+
+                })
+            });
+    }
+</script>
+{% endblock %}
+

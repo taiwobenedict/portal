@@ -1,0 +1,52 @@
+{% extends "basenew.html" %} {% block title %} Alerts{% endblock %}
+    {% block extracss %}
+ {% endblock extracss %}
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">All Notifications</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table width="100%" class="table table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr width="100%">
+                            <th>Title</th>
+                            <th>Content</th>
+                            <th>Created at</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if alerts %}
+                            {% for object in alerts %}
+                            <tr class="">
+                                <td>{{ object.title }}</td>
+                                <td>{{ object.content | truncatewords:5 }}</td>
+                                <td>{{ object.createdAt | date:'d/M/Y' }}</td>
+                                <td><a class="btn btn-info" href="{% url 'notificationapp:alert_detail' pk=object.id %}">Detail</a></td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                        <tr class="">
+                            <td>Sorry, no Alerts Yet.</td>
+                        </tr>
+                        {% endif %}
+
+
+                    </tbody>
+                </table>
+<!--                 {% include "partials/paginations.html" %} -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+{% endblock %}
+{% block footer_scripts %}
+{% include 'partials/table_scripts.html' %}
+{% endblock footer_scripts %}

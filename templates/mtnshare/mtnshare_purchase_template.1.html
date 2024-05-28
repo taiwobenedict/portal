@@ -1,0 +1,118 @@
+{% extends "base.html" %} {# Display django.contrib.messages as Bootstrap alerts #}    
+{% block head %}{% endblock head %}
+{% load bootstrap4 %}{% bootstrap_messages %}{% block content %}
+<script type="text/javascript">
+function populate(s1,s2,s3){
+    var s1 = document.getElementById(s1);
+    var s2 = document.getElementById(s2);
+    s2.innerHTML = "";
+    if(s1.value == "530") {
+        var optionArray = ["|","1000|1GB"]
+    } else if (s1.value == "1050") {
+        var optionArray = ["|","2000|2GB"]
+    } else if (s1.value == "2400") {
+        var optionArray = ["|","5000|5GB"]
+    } //else if (s1.value == "2") {
+      //  var optionArray = ["|", "200|150MB-7days = N200", "1000|1GB-30days = N1000", "1200|1.5GB-30days = N1200", "2000|2.5GB-30days = N2000", "2500|3.5GB-30days = N2500"]
+    //}
+    for (var option in optionArray) {
+        var pair = optionArray[option].split("|");
+        var newOption = document.createElement("option");
+        newOption.value = pair[0];
+        newOption.innerHTML = pair[1];
+        s2.options.add(newOption);               
+    }
+}
+</script>
+<div class="row" style="margin-top:20px;">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Purchase Your MTN SME DATA Here          
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-4">
+                        {% if messages %}
+                        <ul class="messages list-unstyled">
+                            {% for message in messages %}
+                            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        <form role="form" method="POST" enctype="multipart/form-data" action="{% url 'rechargeapp:mtnsmedatatopup' %}">
+                            {% csrf_token %}
+
+                            <div class='row'>
+                                <div class="col-lg-12">
+                                <div class='form-group'>
+                                    <label for='Network'>Network</label>
+                                    <select class="form-control" name="network" id="network">
+                                        <!-- <option></option> -->
+                                        <option value="15">MTN</option>
+                                        <option value="2">9mobile</option>
+                                        <!-- <option value="1">Airtel</option>
+                                        <option value="6">Glo</option> -->
+                                    </select>
+                                </div>
+                                <div class='form-group'>
+                                    <label for='amt'>Amount of MTN SME Data Plan</label>
+                                    <select id='amt' class="form-control" name="amt" onchange="populate(this.id, 'datasize')" required>
+                                        <option></option>
+                                        <option value="530">1GB = N530</option>
+                                        <option value="1050">2GB = N1050</option>
+                                        <option value="2400">5GB = N2400</option>
+                                    </select>
+                                </div>
+                                <div class='form-group'>
+                                    <label for='datasize'>SME Data Size</label>
+                                    <select id='datasize' class="form-control" name="data_size" required></select>
+                                </div>
+                                <div class='form-group'>
+                                    <label for='r_phone'>Phone Number to Receive the MTN SME Data </label>
+                                    <input  class="form-control" name="phone" id="phone" placeholder="E.g 08163524890", required>
+                                    <!-- <small id="PhoneHelp" class="form-text text-muted"></small> -->
+                                </div>
+                                <div class='form-group'>
+                                    <label for='use_credit'>Deduct Payment From Your Credits</label>
+                                    <select class="form-control" name="usecredit" id="use_credit" required>
+                                        <option></option>
+                                        <option value="YES">Yes</option>
+                                        <option value="NO" disabled>Direct Purchase Disabled Use credits to purchase</option>
+                                    </select>
+                                </div>
+                                <div class='form-group'>
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block">Proceed to Topup MTN SME Datashare </button>
+                                </div>
+                            </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-8">
+                        <p>
+                            <strong>MTN SME DATA BUNDLE TOP-UP</strong>
+                            <h4>How it works:</h4>
+                            <br><strong> Fast delivery with 90 days validity guraranteed. <br> To Check Balance: *461*6#<br> MTN SME Data Share is available 24/7 daily</strong> 
+                        </p>
+                        <hr/>
+                        <h4><strong><u></u>MTN SME DATA STATUS CHECK</u></strong></h4>
+                        <p>
+                            <h4>In case your credit/Money was deducted and not data was given please do the following</h4>
+                            <ul>
+                                <li>Check Your Balance: *461*6#</li>
+                                <li>Check The status of your transaction using the batch no <a href="{% url 'rechargeapp:mtnsmedata_status_check' %}">HERE</a></li>
+                                <li>Contact US using the contact page Immediately</li>
+                            </ul>
+                            <br><strong>Check Your Balance: *461*6#<br> MTN SME Data Share is available 24/7 daily</strong> 
+                        </p>
+                    </div>
+                </div>
+                <!-- /.row (nested) -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "basenew.html" %}   
+{% block title %}Check Your SME mtn DataShare Status Here{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Check Your SME mtn DataShare Status Here</h6>
+        </div>            
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-6">
+                    {% if messages %}
+                    <ul class="messages list-unstyled">
+                        {% for message in messages %}
+                        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    <form role="form" method="POST" enctype="multipart/form-data" action="{% url 'rechargeapp:mtnsmedata_status_check' %}">
+                        {% csrf_token %}
+                        <div class='form-group'>
+                            <label for='Network' style='color:red;'>To check your MTN SME Data Share Status Please check your MTN SME Transaction History to Copy the "Batch No" of the Transaction </label>
+                        </div>
+                        <div class='form-group'>
+                            <label for='batchno'>Batch No</label>
+                            <input id='batchno' class="form-control" name="batchno" required>
+                        </div>
+                        <div class='form-group'>
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Check MTN SME DataShare Status</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-6">
+                    <strong><u>Response</u></strong>
+                    {% if resp %}
+                    <h5 style="color:red;">{{resp}}</h5>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

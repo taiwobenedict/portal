@@ -1,0 +1,95 @@
+<script type="text/javascript">
+  //var apikey = {{user.token.key}}
+  
+  function checkSmileNo(){
+    var s1 = document.querySelector("#smileNumber").value;
+    if (!isNaN(s1)){
+      document.querySelector("#smileHelp").innerHTML= '';
+      document.querySelector("#chkSmile").removeAttribute("style");
+    } else {
+      document.querySelector("#smileHelp").innerHTML= '<b class="text-danger">(Only number inputs are allowed)<b/>';
+      document.querySelector("#chkSmile").style.display = "none";
+    }
+  }
+  
+  function checkCustomer(event){
+    event.preventDefault()
+    var s1 = document.querySelector("#smileNumber").value;
+    var customerSmileNumber = document.querySelector("#customerSmileNumber")
+    document.querySelector("#chkSmile").textContent = "Processing";
+    console.log(s1)
+    var settings = {
+          "async": true,
+          "crossDomain": true,
+          "url": "/api/v1/checkSmileNo?api-token={{user.auth_token.key}}&smileNumber="+s1+"&serviceID=smile-direct",
+          "method": "POST",
+          "processData": false,
+      };
+      //use label tag to get the firstElementchild and change the attribute of the firstElementChild
+    $.ajax(settings).done(function (response) {
+      data = response
+      console.log(data.details)
+      if(data.status !== 200){
+        //document.querySelector("#notific").innerHTML = '<li class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>' + JSON.stringify(data) +'</li>'
+        document.querySelector("#notific").innerHTML = '<li class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>Fetch Not Successful</li>'
+        customerSmileNumber.reset()
+        document.querySelector("#chkSmile").textContent = "Verify Number";
+      } else {
+        console.log(data)
+        //document.querySelector("#notific").innerHTML = '<li class="alert alert-success alert-dismissible">' + JSON.stringify(data.details) +'</li>'
+        customerSmileNumber.reset()
+        document.querySelector("#notific").innerHTML = '<li class="alert alert-success alert-dismissible">Successfully Fetched Data</li>';
+        document.querySelector("#customerSmileNumber").style.display = 'none';
+        document.querySelector("#customerPurchaseSmile").style.display = 'block';
+        document.querySelector("#smileNo").value = data.smileNumber;
+      }
+    //document.querySelector("#checkMeter").textContent = "Process";
+  
+      //get data from the api and split into object and keys
+      //localStorage.setItem("address", data.address)
+    });
+  }
+  
+  
+  function purchaseSmileData(event){
+    event.preventDefault()
+    var smileNo = document.querySelector("#smileNo").value;
+    var smilePlan = document.querySelector("#smilePlan").value;
+  
+    console.log(smilePlan)
+    var stringParams = `smileNumber=${smileNo}&smilePlan=${smilePlan}`
+  
+    document.querySelector("#purchaseSmile").textContent = "Processing";
+    document.querySelector("#purchaseSmile").setAttribute("disabled", "disabled");
+  
+    var settings = {
+          "async": true,
+          "crossDomain": true,
+          "url": "/api/v1/purchaseSmile?api-token={{user.auth_token.key}}&"+stringParams,
+          "method": "POST",
+          "processData": false,
+      };
+      //use label tag to get the firstElementchild and change the attribute of the firstElementChild
+    $.ajax(settings).done(function (response) {
+      data = response
+      if(response.status !== 201){
+        document.querySelector("#notific").innerHTML = '<li class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>' + data.details +'</li>'
+        document.querySelector("#customerSmileNumber").style.display = 'block';
+        document.querySelector("#customerPurchaseSmile").style.display = 'none';
+        document.querySelector("#purchaseSmile").textContent = "Purchase Data";
+        document.querySelector("#chkSmile").textContent = "Verify Number";
+      } else {
+        console.log(data)
+        document.querySelector("#notific").innerHTML = '<li class="alert alert-success alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>' + JSON.stringify(data.details) + '<a href='+'{% url "other_data_services:smileTransactions" %}'+'>Check Details</a></li>'
+        document.querySelector("#customerSmileNumber").style.display = 'block';
+        document.querySelector("#customerPurchaseSmile").style.display = 'none';
+        document.querySelector("#purchaseSmile").textContent = "Purchase Data";
+        document.querySelector("#chkSmile").textContent = "Verify Number";
+      }
+    document.querySelector("#purchaseSmile").removeAttribute("disabled");
+      //var win = window.open('', )
+      //get data from the api and split into object and keys
+      //localStorage.setItem("address", data.address)
+    });
+  }
+  </script>

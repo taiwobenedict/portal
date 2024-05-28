@@ -1,0 +1,48 @@
+{% extends "base.html" %}{% load humanize %} {% block content %}
+<div class="row" style="margin-top:20px;">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    ALL MTN  SME DATASHARE TRANSACTIONS
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body table-responsive">
+                    <table width="100%" class="table table-bordered table-striped">
+                        <thead>
+                            <tr width="100%">
+                                <th>S/N</th>
+                                <th>User</th>
+                                <th>Order ID</th>
+                                <th>Amount</th>
+                                <th>Network</th>
+                                <th>Data Size(MB)</th>
+                                <th>Phone</th>
+                                <th>Batch No</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in historys %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.user.username}}</td>
+                                <td>{{i.ordernumber}}</td>
+                                <td>{{i.mtn_amount|intcomma}}</td>
+                                <td>{% if 'MTN' in i.ordernumber %}MTN{% else %}9mobile{% endif %}</td>
+                                <td>{{i.mtn_data_size}}</td>
+                                <td>{{i.mtn_number}}</td>
+                                <td>{{i.batchno}}</td>
+                                <td>{{i.status}}</td>
+                                <td>{{i.purchased_date}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% include "partials/paginations.html" %}
+                </div>    
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

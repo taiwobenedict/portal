@@ -1,0 +1,102 @@
+{% extends "basenew.html" %}{% load bootstrap5 humanize mathfilters %}
+{% block title %}Resellers{% endblock %}
+{% block content %}
+{% comment %} {% include 'education/scriptPin.html' %} {% endcomment %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">{% if action == "activation" %}Activate Reseller Package{% else %}Upgrade Reseller Package{% endif %}</h6>
+            <div class="drpdown no-arrow show">
+                <a class="font-weight-bold text-danger d-md-none" href="#note">Must Read</a>
+            </div>
+        </div>            
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-6">
+                  {% bootstrap_messages %}
+                  {% if action == "activation" %}
+                  <form role="form" id="formReseller" action="{% url 'resellers:activate' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="pin_type">Select a Reseller Package</label>
+                        <select class="form-control" name="reseller_level" id="reseller_level" required>
+                          <option></option>
+                          {% for x in obj %}
+                            <option>{{x.name}}</option>
+                          {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-lg btn-block" id="activateButton">Activate Reseller</button>
+                    </div>
+                  </form>
+                  {% else %}
+                    <form role="form" id="formReseller" action="{% url 'resellers:upgrade' %}" method="POST">
+                      {% csrf_token %}
+                      <div class="form-group">
+                          <label for="pin_type">Select a Reseller Package</label>
+                          <select class="form-control" name="reseller_level" id="reseller_level" required>
+                            <option></option>
+                            {% for x in obj %}
+                              <option>{{x.name}}</option>
+                            {% endfor %}
+                          </select>
+                      </div>
+                      <div class="form-group">
+                          <button class="btn btn-primary btn-lg btn-block" id="upgradeButton">Upgrade Package</button>
+                      </div>
+                    </form>
+                  {% endif %}
+
+                </div>
+                <div class="col-lg-6">
+                  <h4 id="note"><strong>Reseller Package Product Discount</strong></h4>
+                  <div class="table-responsive">
+                    <table width="100%" class="table table table-bordered table-striped text-center" id="dataTable" width="100%" cellspacing="0">
+                      <thead>
+                        <tr width="100%">
+                          <th>Package</th>
+                          <th>Cost of Activation</th>
+                          <th>Minimum Wallet Funding</th>
+                          {% comment %} 
+                          <th>Airtime</th>
+                          <th>Data</th>
+                          <th>Cable Tv</th>
+                          <th>Electricity</th>
+                          <th>Education</th>
+                          <th>SMS</th> {% endcomment %}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for i in obj2 %}
+                        <tr width="100%">
+                          <th>{{i.name}}</th>
+                          <th>{{i.cost_of_activation|intcomma}}</th>
+                          <th>{{i.fund_to_wallet|intcomma}}</th>
+                          {% comment %} 
+                          <th>{{i.airtime}}</th>
+                          <th>{{i.data}}</th>
+                          <th>{{i.education}}</th>
+                          <th>{{i.electricity}}</th>
+                          <th>{{i.cable_tv}}</th>
+                          <th>{{i.airtime|mul:100}}%</th>
+                          <th>{{i.data|mul:100}}%</th>
+                          <th>{{i.education|mul:100}}%</th>
+                          <th>{{i.electricity|mul:100}}%</th>
+                          <th>{{i.cable_tv|mul:100}}%</th> 
+                          <th>{{i.sms|mul:100}}%</th> 
+                          {% endcomment %}                      
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+            </div>
+            <!-- /.row (nested) -->
+        </div>
+
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+{% endblock %}

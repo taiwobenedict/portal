@@ -1,0 +1,45 @@
+{% extends "basenew.html" %}{% block title %}Send Mail to user(s){% endblock %} {% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Send Mail to user(s) </h6>
+            <div class="drpdown no-arrow show">
+                <a class="font-weight-bold text-danger d-md-none" href="#note">Must Read</a>
+            </div>
+        </div>            
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-6">
+                    {% if messages %}
+                    <ul class="messages list-unstyled">
+                        {% for message in messages %}
+                        <li {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible"{% endif %}><button type="button" class="close" data-dismiss="alert">&times;</button>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    <form role="form" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input class="form-control" name="subject" length="50">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email </label>
+                            <input type="email" class="form-control" name="user_email">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact_numbers">Message </label>
+                            <textarea class="form-control" name="message" rows="5" placeholder="Enter Message"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Send</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+                <!-- /.row (nested) -->
+        </div>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+{% endblock %}

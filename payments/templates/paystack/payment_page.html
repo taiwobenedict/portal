@@ -1,0 +1,152 @@
+{% extends "basenew.html" %}{% load dashboardconfig %}
+{% DashboardConfigs as config %} {% block content %}
+<style type="text/css">
+#pageloader
+{
+  background: rgba( 255, 255, 255, 0.8 );
+  display: none;
+  height: 100%;
+  position: fixed;
+  width: 100%;
+  z-index: 9999;
+}
+
+#pageloader img
+{
+  left: 50%;
+  margin-left: -32px;
+  margin-top: -32px;
+  position: absolute;
+  top: 50%;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<div id="pageloader">
+   <img src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif" alt="processing..." />
+</div>
+<div class="container">
+  <div class="row justify-content-left">
+    <div class="col-lg-7 justify-content-center">
+      <!-- Dropdown Card Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h4 class="m-0 font-weight-bold text-primary">Proceed to Pay</h4>
+          </div>
+        </div>
+        <div class="card-body">
+          <h5 style="font-weight:bold;">Amount: &#8358;{{amounttobuyy}} <span style="color:blue;">({{config.amount_funding_percentage| multiply:100}}% Merchant Fee included)</span></h5>
+          {% if getuserspecificprice %}
+          <form action="{% url 'smsangosend:processpayment' %}" method="POST">
+            <script src="https://js.paystack.co/v1/inline.js"></script>
+              <input name="price" type="hidden" value="{{getuserspecificprice}}">
+              <input name="realamount" type="hidden" value="{{realamounttobuy}}">
+              <input name="amount" type="hidden" value="{{amounttobuy}}">
+              {% csrf_token %}
+            <button type="button" class="btn btn-user btn-warning btn-block" onclick="payWithPaystack()"> Pay </button> 
+          </form>
+           
+          <script>
+            let amounttobuy = parseInt({{amounttobuy}})
+            let realamounttobuy = parseInt({{realamounttobuy}})
+            let getuserspecificprice = parseInt({{getuserspecificprice}})
+            function payWithPaystack(){
+              var handler = PaystackPop.setup({
+                key: '{{config.paystack_pk_token}}',
+                email: '{{user.email}}',
+                amount: parseInt({{amounttobuy}}),
+                currency: "NGN",
+                ref:'{{orderid}}',
+                metadata: {
+                   custom_fields: [
+                      {
+                          display_name: "Mobile Number",
+                          variable_name: "mobile_number",
+                          value: "{{user.userprofile.phone}}"
+                      }
+                   ]
+                },
+                callback: function(response){
+                  // console.log(response)
+                    // alert('success. transaction ref is ' + response.reference);
+                    $("#pageloader").fadeIn();
+                    $(document).ready(function(){
+                      $.ajax(
+                        {
+                            type:"POST",
+                            url: "{% url 'smsangosend:processpayment' %}",
+                            data:{
+                              'csrfmiddlewaretoken': '{{ csrf_token }}',
+                              'id': parseInt({{user.id}}),
+                              'reference': response.reference, 
+                              'trxref': response.trxref,
+                              'amount': amounttobuy, 
+                              'realamount':realamounttobuy, 
+                              'price': getuserspecificprice
+                            },
+                            dataType: 'json',
+                            success: function (data) {
+                              if (data.status == 'success') {
+                                window.location ="{% url 'smsangosend:buysmssuccess' %}";
+                              } else {
+                                window.location ="{% url 'smsangosend:buysmsfailed' %}";
+                              }
+                            }
+
+                         })
+                      });
+                },
+                onClose: function(){
+                    alert('window closed');
+                }
+              });
+              handler.openIframe();
+            }
+          </script>
+          {% elif priceval %}
+          <form action="{% url 'smsangosend:processpayment' %}" method="POST">
+            <script src="https://js.paystack.co/v1/inline.js"></script>
+            {% for x in priceval %}
+              <input name="price" type="hidden" value="{{x}}">
+            {% endfor %}
+              <input name="amount" type="hidden" value="{{amounttobuy}}">
+              {% csrf_token %}
+            <button type="button" class="btn btn-user btn-warning btn-block" onclick="payWithPaystack()"> Pay </button> 
+          </form>
+           
+          <script>
+            function payWithPaystack(){
+              var handler = PaystackPop.setup({
+                key: '{{config.paystack_pk_token}}',
+                email: '{{user.email}}',
+                amount: parseInt({{amounttobuy}}),
+                currency: "NGN",
+                ref:'{{orderid}}',
+                metadata: {
+                   custom_fields: [
+                      {
+                          display_name: "Mobile Number",
+                          variable_name: "mobile_number",
+                          value: "{{user.userprofile.phone}}"
+                      }
+                   ]
+                },
+                callback: function(response){
+                    alert('success. transaction ref is ' + response.reference);
+                },
+                onClose: function(){
+                    alert('window closed');
+                }
+              });
+              handler.openIframe();
+            }
+          </script>
+            {% else %}
+            Something went wrong Go Back <a href="{% url 'smsangosend:toenteramount' %}">here</a>
+          </div>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}

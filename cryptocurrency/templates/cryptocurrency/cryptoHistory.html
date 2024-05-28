@@ -1,0 +1,71 @@
+{% extends "basenew.html" %} {% load humanize dashboardconfig %}
+{% DashboardConfigs as config %} {% block title %}CRYPTO CURRENCY HISTORY{% endblock %}
+    {% block extracss %}
+ {% endblock extracss %}
+{% block head %}
+<style>
+/* Important part */
+.modal-dialog{
+    overflow-y: initial !important
+}
+.modal-body{
+    height: 500px;
+    overflow-y: auto;
+}
+</style>
+{% endblock head %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">CRYPTO PURCHASE HISTORY</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table width="100%" class="table table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr width="100%">
+                                <th>S/N</th>
+                                <th>Order ID</th>
+                                <th>Currency</th>
+                                <th>Amount($)</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% if historys %}
+                            {% for i in historys %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.trans_id}}</td>
+                                <td>{{i.currency}}</td>
+                                <td>{{i.amount|intcomma}}</td>
+                                <td>{{i.status}}</td>
+                                <td>{{i.date}}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                        <tr class="">
+                            <td colspan="5">Sorry, no history Yet.</td>
+                        </tr>
+                        {% endif %}
+
+
+                    </tbody>
+                </table>
+<!--                 {% include "partials/paginations.html" %} -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+
+{% endblock %}
+{% block footer_scripts %}
+{% include 'partials/table_scripts.html' %}
+{% endblock footer_scripts %}

@@ -1,0 +1,171 @@
+{% extends "basenew.html" %}{% load humanize %} {% block title %}YOUR BUNDLE TRANSACTIONS{% endblock %}{% block content %}
+<style>
+    @media screen {
+  #printSection {
+      display: none;
+  }
+}
+
+@media print {
+  body * {
+    visibility:hidden;
+    color:black;
+  }
+  #printSection, #printSection * {
+    visibility:visible;
+  }
+  #printSection {
+    position:absolute;
+    left:0;
+    top:0;
+  }
+}
+
+.logo-print {
+    width: 100%;
+    height: 50px;
+    /* display: list-item; */
+    /* list-style-image: url(/media/logo-site2_ruDeYef.png); */
+    background: url(/media/logo-site2_ruDeYef.png);
+    list-style-position: inside;
+    background-size: 200px;
+    background-repeat: no-repeat;
+    background-position-x: center;
+}
+
+
+</style>
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">DATA BUNDLE TRANSACTIONS</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table width="100%" class="table table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr width="100%">
+                            <th>S/N</th>
+                            <th>Order ID</th>
+                            <th>Amount</th>
+                            <th>Old Balance</th>
+                            <th>New Balance</th>
+                            <th>Network</th>
+                            <th>Data Size(MB)</th>
+                            <th>Phone</th>
+                            <th>Batch No</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            {% if "data_topup" in request.GET.type %}
+                            <th>Admin Action</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if historys %}
+                            {% for i in historys %}
+                            <tr id="tb_{{i.id}}">
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.ordernumber}}</td>
+                                <td>{{i.data_amount|intcomma}}</td>
+                                <td>{{i.old_balance|intcomma}}</td>
+                                <td>{{i.new_balance|intcomma}}</td>
+                                <td>{% if 'MTN' in i.ordernumber %} MTN {% elif 'ETI' in i.ordernumber %}9mobile{% else %}{{i.data_network}}{% endif %}</td>
+                                <td>{{i.dataSize}}</td>
+                                <td>{{i.data_number}}</td>
+                                <td>{{i.batchno}}</td>
+                                <td>{{i.status}}</td>
+                                <td>{{i.purchased_date}}</td>
+                                <td><button class="btn btn-primary" onclick="displayDetails('tb_{{i.id}}')" data-toggle="modal" data-target="#exampleModal">view</button></td>
+                                {% if "data_topup" in request.GET.type %}
+					{% if i.status != "REFUNDED" %}
+                                <td><a href="{% url 'user_transactions:refund_transaction' %}?type=data_topup&order_id={{i.trans_id}}" class="btn btn-primary">Refund</a></td>
+                                {% else %}
+                                <td>REFUNDED</tr>
+                                {% endif %}
+                                {% endif %}
+                            </tr>
+                           {% endfor %}
+                        {% else %}
+                        <tr class="">
+                            <td>Sorry, no history Yet.</td>
+                        </tr>
+                        {% endif %}
+
+
+                    </tbody>
+                </table>
+<!--                 {% include "partials/paginations.html" %} -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" id="printable" >
+        <div class="logo-print"></div>
+      <div class="modal-header bg-primary">
+        <h5 class="modal-title text-white" id="exampleModalLabel">Details</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row" id="table-data"></div>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="close text-center btn" id="btnPrint">Print</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const displayDetails = (val) => {
+    let tableDis = document.querySelector("#" + val)
+    tableDis = tableDis.querySelectorAll("td")
+    console.log(tableDis, "tableDis")
+    let details = ''
+
+    let items = ["Order ID", "Amount", "Old Balance", "New Balance", "Network", "Data Size(MB)", "Phone", "Batch No", "Status", "Date"]
+    if (tableDis.length > 0){
+      for (let i = 0; i < tableDis.length; i++) {
+        // const ele = tableDis[i];
+        if (i != 0 && items[i - 1]){
+          details += '<div class="col-12 p-2">' + '<span class="pr-2 text-bold">' + items[i -1]+ ':</span> ' + tableDis[i].innerHTML + '<hr/></div>'
+        }
+      }
+      details += ''
+      let modalUpdate = document.querySelector("#table-data").innerHTML = details; 
+    }
+  }
+  
+  document.getElementById("btnPrint").onclick = function () {
+    printElement(document.getElementById("printable"));
+}
+
+function printElement(elem) {
+    var domClone = elem.cloneNode(true);
+    
+    var $printSection = document.getElementById("printSection");
+    
+    if (!$printSection) {
+        var $printSection = document.createElement("div");
+        $printSection.id = "printSection";
+        document.body.appendChild($printSection);
+    }
+    
+    $printSection.innerHTML = '';
+    $printSection.appendChild(domClone);
+    window.print();
+}
+
+ </script>
+<!-- /.row -->
+{% endblock %}
+{% block footer_scripts %}
+{% include 'partials/table_scripts.html' %}
+{% endblock footer_scripts %}

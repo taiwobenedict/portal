@@ -1,0 +1,395 @@
+{% extends "basenew.html" %} {% load bootstrap4 %}
+{% block title %}KYC Verification{% endblock %}
+{% block content %}
+<style>
+    * {
+        border: 0;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      
+      .credit, .card__chip {
+        overflow: hidden;
+        position: relative;
+      }
+      
+      .credit, .credit__chip-texture, .credit__texture {
+        animation-duration: 3s;
+        animation-timing-function: ease-in-out;
+        animation-iteration-count: infinite;
+      }
+      
+      .credit {
+        animation-name: rotate;
+        background-color: #636e79;
+        background-image: radial-gradient(circle at 100% 0%,hsla(0,0%,100%,0.08) 29.5%,hsla(0,0%,100%,0) 30%), radial-gradient(circle at 100% 0%,hsla(0,0%,100%,0.08) 39.5%,hsla(0,0%,100%,0) 40%), radial-gradient(circle at 100% 0%,hsla(0,0%,100%,0.08) 49.5%,hsla(0,0%,100%,0) 50%);
+        border-radius: 0.5em;
+        box-shadow: 0 0 0 hsl(0,0%,80%), 0 0 0 hsl(0,0%,100%), -0.2rem 0 0.75rem 0 hsla(0,0%,0%,0.3);
+        color: hsl(0,0%,100%);
+        width: 18.3em;
+        height: 11.8em;
+        transform: translate3d(0,0,0);
+      }
+      
+      .credit__info, .credit__chip-texture, .credit__texture {
+        position: absolute;
+      }
+      
+      .credit__chip-texture, .credit__texture {
+        animation-name: texture;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 100%;
+      }
+      
+      .credit__info {
+        font: 0.75em/1 "DM Sans", sans-serif;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 0.75rem;
+        inset: 0;
+      }
+      
+      .credit__logo, .credit__number {
+        width: 100%;
+      }
+      
+      .credit__logo {
+        font-weight: bold;
+        font-style: italic;
+      }
+      
+      .credit__chip {
+        background-image: linear-gradient(hsl(0,0%,70%),hsl(0,0%,80%));
+        border-radius: 0.2rem;
+        box-shadow: 0 0 0 0.05rem hsla(0,0%,0%,0.5) inset;
+        width: 1.25rem;
+        height: 1.25rem;
+        transform: translate3d(0,0,0);
+      }
+      
+      .credit__chip-lines {
+        width: 100%;
+        height: auto;
+      }
+      
+      .credit__chip-texture {
+        background-image: linear-gradient(-80deg,hsla(0,0%,100%,0),hsla(0,0%,100%,0.6) 48% 52%,hsla(0,0%,100%,0));
+      }
+      
+      .credit__type {
+        align-self: flex-end;
+        margin-left: auto;
+      }
+      
+      .credit__digit-group, .credit__exp-date, .credit__name {
+        background: linear-gradient(hsl(0,0%,100%),hsl(0,0%,85%) 15% 55%,hsl(0,0%,70%) 70%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-family: "Courier Prime", monospace;
+        filter: drop-shadow(0 0.05rem hsla(0,0%,0%,0.3));
+      }
+      
+      .credit__number {
+        font-size: 1.2rem;
+        display: flex;
+        justify-content: space-around;
+      }
+      
+      .credit__valid-thru, .credit__name {
+        text-transform: uppercase;
+      }
+      
+      .credit__valid-thru, .credit__exp-date {
+        margin-bottom: 0.25rem;
+        width: 50%;
+      }
+      
+      .credit__valid-thru {
+        font-size: 0.3rem;
+        padding-right: 0.25rem;
+        text-align: right;
+      }
+      
+      .credit__exp-date, .credit__name {
+        font-size: 0.6rem;
+      }
+      
+      .credit__exp-date {
+        padding-left: 0.25rem;
+      }
+      
+      .credit__name {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        width: 100%;
+        font-size: 0.7rem; 
+        color: white!important;
+      }
+      
+      .credit__vendor, .credit__vendor:before, .credit__vendor:after {
+        position: absolute;
+      }
+      
+      .credit__vendor {
+        right: 0.375rem;
+        bottom: 0.375rem;
+        width: 2.55rem;
+        height: 1.5rem;
+      }
+      
+      .credit__vendor:before, .credit__vendor:after {
+        border-radius: 50%;
+        content: "";
+        display: block;
+        top: 0;
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+      
+      .credit__vendor:before {
+        background-color: #e71d1a;
+        left: 0;
+      }
+      
+      .credit__vendor:after {
+        background-color: #fa5e03;
+        box-shadow: -1.05rem 0 0 #f59d1a inset;
+        right: 0;
+      }
+      
+      .credit__vendor-sr {
+        clip: rect(1px,1px,1px,1px);
+        overflow: hidden;
+        position: absolute;
+        width: 1px;
+        height: 1px;
+      }
+      
+      .credit__texture {
+        animation-name: texture;
+        background-image: linear-gradient(-80deg,hsla(0,0%,100%,0.3) 25%,hsla(0,0%,100%,0) 45%);
+      }
+      
+      
+</style>
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">KYC Verification</h6>
+        </div> 
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div id="comp"></div>
+                    {% if not user.userprofile.kyc_verification %}
+                      <div class="form-group" id="nin_code">
+                        <label for="nin">BVN Number</label>
+                        <input type="text"
+                          class="form-control" name="nin" id="nin" aria-describedby="helpId" placeholder="8322424242">
+                        <small id="helpId" class="form-text text-muted">BVN number</small>
+                      </div>
+                      <input id="kyc_type" name="kyc_type" hidden value="BVN" />
+                      <div class="form-group" id="nin_submit">
+                        <button class="btn btn-primary text-white" onclick="doVerification()" id="verify">Verify</button>
+                      </div>
+                    {% else %}
+                      <div class="text-success">Account has been verified before</div>
+                    {% endif %}
+                    <div id="code_form" style="display: none">
+                      <div class="form-group">
+                        <label for="nin">Code</label>
+                        <input type="text"
+                          class="form-control" name="code" id="code" aria-describedby="helpId" placeholder="">
+                        <a href="#" id="helpId" class="form-text text-muted" onclick="resendCodeVerification();" >Resend Code</a>
+                      </div>
+                      <div class="form-group">
+                        <button class="btn btn-primary text-white" onclick="doCodeVerification()" id="verify_code">Submit</button>
+                      </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    {{obj.description|safe}}
+                </div>
+            </div>
+        </div>
+            <!-- /.card-body -->
+        <!-- /.col-lg-12 -->
+    </div>
+</div>
+
+<script>
+  // Specify the URL for the POST request
+
+  const doVerification = () => {
+    const apiUrl = '/api/v1/kyc-verification';
+
+    var nin = document.getElementById("nin").value
+
+    if (!nin){
+      document.getElementById("comp").innerHTML = "Enter your BVN"
+      return 
+    }
+
+    // Define the headers for the request
+    const headers = new Headers({
+      'Content-Type': 'application/json', // Specify the content type as JSON
+      "Authorization": "{{user.auth_token.key}}"
+    });
+    
+    // Create an object representing the data you want to send in the request body
+    const requestBody = {
+      nin: nin,
+      kyc_type: "BVN"
+    };
+    
+    // Convert the data to JSON format
+    const jsonData = JSON.stringify(requestBody);
+
+    //
+    
+    // Create the fetch request
+    fetch(apiUrl, {
+      method: 'POST',
+      headers: headers,
+      body: jsonData, // Include the JSON data in the request body
+    }).then((response) => {
+        if (!response.ok) {
+          document.getElementById("comp").innerHTML = "Could not connect"
+          document.getElementById("code_form").setAttribute("style", "display:none")
+        }
+        return response.json(); // Parse the JSON response
+      })
+      .then((data) => {
+        console.log('Success:', data);
+        if (data.status == 400) {
+          document.getElementById("comp").innerHTML = "<p style='color:red;'><b>Verification Unsuccessful</b></p>"
+          document.getElementById("code_form").setAttribute("style", "display:none")
+        } else {
+            var dv = "{{kycapi.do_verifcation}}"
+            if (dv != "True"){
+              document.getElementById("comp").innerHTML = "<p style='color:green;'><b>BVN saved successfully</b></p>"
+            } else {
+                document.getElementById("comp").innerHTML = "<p style='color:green;'><b>OTP has been sent to the bvn number</b></p>"
+                document.getElementById("code_form").setAttribute("style", "display:block")
+                document.getElementById("nin_code").setAttribute("hidden", "true")
+                document.getElementById("nin_submit").setAttribute("hidden", "true")   
+            }
+            
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        document.getElementById("comp").innerHTML = "<p style='color:red;'><b>Error verifying</b></p>"
+        document.getElementById("code_form").setAttribute("style", "display:none")
+        // Handle errors
+      });
+  }
+
+  const doCodeVerification = () => {
+    const apiUrl = '/api/v1/kyc-verification';
+
+    var code = document.getElementById("code").value
+
+    if (!code){
+      document.getElementById("comp").innerHTML = "Enter your OTP"
+      return 
+    }
+
+    // Define the headers for the request
+    const headers = new Headers({
+      'Content-Type': 'application/json', // Specify the content type as JSON
+      "Authorization": "{{user.auth_token.key}}"
+    });
+    
+    // Create an object representing the data you want to send in the request body
+    const requestBody = {
+      code: code,
+      kyc_type: "BVN"
+    };
+    
+    // Convert the data to JSON format
+    const jsonData = JSON.stringify(requestBody);
+
+    //
+    
+    // Create the fetch request
+    fetch(apiUrl, {
+      method: 'POST',
+      headers: headers,
+      body: jsonData, // Include the JSON data in the request body
+    }).then((response) => {
+        if (!response.ok) {
+          document.getElementById("comp").innerHTML = "Could not connect"
+        }
+        return response.json(); // Parse the JSON response
+      })
+      .then((data) => {
+        console.log('Success:', data);
+        if (data.status == 400) {
+          document.getElementById("comp").innerHTML = "<p style='color:red;'><b>Verification Unsuccessful</b></p>"
+        } else {
+          document.getElementById("comp").innerHTML = "<p style='color:green;'><b>Verification Successful</b></p>"
+          window.location = "/api/v1/kyc-template"
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        document.getElementById("comp").innerHTML = "<p style='color:red;'><b>Error verifying</b></p>"
+        // Handle errors
+      });
+  }
+
+
+  const resendCodeVerification = () => {
+    const apiUrl = '/api/v1/kyc-verification';
+
+    // Define the headers for the request
+    const headers = new Headers({
+      'Content-Type': 'application/json', // Specify the content type as JSON
+      "Authorization": "{{user.auth_token.key}}"
+    });
+    
+    // Create an object representing the data you want to send in the request body
+    const requestBody = {
+      resend: true,
+      kyc_type: "BVN"
+    };
+    
+    // Convert the data to JSON format
+    const jsonData = JSON.stringify(requestBody);
+
+    //
+    
+    // Create the fetch request
+    fetch(apiUrl, {
+      method: 'POST',
+      headers: headers,
+      body: jsonData, // Include the JSON data in the request body
+    }).then((response) => {
+        if (!response.ok) {
+          document.getElementById("comp").innerHTML = "Could not connect"
+        }
+        return response.json(); // Parse the JSON response
+      })
+      .then((data) => {
+        console.log('Success:', data);
+        if (data.status == 400) {
+          document.getElementById("comp").innerHTML = "<p style='color:red;'><b>Cannot resend OTP</b></p>"
+        } else {
+          document.getElementById("comp").innerHTML = "<p style='color:green;'><b>OTP has been resent Successfully</b></p>"
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        document.getElementById("comp").innerHTML = "<p style='color:red;'><b>Error sending OTP</b></p>"
+        // Handle errors
+      });
+  }
+</script>
+
+{% endblock %}

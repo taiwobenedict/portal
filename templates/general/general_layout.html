@@ -1,0 +1,45 @@
+{% extends "basenew.html" %}{% load bootstrap4 humanize mathfilters %}
+{% block title %}{{title}}{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">{{title}}</h6>
+            <div class="drpdown no-arrow show">
+                <a class="font-weight-bold text-danger d-md-none" href="#note">Must Read</a>
+            </div>
+        </div>            
+        <div class="card-body text-center">
+          {% bootstrap_messages %}
+          <div class="row">
+            {% if products %}
+            {% for i in products %}
+            <div class="col-6 col-xs-4 col-md-4 mb-4">
+              <div class="card mb-30">
+                <a class="card-img-tiles" href="#" data-abc="true">
+                  <div class="inner">
+                    <div class="main-img"><img src="{% if i.network_image %}{{i.network_image.url}}{% elif i.cable_image %}{{i.cable_image.url}}{% elif i.electricity_image %}{{i.electricity_image.url}}{% elif i.result_checker_image %}{{i.result_checker_image.url}}{% else %}https://via.placeholder.com/500x500{% endif %}" alt="{{i.api_name}}" width="50%" height="auto" class="rounded-circle p-4 img-fluid"></div>
+                  </div>
+                </a>
+                <div class="card-body text-center">
+                  <h6 class="card-title">{{i.api_name|upper}}</h6>
+                  <a class="btn btn-outline-primary btn-sm" href="{{link}}/{{i.identifier}}" data-abc="true">Purchase</a>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="col-6 col-xs-4 col-md-4 mb-4" id="cat_${i}">
+              <div class="card mb-30">
+                <h5>No API has been activated</h5>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+            <!-- /.row (nested) -->
+        </div>
+
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+{% endblock %}

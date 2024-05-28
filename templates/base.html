@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="International bulk sms service, Bulk SMS service Nigeria,cheapest sms, Nigeria sms gateways, best sms platform, Best Bulk SMS, Bulk SMS, SMS in Nigeria, Bulk SMS in Nigeria, Bulk Sms, mtn sme data share, Sender,
+Bulk Sms Service,Ogun state sms,Lagos state sms,Ibadan state sms,south west region sms,Virtual Top Up Business, VTU Business, Airtime Business, Recharge card business, Data share business, GOtv recharge business, Startimes recharge business, DStv recharge business, Cheap MTN Data"/>
+	<meta name="description" content="No. 1 Mobile &amp; Digital Marketing Services: BulkSMS, Website design, Bulk Emailing, Virtual Top Up Business, VTU Business, Airtime Business, Recharge card business, Data share business, GOtv recharge business, Startimes recharge business, DStv recharge business, mtn sme data share" />
+    <meta name="author" content="OLA-EST INTEGRATED RESOURCES LIMITED">
+
+    <title>Otextcity - SMSANGO</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="/static/vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/static/dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="/static/css/css/vertical-layout-light/style.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="/static/vendor/morrisjs/morris.css" rel="stylesheet">
+	<link href="https://{{ domain }}/templates/joothemes-newsportal-free/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+
+    <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+    <link href="https://printjs-4de6.kxcdn.com/print.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Custom Fonts -->
+    <link href="/static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    {% block head %}
+    {% endblock head %}
+    {% block extracss %}
+    {% endblock extracss %}
+<style>
+    @media only screen and (min-width:360px) and (max-width:768px){
+        .hiddn{
+           display:none!important; 
+        }
+    }
+    .navbar-default {
+        background-color: rgba(240, 173, 78, 0.49);
+        border-color: #e7e7e7;
+    }
+    .sidebar ul li a.active {
+        background-color: #1f0606;
+        color: #f0ad4e;
+    }
+    .nav>li>a:focus, .nav>li>a:hover {
+        text-decoration: none;
+        background-color: #1f0606;
+        color: white;
+    }
+    .bolded {
+        font-weight:bolder;
+    }
+</style>
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="dropdown navbar-toggle">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#"><i class="fa fa-user fa-fw"></i>{{ user.username }}'s Profile</a>
+                        </li>
+                        <li><a href="#"><span class="badge"> {{ user.smsbulkcredit.smscredit }}</span></a>
+                        </li>
+
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="{% url 'smsangosend:logout' %}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </div>
+                <a class="navbar-brand" href="/app/customer/">Otextcity (SMSANGO)</a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-right hiddn">
+                <!-- <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-envelope fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-messages"></ul>
+                </li> -->
+                <!-- /.dropdown -->
+                <!-- <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+
+                </li> -->
+                <!-- /.dropdown -->
+                <!-- <li class="">
+                    <a  href="#">
+                        <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+
+                </li> -->
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#"><i class="fa fa-user fa-fw"></i>{{ user.username }}'s Profile</a>
+                        </li>
+                        <li><a href="#" class=""><span class="badge"> {{ user.smsbulkcredit.smscredit }}</span></a>
+                        </li>
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="{% url 'smsangosend:logout' %}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                        <li>
+                            <a class="bolded" href="{% url 'smsangosend:customer' %}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                        </li>
+                        <li>
+                            <a class="bolded" href="#"><i class="fa fa-cart-plus fa-fw"></i>Fund Wallet Now (OC)<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a class="bolded" href="{% url 'smsangosend:toenteramount' %}"> Buy Credits</a>
+                                </li>
+                                <li>
+                                    <a class="bolded" href="{% url 'smsangosend:payment_history' %}"> Funds Transaction History</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a class="bolded" href="#"><i class="fa fa-envelope-o fa-fw"></i> SMS Menu<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a class="bolded" href="{% url 'smsangosend:sendsmspage' %}"> Send SMS</a>
+                                </li>
+                                <li>
+                                    <a class="bolded" href="{% url 'smsangosend:smshistory' %}"> SMS History</a>
+                                </li>
+                                <li>
+                                    <a class="bolded" href="{% url 'smsangosend:smsreport' %}"> SMS Report</a>
+                                </li>
+                                <hr />
+                                <li>
+                                    <a class="bolded" href="{% url 'smsangosend:savedschedulesms' %}"> Schedule SMS </a>
+                                </li>
+                                <li>
+                                    <a class="bolded" href="{% url 'smsangosend:schedulesmshistory' %}"> Schedule SMS History</a>
+                                </li>
+                                <li>
+                                    <a class="bolded" href="{% url 'smsangosend:schedulesmsreport' %}"> Schedule SMS Report</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>                        
+
+                        <li>
+                            <a class="bolded" href="#"><i class="fa fa-mobile-phone fa-fw"></i> Airtime TopUp<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a class="bolded" href="{% url 'rechargeapp:airtimetemplate' %}">Buy Airtime TopUp</a>
+                                </li>
+                                <li>
+                                    <a class="bolded" href="{% url 'rechargeapp:airtime_transactions' %}">Airtime Transactions</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a class="bolded" href="#"><i class="fa fa-mobile-phone fa-fw"></i> Direct Data Bundles<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a class="bolded" href="{% url 'rechargeapp:datatemplate' %}">Buy Data Bundles</a>
+                                </li>
+                                <li>
+                                    <a class="bolded" href="{% url 'rechargeapp:data_transactions' %}">Data Bundle Transactions</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a class="bolded" href="#"><i class="fa fa-mobile-phone fa-fw"></i>SME Data Bundles<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a class="bolded" href="{% url 'rechargeapp:mtnsmedatatemplate' %}">Buy SME Datashare</a>
+                                </li>
+                                <li>
+                                    <a class="bolded" href="{% url 'rechargeapp:mtnsmedata_status_check' %}">MTN SME Datashare Status Check</a>
+                                </li>
+
+                                <li>
+                                    <a class="bolded" href="{% url 'rechargeapp:mtnsmedata_transactions' %}">SME Datashare Transactions</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a class="bolded" class="bolded" href="#"><i class="fa fa-globe fa-fw"></i>Pay Bills<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a class="bolded" href="{% url 'rechargeapp:bills_status_check' %}">Gotv/Dstv/Startimes/<br/>Smile/Spectranet</a>
+                                </li>
+                                {% comment %} <li>
+                                    <a class="bolded" href="{% url 'rechargeapp:startimes_topup' %}">Startimes</a>
+                                </li>
+                                <li>
+                                    <a class="bolded" href="{% url 'rechargeapp:gotvdstvtemplate' %}">Gotv/Dstv</a>
+                                </li> {% endcomment %}
+                                <li>
+                                    <a class="bolded" href="{% url 'rechargeapp:cable_transactions' %}">Transactions</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a class="bolded" href="#"><i class="fa fa-address-book-o fa-fw"></i> Contacts <span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a class="bolded" href="{% url 'smsangosend:phonebooks' %}"> Manage Contacts</a>
+                                </li>
+                                <!-- <li>
+                                    <a class="bolded" href="#"> SMS contacts</a>
+                                </li>
+                                <li>
+                                    <a class="bolded" href="#"> SMS Report</a>
+                                </li> -->
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li> 
+                        <li>
+                            <a class="bolded" href="#"><i class="fa fa-cog fa-fw"></i> Tools<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a class="bolded" href="{% url 'smsangosend:phextractor' %}"> Phone Number Extractor</a>
+                                </li>
+                                <!-- <li>
+                                    <a class="bolded" href="#"> SMS History</a>
+                                </li>
+                                <li>
+                                    <a class="bolded" href="#"> SMS Report</a>
+                                </li> -->
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a class="bolded" href="#"><i class="fa fa-user-circle-o fa-fw"></i> Profile Management <span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a class="bolded" href="{% url 'smsangosend:profile_edit' %}"> Profile Edits</a>
+                                </li>
+                                <li>
+                                    <a class="bolded" href="{% url 'smsangosend:myrefferal' %}"> My Refferals</a>
+                                </li>
+                                <li>
+                                    <a class="bolded" href="{% url 'smsangosend:rbonushistory' %}">My Earnings</a>
+                                </li>
+                                <li>
+                                    <a class="bolded" href="{% url 'smsangosend:change_password' %}"> Change Password</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        {% if user.is_superuser %}
+                        <li>
+                            <a class="bolded" href="#"><i class="fa fa-user-circle-o fa-fw"></i>Administrator's Tools <span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a class="bolded" href="{% url 'impersonate-list' %}"> Impersonate Users</a>
+                                </li>
+                            </ul>                 
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <!-- Page Content -->
+        <div id="page-wrapper">
+            <div class="container-fluid">
+                <!-- /.row -->
+                {% block content %} {% endblock content %}
+
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+
+    <script src="/static/vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="/static/vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <script src="/static/vendor/raphael/raphael.min.js"></script>
+    <script src="/static/vendor/morrisjs/morris.min.js"></script>
+    <script src="/static/data/morris-data.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="/static/dist/js/sb-admin-2.js"></script>
+<script type="text/javascript" id="cookieinfo"
+	src="//cookieinfoscript.com/js/cookieinfo.min.js"
+	data-bg="#645862"
+	data-fg="#FFFFFF"
+	data-link="#F1D600"
+	data-cookie="CookieInfoScript"
+	data-text-align="left"
+       data-close-text="Got it!">
+</script>
+
+</body>
+
+</html>

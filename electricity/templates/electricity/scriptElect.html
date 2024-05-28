@@ -1,0 +1,139 @@
+<script type="text/javascript">
+//var apikey = {{user.token.key}}
+
+var array= {{array|safe}}
+var metertypearr = {{metertypearr|safe}}
+
+function generateOptions(array){
+  var optionsX = ""
+  for (i = 0; i < array.length; i++){
+    var arr = array[i].split("|")
+    var option = '<option value="'+arr[1]+'">'+arr[1]+'</option>'
+    optionsX+=option
+  }
+  return optionsX
+}
+
+function generateMeterOptions(metertypearr){
+  var meterOptions = "<option>Choose Meter Type</option>"
+  for (i = 0; i < metertypearr.length; i++){
+    var arr = metertypearr[i].split("|")
+    var option = '<option value="'+arr[1]+'">'+arr[1]+'</option>'
+    meterOptions+=option
+  }
+  return meterOptions
+}
+
+function checkMeterNo(){
+  var s1 = document.querySelector("#power_id").value;
+  var s2 = document.querySelector("#meterno").value;
+  if (!isNaN(s2)){
+    document.querySelector("#meterValid").innerHTML= '';
+    document.querySelector("#power_id").innerHTML = generateOptions(array);
+    document.querySelector("#meterType").innerHTML = generateMeterOptions(metertypearr);
+    document.querySelector("#checkMeter").removeAttribute("style");
+  } else {
+    document.querySelector("#meterValid").innerHTML= '<b class="text-danger">(Only number inputs are allowed)<b/>';
+    document.querySelector("#checkMeter").style.display = "none";
+  }
+}
+
+function checkCustomer(event){
+  event.preventDefault()
+  var s1 = document.querySelector("#meterno").value;
+  var s2 = document.querySelector("#power_id").value;
+  document.querySelector("#checkMeter").textContent = "Processing";
+  console.log(s1, s2)
+  var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "/api/v1/electricityCheck?api-token={{user.auth_token.key}}&service="+s2+"&meterNo="+s1+"&code={{obj.identifier}}",
+        "method": "GET",
+        "processData": false,
+        "header": {"Authorization": "{{user.auth_token.key}}"}
+    };
+    //use label tag to get the firstElementchild and change the attribute of the firstElementChild
+  $.ajax(settings).done(function (response) {
+    data = response
+    console.log(data.details)
+    if(data.status !== 200){
+      //document.querySelector("#notific").innerHTML = '<li class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>' + JSON.stringify(data) +'</li>'
+      document.querySelector("#notific").innerHTML = '<li class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>Fetch Not Successful</li>'
+      document.querySelector("#checkMeter").textContent = "Check Meter Details";
+      document.querySelector("#customerPurchasePower").style.display = 'none';
+    } else {
+      console.log(data)
+      //document.querySelector("#notific").innerHTML = '<li class="alert alert-success alert-dismissible">' + JSON.stringify(data.details) +'</li>'
+      document.querySelector("#notific").innerHTML = '<li class="alert alert-success alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>Successfully Fetched Data</li>'
+      document.querySelector("#customerPowerCheck").style.display = 'none';
+      document.querySelector("#customerPurchasePower").style.display = 'block';
+      document.querySelector("#purchasePowerMeter").value = data.details.vbpMeterNo
+      document.querySelector("#purchasePowerService").value = data.details.vbpService
+      document.querySelector("#customerName").value = (data.details.customerName !== undefined) ? data.details.customerName : data.details.name;
+      document.querySelector("#customerAddress").value = (data.details.customerDistrict !== undefined) ? data.details.customerDistrict : data.details.businessUnit;
+      document.querySelector("#customerDtNumber").value = (data.details.customerDtNumber !== undefined) ? data.details.customerDtNumber : 'null';
+    }
+  document.querySelector("#checkMeter").textContent = "Process";
+
+    //get data from the api and split into object and keys
+    //localStorage.setItem("address", data.address)
+  });
+}
+
+
+function purchasePowerForCustomer(event = null){
+  if (event){
+    event.preventDefault()
+  }
+
+  var meterNo = document.querySelector("#purchasePowerMeter").value;
+  var service = document.querySelector("#purchasePowerService").value;
+  var meterType = document.querySelector("#meterType").value;
+  var amount = document.querySelector("#amount").value;
+  var customerName = document.querySelector("#customerName").value;
+  var customerAddress = document.querySelector("#customerAddress").value;
+  //var customerAccountType = document.querySelector("#customerAccountType").value || 'None';
+  var customerDtNumber = document.querySelector("#customerDtNumber").value;
+  var stringParams = 'meterNo='+meterNo+'&service='+service+'&meterType='+meterType+'&amount='+amount+'&customerName='+customerName+'&customerAddress='+customerAddress+'&customerDtNumber='+customerDtNumber+'&code={{obj.identifier}}'
+
+  document.querySelector("#purchasePowerButton").textContent = "Processing";
+
+  var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "/api/v1/electricityPurchase?api-token={{user.auth_token.key}}&"+stringParams,
+        "method": "POST",
+        "processData": false,
+        "header": {"Authorization": "{{user.auth_token.key}}"}
+    };
+    //use label tag to get the firstElementchild and change the attribute of the firstElementChild
+    console.log("got here")
+  $.ajax(settings).done(function (response) {
+    var data = response
+    console.log(data, response)
+    if(response.status !== 201){
+      document.querySelector("#notific").innerHTML = '<li class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>' + JSON.stringify(data.details) +'</li>'
+      document.querySelector("#notificbotom").innerHTML = '<li class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>' + data.details +'</li>'
+      console.log(data)
+      document.querySelector("#customerPurchasePower").style.display="none";
+      document.querySelector("#customerPowerCheck").style.display="block";
+    } else {
+      console.log(data)
+      document.querySelector("#notific").innerHTML = '<li class="alert alert-success alert-dismissible">' + JSON.stringify(data.details) +'</li>'
+      document.querySelector("#customerPurchasePower").style.display="none";
+      document.querySelector("#customerPowerCheck").style.display="block";
+    }
+    //get data from the api and split into object and keys
+    //localStorage.setItem("address", data.address)
+  }).fail(function(error){
+      var data = error.responseJSON
+      document.querySelector("#notific").innerHTML = '<li class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>' + JSON.stringify(data.details) +'</li>'
+      document.querySelector("#notificbotom").innerHTML = '<li class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>' + data.details +'</li>'
+      console.log(data)
+      document.querySelector("#customerPurchasePower").style.display="none";
+      document.querySelector("#customerPowerCheck").style.display="block";
+      
+  });
+  document.querySelector("#purchasePowerButton").textContent = "Recharge Meter";
+}
+</script>

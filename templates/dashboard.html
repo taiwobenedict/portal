@@ -1,0 +1,316 @@
+{% extends "basenew.html" %}
+{% load alert_system  dashboardconfig %}
+{% DashboardConfigs as config %}
+{% DisplayAppsConfigDashboard as display_new %}
+
+{% block title %}DASHBOARD{% endblock %}
+{% block content %}
+
+<style>
+  .on_card:hover{
+    padding-bottom:5px;
+    border:1px solid dimgrey ;
+  }
+</style>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 text-md-center py-0">
+            <h5>Welcome to Your Dashboard {{ user.username }}!!</h5> 
+        </div>
+        <div class="col-lg-6 text-center">
+            <h5>
+              {% if user.userprofile.phone %} 
+              <span class="btn btn-info my-2 badge">
+                <i class="fas fa-money-bill-wave fa-sm fa-fw mr-2 text-danger-400"></i> {{user.smsbulkcredit.smscredit }} credit(s)
+              </span> 
+              <span class="btn btn-info my-2 badge" id="earnings">
+                Bonus: {% if user.user_bonus.bonus %}{{ user.user_bonus.bonus }}{% else %}0.00{% endif %}
+              </span> 
+              {% else %} 
+              <a class="btn btn-danger" href="{% url 'smsangosend:profile_edit' %}">Update your PhoneNumber</a>
+              {% endif %}
+            </h5>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            {% if messages %}
+            <ul class="messages list-unstyled">
+                {% for message in messages %}
+                <li {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible"{% endif %}><button type="button" class="close" data-dismiss="alert">&times;</button>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="col-lg-12">
+          {% if config.dashboard_extra_info %}{{config.dashboard_extra_info | safe}}{% endif %}
+        </div>
+        {% if display_new.show_airtime %}
+        <div class="col-6 col-xs-4 col-md-4 mb-4">
+          <a href="{% url 'rechargeapp:airtimetemplate' %}" title="Purchase Airtime">
+            <div class="card border-left-secondary shadow h-100 py-2 on_card">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2 text-center">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"><i class="fas fa-mobile-phone fa-2x text-gray-300"></i></div>
+                    <div class="text-md font-weight-bold text-primary text-uppercase mb-1">Airtime</div>
+                  </div> 
+                </div>
+              </div>
+              <div class="card-footer text-center">
+                <span class="pull-left text-bold">Top Up</span>
+                <span class="pull-right text-bold"><i class="fa fa-arrow-circle-right"></i></span>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% endif %}
+        {% if display_new.show_data %}
+        <div class="col-6 col-xs-4 col-md-4 mb-4">
+          <a href="{% url 'rechargeapp:datatemplate' %}" title="Purchase Data">
+            <div class="card border-left-secondary shadow h-100 py-2 on_card">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2 text-center">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"><i class="fab fa-internet-explorer fa-2x text-gray-300"></i></div>
+                    <div class="text-md font-weight-bold text-primary text-uppercase mb-1">Data</div>
+                  </div> 
+                </div>
+              </div>
+              <div class="card-footer text-center">
+                <span class="pull-left text-bold">Top Up</span>
+                <span class="pull-right text-bold"><i class="fa fa-arrow-circle-right"></i></span>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% endif %}
+        {% if display_new.show_sms %}
+        <div class="col-6 col-xs-4 col-md-4 mb-4">
+          <a href="{% url 'smsangosend:sendsmspage' %}" title="Send SMS">
+            <div class="card border-left-uccess shadow h-100 py-2 on_card">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2 text-center">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"><i class="fas fa-envelope fa-2x text-gray-300"></i></div>
+                    <div class="text-md font-weight-bold text-primary text-uppercase mb-1">SMS</div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer text-center">
+                  <span class="pull-left"><strong>Send</strong></span>
+                  <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                  <div class="clearfix"></div>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% endif %}
+        {% if display_new.show_sms %}
+        <div class="col-6 col-xs-4 col-md-4 mb-4">
+          <a href="{% url 'smsangosend:savedschedulesms' %}" title="Schedule SMS">
+            <div class="card border-left-uccess shadow h-100 py-2 on_card">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2 text-center">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"><i class="fas fa-envelope fa-2x text-gray-300"></i></div>
+                    <div class="text-md font-weight-bold text-primary text-uppercase mb-1">SMS</div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer text-center">
+                  <span class="pull-left"><strong>Schedule</strong></span>
+                  <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                  <div class="clearfix"></div>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% endif %}
+        {% if display_new.show_cable %}
+        <div class="col-6 col-xs-4 col-md-4 mb-4">
+          <a href="{% url 'rechargeapp:cabletvtemplate' %}" title="Cable Tv">
+            <div class="card border-left-uccess shadow h-100 py-2 on_card">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2 text-center">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"><i class="fas fa-dice-d20 fa-2x text-gray-300"></i></div>
+                    <div class="text-md font-weight-bold text-primary text-uppercase mb-1">Cable Tv</div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer text-center">
+                  <span class="pull-left"><strong>Subscribe</strong></span>
+                  <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                  <div class="clearfix"></div>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% endif %}
+        {% if display_new.show_electricity %}
+        <div class="col-6 col-xs-4 col-md-4 mb-4">
+          <a href="{% url 'electricity:eletricityPurchaseTemplate' %}" title="Electricity">
+            <div class="card border-left-uccess shadow h-100 py-2 on_card">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2 text-center">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"><i class="fas fa-bolt fa-2x text-gray-300"></i></div>
+                    <div class="text-md font-weight-bold text-primary text-uppercase mb-1">Electricity</div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer text-center">
+                  <span class="pull-left"><strong>Pay</strong></span>
+                  <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                  <div class="clearfix"></div>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% endif %}
+        {% if display_new.show_crypto %}
+        <div class="col-6 col-xs-4 col-md-4 mb-4">
+          <a href="{% url 'cryptocurrency:cryptoTemplate' %}" title="CRYPTO CURRENCY">
+            <div class="card border-left-uccess shadow h-100 py-2 on_card">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2 text-center">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"><i class="fas fa-bolt fa-2x text-gray-300"></i></div>
+                    <div class="text-md font-weight-bold text-primary text-uppercase mb-1">CRYPTO CURRENCY</div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer text-center">
+                  <span class="pull-left"><strong>Purchase</strong></span>
+                  <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                  <div class="clearfix"></div>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% endif %}
+        {% if display_new.show_contact %}
+        <div class="col-6 col-xs-4 col-md-4 mb-4">
+          <a href="{% url 'smsangosend:phonebooks' %}" title="Manage Contacts">
+            <div class="card border-left-uccess shadow h-100 py-2 on_card">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2 text-center">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"><i class="fas fa-address-book fa-2x text-gray-300"></i></div>
+                    <div class="text-md font-weight-bold text-primary text-uppercase mb-1">Contacts</div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer text-center">
+                  <span class="pull-left"><strong>Manage</strong></span>
+                  <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                  <div class="clearfix"></div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-6 col-xs-4 col-md-4 mb-4">
+          <a href="{% url 'smsangosend:phextractor' %}" title="Manage Contacts">
+            <div class="card border-left-uccess shadow h-100 py-2 on_card">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2 text-center">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"><i class="fas fa-tools fa-2x text-gray-300"></i></div>
+                    <div class="text-md font-weight-bold text-primary text-uppercase mb-1">My Tools</div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer text-center">
+                  <span class="pull-left"><strong>Use</strong></span>
+                  <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                  <div class="clearfix"></div>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% endif %}
+        <div class="col-6 col-xs-4 col-md-4 mb-4">
+          <div class="card border-left-inf shadow h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2 text-center">
+                  <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"><i class="fa fa-undo fa-2x text-gray-300"></i></div>
+                  <div class="text-md font-weight-bold text-primary text-uppercase mb-1">Bonus</div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer text-center">
+              <span class="pull-left"><a class="" href="{% url 'smsangosend:rbonushistory' %}">View Details</a></span>
+              <span class="pull-right">
+                {%if user.user_bonus.bonus %}
+                  <a href="#" class="pull-right" id="redeem" onclick="checkif()">Redeem <i class="fa fa-arrow-circle-right"></i></a> 
+                {% else %}
+                  <a href="#" class="badge pull-right" onclick="checkif()">No Point to Redeem <i class="fa fa-arrow-circle-right"></i></a>
+                {%endif%}
+              </span>
+              <div class="clearfix"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-xs-4 col-md-4 mb-4">
+          <div class="card border-left-warnng shadow h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2 text-center">
+                  <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"><i class="fas fa-users fa-2x text-gray-300"></i></div>
+                  <div class="text-md font-weight-bold text-primary text-uppercase mb-1">{{getallreffered}} persons reffered</div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer text-center">
+                <a href="{% url 'smsangosend:myrefferal' %}"><span class="pull-left">View Details</span>
+                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span></a>
+                <div class="clearfix"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          {% include "partials/referrallinks.html" %}
+        </div>
+    </div>
+    <script>
+    function checkif(){
+      const getEarnings = document.querySelector('#earnings').innerText;
+      console.log(getEarnings);
+      if (parseInt({{user.user_bonus.bonus}}) <= 0){
+        Swal.fire({
+          title: 'Oops!!, You Dont have Enough Bonus to Redeem',
+        //   showCancelButton: true,
+          confirmButtonText: 'Ok',
+        //   denyButtonText: `Cancel`,
+        }).then((result) => {
+            Swal.fire('Sorry', '', 'info')
+        })
+      } else {
+          Swal.fire({
+          title: 'Hurray!!, You have Enough Bonus to Redeem',
+          //showCancelButton: true,
+          confirmButtonText: 'Redeem',
+          //denyButtonText: `Cancel`,
+        })
+          .then((value) => {
+            if (value.isConfirmed){
+              window.location.assign("{% url 'smsangosend:redeembonus' %}");
+            }
+          });
+      }
+    }
+
+    </script>
+</div>
+
+{% endblock %}
+{% block footer_javascript %}
+{% display_the_alert %}
+{% endblock footer_javascript %}

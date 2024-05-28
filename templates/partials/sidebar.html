@@ -1,0 +1,428 @@
+{% load dashboardconfig %}
+{% DashboardConfigs as config %}
+{% DisplayAppsConfig as display %}
+
+<div class="sidebar sidebar-style-2 bg-gradient-primary" data-background-color="dark2">
+  <div class="sidebar-wrapper scrollbar scrollbar-inner">
+    <div class="sidebar-content">
+      <div class="user">
+        <div class="avatar-sm float-left mr-2">
+          <img src="/static/assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
+        </div>
+        <div class="info">
+          <a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
+            <span>
+              {{user.username}}
+              <span class="user-level">{{user.user_reseller_status.reseller_level}}</span>
+              <span class="caret"></span>
+            </span>
+          </a>
+          <div class="clearfix"></div>
+
+          <div class="collapse in" id="collapseExample">
+            <ul class="nav">
+              <li>
+                <a href="{% url 'smsangosend:myrefferal' %}">
+                  <span class="link-collapse">My Refferals</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'smsangosend:profile_edit' %}">
+                  <span class="link-collapse">Edit Profile</span>
+                </a>
+              </li>
+              <li>
+                <a href="#settings">
+                  <span class="link-collapse">Settings</span>
+                </a>
+              </li>
+              <li>
+                <a  href="{% url 'smsangosend:rbonushistory' %}">
+                  <span class="link-collapse">My Earnings</span>
+                </a>
+              </li>
+              <li>
+                <a  href="{% url 'smsangosend:change_password' %}">
+                  <span class="link-collapse">Change Password</span>
+                </a>
+              </li>
+              <li>
+                <a  href="{% url 'api:kyc_template' %}">
+                  <span class="link-collapse">Kyc Verification</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <ul class="nav nav-primary">
+        <li class="nav-item active">
+          <a href="{% url 'smsangosend:customer' %}" class="collapsed" aria-expanded="false">
+            <i class="fas fa-home"></i>
+            <p>Dashboard</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a data-toggle="collapse" href="#wallet">
+            <i class="fas fa-layer-group"></i>
+            <p>Wallet Actions</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="wallet">
+            <ul class="nav nav-collapse">
+              <li>
+                <a href="{% url 'smsangosend:toenteramount' %}">
+                  <span class="sub-item">Buy Credits</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'voucher:loadVoucher' %}">
+                  <span class="sub-item">Load Voucher</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'smsangosend:mtnsharensell' %}">
+                  <span class="sub-item">Airtime To Cash</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'smsangosend:payment_history' %}">
+                  <span class="sub-item">Funds Transaction History</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        {% if display.show_sms %}
+        <li class="nav-item">
+          <a data-toggle="collapse" href="#smsmenu">
+            <i class="fa fa-envelope"></i>
+            <p>SMS Menu</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="smsmenu">
+            <ul class="nav nav-collapse">
+              <li>
+                <a href="{% url 'smsangosend:sendsmspage' %}">
+                  <span class="sub-item">Send SMS</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'smsangosend:smshistory' %}">
+                  <span class="sub-item">SMS History</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'smsangosend:smsreport' %}">
+                  <span class="sub-item">SMS Report</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'smsangosend:savedschedulesms' %}">
+                  <span class="sub-item">Schedule SMS</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'smsangosend:schedulesmshistory' %}">
+                  <span class="sub-item">Schedule SMS History</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'smsangosend:schedulesmsreport' %}">
+                  <span class="sub-item">Schedule SMS Report</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        {% endif %}
+        {% if display.show_airtime %}
+        <li class="nav-item">
+          <a data-toggle="collapse" href="#airtime">
+            <i class="fas fa-mobile-phone fa-fw"></i>
+            <p>Airtime TopUp</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="airtime">
+            <ul class="nav nav-collapse">
+              <li>
+                <a href="{% url 'rechargeapp:airtimetemplate' %}">
+                  <span class="sub-item">Buy Airtime TopUp</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        {% endif %}
+        {% if display.show_data %}
+        <li class="nav-item">
+          <a data-toggle="collapse" href="#directdata">
+            <i class="fas fa-wifi fa-fw"></i>
+            <p>Data TopUp</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="directdata">
+            <ul class="nav nav-collapse">
+              <li>
+                <a href="{% url 'rechargeapp:datatemplate' %}">
+                  <span class="sub-item">Buy Data Bundles</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        {% endif %}
+        {% if display.show_broadband %}
+        <li class="nav-item">
+          <a data-toggle="collapse" href="#broadband">
+            <i class="fas fa-mobile-phone fa-fw"></i>
+            <p>Broadband Internet</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="broadband">
+            <ul class="nav nav-collapse">
+              <li>
+                <a href="{% url 'other_data_services:smilePage' %}">
+                  <span class="sub-item">Buy Smile Data</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'other_data_services:smileTransactions' %}">
+                  <span class="sub-item">Smile Transactions</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        {% endif %}
+        {% if display.show_cable %}
+        <li class="nav-item">
+          <a data-toggle="collapse" href="#paybills">
+            <i class="fa fa-television fa-fw"></i>
+            <p>Tv Bills</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="paybills">
+            <ul class="nav nav-collapse">
+              <li>
+                <a href="{% url 'rechargeapp:cabletvtemplate' %}">
+                  <span class="sub-item">Gotv/Dstv/Startimes</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        {% endif %}
+        {% if display.show_cable %}
+        <li class="nav-item">
+          <a data-toggle="collapse" href="#power">
+            <i class="fas fa-bolt fa-fw"></i>
+            <p>Electricity</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="power">
+            <ul class="nav nav-collapse">
+              <li>
+                <a href="{% url 'electricity:eletricityPurchaseTemplate' %}">
+                  <span class="sub-item">Electricity Bills</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        {% endif %}
+        {% if display.show_crypto %}
+        <li class="nav-item">
+          <a data-toggle="collapse" href="#crytocurrency">
+            <i class="fa fa-btc fa-fw"></i>
+            <p>Crypto Currency</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="crytocurrency">
+            <ul class="nav nav-collapse">
+              <li>
+                <a href="{% url 'cryptocurrency:cryptoTemplate' %}">
+                  <span class="sub-item">Buy/Sell</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'cryptocurrency:cryptoTransactions' %}">
+                  <span class="sub-item">Transactions</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        {% endif %}
+        {% if display.show_reseller %}
+        <li class="nav-item">
+          <a data-toggle="collapse" href="#resellers">
+            <i class="fa fa-users fa-fw"></i>
+            <p>Resellers</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="resellers">
+            <ul class="nav nav-collapse">
+              {% if user.user_reseller_status.is_reseller is True  %}
+                  <li>
+                    <a href="{% url 'resellers:upgrade' %}">
+                      <span class="sub-item">Purchase</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{% url 'resellers:history' %}">
+                      <span class="sub-item">History</span>
+                    </a>
+                  </li>
+              {% else %}
+                  <li>
+                    <a href="{% url 'resellers:activate' %}">
+                      <span class="sub-item">Get Started</span>
+                    </a>
+                  </li>
+              {% endif %}
+            </ul>
+          </div>
+        </li>
+        {% endif %}
+        <li class="nav-item">
+          <a href="{% url 'transactions:list_tranasactions' %}">
+            <i class="fas fa-list fa-fw"></i>
+            <p>Transactions</p>
+          </a>
+        </li>
+        {% if display.show_contact %}
+        <li class="nav-item">
+          <a data-toggle="collapse" href="#contacts">
+            <i class="fa fa-address-book-o fa-fw"></i>
+            <p>My Contacts</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="contacts">
+            <ul class="nav nav-collapse">
+                <li>
+                  <a href="{% url 'smsangosend:phonebooks' %}">
+                    <span class="sub-item">Manage Contacts</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{% url 'smsangosend:phextractor' %}">
+                    <span class="sub-item">Phone Number Extractor</span>
+                  </a>
+                </li>
+
+            </ul>
+          </div>
+        </li>
+        {% endif %}
+        {% if display.show_news %}
+        <li class="nav-item">
+          <a data-toggle="collapse" href="#news">
+            <i class="fa fa-newspaper-o fa-fw"></i>
+            <p>News/Tutorials</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="news">
+            <ul class="nav nav-collapse">
+                <li>
+                  <a href="{% url 'alert_system:news' %}">
+                    <span class="sub-item">News/Tutorials</span>
+                  </a>
+                </li>
+            </ul>
+          </div>
+        </li>
+        {% endif %}
+        <li class="nav-item">
+          <a data-toggle="collapse" href="#developer">
+            <i class="fa fa-code fa-fw"></i>
+            <p>Developer Api</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="developer">
+            <ul class="nav nav-collapse">
+                <li>
+                  <a href="{% url 'api:generate_token' %}">
+                    <span class="sub-item">Generate Token</span>
+                  </a>
+                </li>
+            </ul>
+          </div>
+        </li>
+        {% if user.is_superuser %}
+        <li class="nav-item">
+          <a data-toggle="collapse" href="#submenu">
+            <i class="fas fa-bars"></i>
+            <p>Other Admin Area</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="submenu">
+            <ul class="nav nav-collapse">
+              <li>
+                <a href="{% url 'su:list_all_users' %}">
+                  <span class="sub-item">Impersonate Users</span>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'mailing:send_email' %}">
+                  <span class="sub-item">Send Mail to Users</span>
+                </a>
+              </li>
+              <li>
+                <a data-toggle="collapse" href="#vouchers">
+                  <span class="sub-item">Vouchers</span>
+                  <span class="caret"></span>
+                </a>
+                <div class="collapse" id="vouchers">
+                  <ul class="nav nav-collapse subnav">
+                    <li>
+                      <a href="{% url 'voucher:gVoucher' %}">
+                        <span class="sub-item">Generate Vouchers</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'voucher:listVoucher' %}">
+                        <span class="sub-item">View Vouchers</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li>
+                <a data-toggle="collapse" href="#transactions">
+                  <span class="sub-item">Transactions</span>
+                  <span class="caret"></span>
+                </a>
+                <div class="collapse" id="transactions">
+                  <ul class="nav nav-collapse subnav">
+                    <li>
+                      <a href="{% url 'user_transactions:list_user_tranasactions' %}">
+                        <span class="sub-item">User Transactions</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'user_transactions:list_transaction_statistics' %}">
+                        <span class="sub-item">Transactions Statistics</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'user_transactions:all_transactions' %}">
+                        <span class="sub-item">All Transactions</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li>
+                <a href="{% url 'load_config' %}">
+                  <span class="sub-item">Load Config</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,100 @@
+{% extends "base2.html" %}
+{% load bootstrap4 dashboardconfig %}
+{% DashboardConfigs as config %}
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% block title %}  Login {% endblock %}
+{% block content %}
+
+  <div class="container">
+
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+
+      <div class="col-xl-6 col-lg-6 col-md-6">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+          <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="p-5">
+                  <div class="text-center">
+                    {% if config.site_logo %}<a href="/"><img src="{{config.get_logo_url}}" alt="{{config.site_name}}" title="{{config.site_name}}" width="30%"></a>{% endif %}
+                    <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                  </div>
+                  {% bootstrap_messages %}
+                      {% if form.errors %}
+                        {% for field in form %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-fill-danger alert-dismissible" role="alert">
+                              <i class="ti-info-alt"></i>
+                              {{errors}}<button type="button" class="close" data-dismiss="alert">&times;</button>
+                            </div>
+                        {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                          <div class="alert alert-fill-danger alert-dismissible" role="alert">
+                            <i class="ti-info-alt"></i>
+                           {{error}}<button type="button" class="close" data-dismiss="alert">&times;</button>
+                          </div>
+                        {% endfor %}
+                    {% endif %}
+                  <form id="mainForm" class="user" role="form" method="post">
+                    {% csrf_token %}                        
+                        <div class="form-group">
+                          <label for="id_username">Username</label><input type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" class="form-control" placeholder="Username" title="" required="" id="id_username">
+                        </div>
+                        <div class="form-group">
+                          <label for="id_password">Password</label>
+                          <div class="input-group">
+                            <input type="password" name="password" autocomplete="current-password" class="form-control" placeholder="Password" title="" required="" id="id_password">
+                            <div class="input-group-append">
+                              <span href="#" class="btn btn-md bg-gray" id="show_password" onclick="togglePassword()"><i class="fa fa-eye"></i></span>
+                            </div>
+                          </div>
+                        </div>
+                      
+                      {% include "javascripts/account.html" %}
+                    {% buttons %}
+                    <div class="form-group">
+                      <div class="custom-control custom-checkbox small">
+                        <input type="checkbox" class="custom-control-input" id="customCheck">
+                        <label class="custom-control-label" for="customCheck">Remember Me</label>
+                      </div>
+                    </div>
+                    <button id="submit" class="btn btn-primary btn-user btn-block btn-lg" type="submit">Login</button>
+                    {% comment %} <hr>
+                    <a href="{% url 'social:begin' 'facebook' %}" class="btn btn-facebook btn-user btn-block">
+                      <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
+                    </a> {% endcomment %}
+                    <script type="text/javascript">
+                        $(function(){
+                            $(".alert-message").alert();
+                            $('#mainForm').submit(function(){
+                                $('#submit').button('loading');
+                            })
+                        });
+                        document.forms[1].elements[2].focus();
+                    </script>
+                    {% endbuttons %}
+                  </form>
+                  <hr>
+                  <div class="text-center">
+                    <a class="small" href="{% url 'smsangosend:password_reset' %}">Reset Password</a>
+                  </div>
+                  <div class="text-center">
+                    <a class="small" href="{% url 'smsangosend:register' %}">Create an Account!</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+{% endblock %}

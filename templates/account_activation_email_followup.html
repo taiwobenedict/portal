@@ -1,0 +1,23 @@
+{% load dashboardconfig %}
+{% DashboardConfigs as config %}
+{% autoescape off %}
+Hi {{ user.username }},
+
+Your {{config.site_name}} has now been activated, Invite you Friend and Earn OC points which can be used to purchase any of our services
+You now have access to do the following:
+
+1. Send Bulk SMS at the lowest price possible {{config.site_domain}}/customer/sendsms
+
+2. Airtime Top-up using your credits and earn points (All Networks) {{config.site_domain}}/customer/recharge/airtime
+
+3. Data bundles Top Up using your credits and earn points (All Networks) {{config.site_domain}}/customer/recharge/datatopup
+
+4. Cable/Decoder Subscription/Recharge using your credits and earn points {{config.site_domain}}/customer/recharge/select-cabletv
+
+5. And some more amazing features coming soon...
+
+
+PS: Apart from earning point when you use any of our services above listed you also earn point when you reffer Friends and Family.
+You can find your refferal link on your profile page here {{config.site_domain}}/customer/profile-edit
+
+{% endautoescape %}

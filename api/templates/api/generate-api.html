@@ -1,0 +1,88 @@
+{% extends "basenew.html" %} {% load bootstrap5 %}
+{% block title %}Generate API TOKEN Here{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+      <h6 class="m-0 font-weight-bold text-primary">Generate API TOKEN Here</h6>
+      <div class="drpdown no-arrow show">
+        <a class="font-weight-bold text-danger d-md-none" href="#note">Must Read</a>
+      </div>
+    </div>
+    <div class="card-body">
+      {% bootstrap_messages %}
+      {% if token %}
+      <div class="row">
+        <div class="col-lg-6">
+          <div class='form-group'>
+            <h4 class="">
+              <input type='text' class="form-control" readonly id="copytoken" value='{{token}}' />
+            </h4>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class='form-group'>
+            <button class="text-white btn btn-secondary btn-block" onclick="copyToken()">Copy text</button>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% if message %}
+      <div class="row">
+        <div class="col-lg-6">
+          <div class='form-group'>
+            <h4 class="">
+              <input type='text' class="form-control" disabled='disabled' value='{{message}}' />
+            </h4>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class='form-group'>
+            <button type="submit" class="btn btn-user btn-primary">Generate Token</button>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% comment %} {% if not domain.verified %} 
+      <span class="text-danger">Verify your domain to use API</span> 
+      <br/> 
+      <code>
+        create a .txt file with {{dconfig.api_text}} as the content and domain should be in the format https://domain_or_subdomain.com
+      </code>
+      {% endif %} {% endcomment %}
+      <form action="{% url 'api:update_domain' %}" method="POST" class="row">
+        {% csrf_token %}
+        <div class="col-lg-6">
+          <div class='form-group'>
+            <h4 class="">
+              <input type='text' name="domain" class="form-control" value='{% if domain.domain is not None %}{{domain.domain}}{% endif %}' />
+            </h4>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class='form-group'>
+            <button type="submit" class="btn btn-user btn-primary">Add Secret or Domain</button>
+          </div>
+        </div>
+      </form>
+      <p>The Domain or Secret added above is majorly for api usage, It can be changed at will</p>
+      {% comment %} <a class="btn btn-primary" href="{% url 'api:verify_domain' %}"> Verify Domain</a> {% endcomment %}
+      <!-- /.row (nested) -->
+    </div>
+    <!-- /.card-body -->
+    <!-- /.col-lg-12 -->
+  </div>
+</div>
+<script>
+document.querySelector('#copytoken').value = `{{token}}`
+
+function copyToken() {
+  var copyText = document.querySelector("#copytoken");
+  copyText.select();
+  document.execCommand("copy");
+  //alert("API Token Copied!!!" + copyText.value); -->
+  swal('Copied', 'API Token Copied!!!');
+}
+</script>
+{% endblock %}
+

@@ -1,0 +1,63 @@
+{% extends "basenew.html" %} {% load bootstrap5 %}
+{% block title %}Purchase Your DataBundle Here{% endblock %}
+{% block content %}
+<script type="text/javascript">
+
+</script>
+{% include "javascripts/verify_airtime_data.html" %}
+
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Purchase Your DataBundle Here</h6>
+            <div class="drpdown no-arrow show">
+                <a class="font-weight-bold text-danger d-md-none" href="#note">Must Read</a>
+            </div>
+        </div>            
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-4">
+                    {%  bootstrap_messages %}
+                    <form role="form" method="POST" enctype="multipart/form-data" action="{% url 'rechargeapp:datatopup' %}" id="form"> 
+                        {% csrf_token %}
+                            <div class='form-group'>
+                                <label for='Network'>Network</label>
+                                <input class="form-control" name="network" id="network" value="{{obj.api_name}}" required readonly>                        
+                            </div>
+                            <div class='form-group'>
+                                <label for='code'>Code</label>
+                                <input class="form-control" name="code" id="code" value="{{obj.identifier}}" required readonly>                        
+                            </div>
+                            <div class='form-group'>
+                                <label for='amt'>Amount of Data Plan</label>
+                                <select id='amt' class="form-control" name="amt" required>
+                                    {% if items %}
+                                        {% for i in items %}
+                                            <option value="{{i.api_amount}}|{{i.data_amount}}|{{i.urlvariable}}|{{i.what_user_sees}}{% if i.extra_variable %}|{{i.extra_variable}}{% endif %}">{{i.what_user_sees}}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <input id='amtt_size' class="form-control" name="amtt_size" value="" type="hidden">
+                            <div class='form-group'>
+                                <label for='r_phone'>Phone Number to Recharge </label>
+                                <input  class="form-control" name="phone" id="phone" placeholder="E.g 08163524890" required>
+                                <small id="error" class="form-text"></small>
+                            </div>
+                    </form>
+                        <div class='form-group'>
+                            <button class="btn btn-user btn-primary btn-lg btn-block" id="btn" onclick="saveToLocalStorage('You are about to purchase '+ document.getElementById('network').value + ' DATA of ' +document.getElementById('amt').value.split('|')[3] + ' to '+ document.getElementById('phone').value)">Proceed to Topup Data </button>
+                        </div>
+                        {% include "javascripts/swal_alerts.html" %}
+                </div>
+                <div class="col-lg-8">
+                    {{obj.description|safe}}
+                </div>
+            </div>
+            <!-- /.row (nested) -->
+        </div>
+
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+{% endblock %}

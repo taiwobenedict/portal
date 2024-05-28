@@ -1,0 +1,34 @@
+{% extends "basenew.html" %} {% block title %}SMS REPORT{% endblock %} {% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">SMS REPORT</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table width="100%" class="table table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                    <tbody>
+                        {% if indsmsreport %}
+                            <tr><td><h4>Sender</h4>{{ indsmsreport.sender }}</td></tr>
+                            <tr><td><h4>All Recipients</h4>{{ indsmsreport.recipients }}</td></tr>
+                            <tr><td><h4>Message Content</h4>{{ indsmsreport.messagecontent }}</td></tr>
+                            <tr><td><h4>Number(s) Sent To</h4>{% if indsmsreport.sently %}{{ indsmsreport.sently | linebreaks }}{% else %} No Record {% endif %}</td></tr>
+                            <tr><td><h4>Number(s) Not Sent To</h4>{% if indsmsreport.notsently %}{{ indsmsreport.notsently | linebreaks }} <br><form action="{% url 'smsangosend:sendsmspage' %}" method="POST">{% csrf_token %} <input type="hidden" name="sender" value="{{ indsmsreport.sender }}"><input type="hidden" name="messagecontent" value="{{ indsmsreport.messagecontent }}"><input type="hidden" name="recipients" value="{{ indsmsreport.notsently }}"><input type="hidden" name="smsroute" value="DND"><button class="btn btn-primary" style="padding: 2px 2px!important;">Try DND Route</button></form>{% else %} No Record {% endif %}</td></tr>
+                            <tr class="center"><td><h4>SMS credit used</h4>{{ indsmsreport.creditusedall }}</td></tr>
+                            <tr class="center"><td><h4>Api Route used</h4>{{ indsmsreport.apiRoute }}</td></tr>
+                            <tr class="center"><td><h4>Date</h4>{{ indsmsreport.timestamp }}</td></tr>
+                        {% else %}
+                            No Data
+                        {% endif %}
+                    </tbody>
+                   </table>
+<!--                 {% include "partials/paginations.html" %} -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+{% endblock %}

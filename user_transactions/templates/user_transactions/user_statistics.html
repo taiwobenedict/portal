@@ -1,0 +1,81 @@
+{% extends "basenew.html" %}{% load humanize %}{% block title %}TRANSACTIONS{% endblock %} {% block content %}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load('current', {'packages':['bar']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable([
+      ['Services', 'Purchases'],
+      ['Airtime', {{airtime}}],
+      ['Data', {{data_topup}}],
+      ['CableTv', {{cable_tv}}],
+      ['Electricity', {{electricity}}],
+      ['Result Checker', {{result_checkers}}]
+    ]);
+
+    var options = {
+      chart: {
+        title: 'Purchase Stats of Each Service',
+        subtitle: 'Airtime, Data, CableTv, Electricity, Result Checker',
+      },
+      bars: 'vertical' // Required for Material Bar Charts.
+    };
+
+    var chart = new google.charts.Bar(document.getElementById('barchart_material'));
+
+    chart.draw(data, google.charts.Bar.convertOptions(options));
+  }
+</script>
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">USER TRANSACTIONS STATISTICS</h6>
+        </div>
+        <div class="row p-4">
+          <div class="col-md-6 grid-margin stretch-card">
+            <div class="card bg-primary card-rounded">
+              <div class="card-body pb-0">
+                <h4 class="card-title card-title-dash text-white mb-4">Total Wallet Balance</h4>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <h2 class="text-info">{{wallet}}</h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+            <form class="row px-4">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                      <label for="start_date">Start Date</label>
+                      <input type="date"
+                        class="form-control" name="start_date" id="start_date" aria-describedby="helpId" placeholder="">
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                      <label for="end_date">End Date</label>
+                      <input type="date"
+                        class="form-control" name="end_date" id="end_date" aria-describedby="helpId" placeholder="">
+                    </div>
+                </div>
+                <div class="col-lg-4 py-4 my-2">
+                    <div class="form-group py-">
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i>  Search</button>
+                    </div>
+                </div>
+            </form>
+            <div id="barchart_material" class="px-4" style="width: 100%; min-height: 500px;"></div>
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+{% endblock %}
+{% block footer_scripts %}
+{% include 'partials/table_scripts.html' %}
+{% endblock footer_scripts %}

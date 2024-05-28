@@ -1,0 +1,27 @@
+{% extends "basenew.html" %} 
+{% block title %}{{getNote.title}}{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">{{getNote.title}} 
+            </h6>
+        </div>            
+        <div class="card-body">
+            <div class="row">
+                <div class='col-lg-8'>
+                    <div class="">
+                        {{getNote.content | safe}}
+                    </div>
+                    <div>
+                        <a href="{% url 'notificationapp:list_alert' %}" class="btn btn-user btn-warning">Back</a>
+                    </div>
+
+                </div>
+            </div>
+                <!-- /.row (nested) -->
+        </div>
+            <!-- /.panel-body -->
+    </div>
+</div>
+{% endblock %}

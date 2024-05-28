@@ -1,0 +1,55 @@
+{% extends "basenew.html" %} {% load bootstrap5 %}
+{% block title %}Purchase Your Airtime Here{% endblock %}
+{% block content %}
+{% include "javascripts/verify_airtime_data.html" %}
+
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Purchase Your Airtime Here</h6>
+            <div class="drpdown no-arrow show">
+                <a class="font-weight-bold text-danger d-md-none" href="#note">Must Read</a>
+            </div>
+        </div>            
+        <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        {%  bootstrap_messages %}
+                        <form role="form" method="POST" enctype="multipart/form-data" action="{% url 'rechargeapp:airtimetopup' %}?pee={% lorem 1 w random %}" id="form">
+                            {% csrf_token %}
+                            <div class='form-group'>
+                                <label for='Network'>Network</label>
+                                <input class="form-control" name="network" id="network" value="{{obj.api_name}}" readonly required />
+                            </div>
+                            <div class='form-group'>
+                                <label for='code'>Product Code</label>
+                                <input class="form-control" name="code" id="code" value="{{obj.identifier}}" readonly required />
+                            </div>
+                            <div class='form-group'>
+                                <label for='amt'>Amount to Recharge</label>
+                                <input class="form-control" type='number' min="100" name='amt' id='amt' placeholder="E.g 1000" required>
+                                <small class="text-danger">Minimum amount to purchase is 100</small>
+                            </div>
+                            <div class='form-group'>
+                                <label for='r_phone'>Phone Number to Recharge </label>
+                                <input  class="form-control" name="phone" id="phone" placeholder="E.g 08163524890" required>
+                                <small id="error" class="form-text"></small>
+                            </div>
+                        </form>
+                        <div class='form-group'>
+                            <button class="btn btn-user btn-primary btn-lg btn-block" id="btn" onclick="saveToLocalStorage('You are about to purchase of NGN'+document.getElementById('amt').value + ' AIRTIME to '+ document.getElementById('phone').value)">Proceed to Recharge </button>
+                        </div>
+                        {% include "javascripts/swal_alerts.html" %}
+                    </div>
+                    <div class="col-lg-6">
+                        {{obj.description|safe}}
+                    </div>
+                </div>
+                <!-- /.row (nested) -->
+        </div>
+            <!-- /.card-body -->
+        <!-- /.col-lg-12 -->
+    </div>
+</div>
+
+{% endblock %}

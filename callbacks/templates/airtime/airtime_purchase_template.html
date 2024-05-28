@@ -1,0 +1,71 @@
+{% extends "basenew.html" %} {% load bootstrap5 %}
+{% block title %}Purchase Your Airtime Here{% endblock %}
+{% block content %}
+{% include "javascripts/verify_airtime_data.html" %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Purchase Your Airtime Here</h6>
+            <div class="drpdown no-arrow show">
+                <a class="font-weight-bold text-danger d-md-none" href="#note">Must Read</a>
+            </div>
+        </div>            
+        <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        {%  bootstrap_messages %}
+                        <form role="form" method="POST" enctype="multipart/form-data" action="{% url 'rechargeapp:airtimetopup' %}">
+                            {% csrf_token %}
+                            <div class='form-group'>
+                                <label for='Network'>Network</label>
+                                <select class="form-control" name="network" id="network" required>
+                                    <option></option>
+                                    {% if getNetworkAvail %}
+                                        {% for network, value in getNetworkAvail.items %}
+                                        <option value="{{value}}">{{network}}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class='form-group'>
+                                <label for='amt'>Amount to Recharge</label>
+                                <input class="form-control" type='number' min="100" name='amt' id='amt' placeholder="E.g 1000" required>
+                                <small class="text-danger">Minimum amount to purchase is 100</small>
+                            </div>
+                            <div class='form-group'>
+                                <label for='r_phone'>Phone Number to Recharge </label>
+                                <input  class="form-control" name="phone" id="phone" placeholder="E.g 08163524890" required>
+                                <small id="error" class="form-text"></small>
+                            </div>
+                            <!-- <div class='form-group'>
+                                <label for='use_credit'>Deduct Payment From Your Credits ?</label>
+                                <select class="form-control" name="usecredit" id="use_credit" required>
+                                    <option></option>
+                                    <option value="YES">Yes</option>
+                                    <option value="NO"disabled>Direct Purchase Disabled Use credits to purchase</option>
+                                </select>
+                            </div> -->
+                            <div class='form-group'>
+                                <button type="submit" class="btn btn-user btn-primary btn-lg btn-block">Proceed to Recharge </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-6">
+                        <h4 id="note"><strong><u>How to Top-Up Airtime</u></strong></h4>
+                        <p>TOP-UP your MTN, 9MOBILE, AIRTEL, GLO</p>
+                        <p>
+                            <li>Choose your Network</li>
+                            <li>Enter your Recharge Amount</li>
+                            <li>Enter the Phone number to recharge</li>
+                        </p>
+            		    <p><strong>The more you recharge, the more bonus point you gathered</strong></p>
+                    </div>
+                </div>
+                <!-- /.row (nested) -->
+        </div>
+            <!-- /.card-body -->
+        <!-- /.col-lg-12 -->
+    </div>
+</div>
+
+{% endblock %}

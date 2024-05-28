@@ -1,0 +1,50 @@
+{% extends "basenew.html" %} {% block title %}SMS REPORT{% endblock %} {% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">SMS REPORT</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table width="100%" class="table table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr width="100%">
+                            <th>Sender</th>
+                            <th>Sent Recipients</th>
+                            <th>Not Sent Recipients</th>
+                            <th>Route</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if historys %}
+                            {% for object in historys %}
+                            <tr class="">
+                                <td>{{ object.sender }}</td>
+                                <td>{% if object.sently %}{{ object.sently | truncatechars:200}}{% else %} No Record {% endif %}</td>
+                                <td>{% if object.notsently %}{{ object.notsently | truncatechars:200 }} <br><form action="{% url 'smsangosend:sendsmspage' %}" method="POST">{% csrf_token %} <input type="hidden" name="sender" value="{{ object.sender }}"><input type="hidden" name="messagecontent" value="{{ object.messagecontent }}"><input type="hidden" name="recipients" value="{{ object.notsently }}"><input type="hidden" name="smsroute" value="DND"><button class="btn btn-primary" style="padding: 2px 2px!important;">Try DND Route</button></form>{% else %} No Record {% endif %}</td>
+                                <td class="center">{{ object.apiRoute }}</td>
+                                <td class="center">{{ object.timestamp }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td>Sorry, no history Yet.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+<!--                 {% include "partials/paginations.html" %} -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+
+{% endblock %}
+{% block footer_scripts %}
+{% include 'partials/table_scripts.html' %}
+{% endblock footer_scripts %}

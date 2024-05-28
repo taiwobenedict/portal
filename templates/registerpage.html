@@ -1,0 +1,117 @@
+{% extends "base2.html" %} {% load bootstrap4 dashboardconfig %}
+{% DashboardConfigs as config %}
+{% block title %} Register {% endblock %} {% block head_block %} {% endblock %} {% block content %}
+
+  <div class="container">
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+
+      <div class="col-xl-6 col-lg-6 col-md-6">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+          <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="p-5">
+                  <div class="text-center">
+                    {% if config.site_logo %}<a href="/"><img src="{{config.site_logo.url}}" alt="{{config.site_name}}" title="{{config.site_name}}" width="30%"></a>{% endif %}
+                    <h1 class="h4 text-gray-900 mb-4">Create An Account!</h1>
+                  </div>
+                  {% bootstrap_messages %}
+                  <div class="col-lg-12">
+                      {% if messages %}
+                      <ul class="messages list-unstyled">
+                          {% for message in messages %}
+                          {{message}}
+                          <li {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible"{% endif %}><button type="button" class="close" data-dismiss="alert">&times;</button>{{ message }}</li>
+                          {% endfor %}
+                      </ul>
+                      {% endif %}
+                      {% if form.errors %}
+                        {% for field in form %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-fill-danger alert-dismissible" role="alert">
+                              <i class="ti-info-alt"></i>
+                              {{errors}}<button type="button" class="close" data-dismiss="alert">&times;</button>
+                            </div>
+                        {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                          <div class="alert alert-fill-danger alert-dismissible" role="alert">
+                            <i class="ti-info-alt"></i>
+                           {{error}}<button type="button" class="close" data-dismiss="alert">&times;</button>
+                          </div>
+                        {% endfor %}
+                    {% endif %}
+                  </div>
+                  <form id="mainForm" class="user" role="form" method="post">
+                    {% csrf_token %} 
+          					<div class="form-group">
+          						<label for="id_phone">Phone number</label>
+          						<input type="number" name="phone" autofocus="" autocomplete="off" class="form-control" min="2347000000000" max="2349999999999" id="id_phone" placeholder="Format: 2348181811111" required="">
+          						<small class="form-text text-muted">Phone/Whatsapp Number Preferrable format 2348181811111</small>
+                      <div id="error"></div>
+                      {% include "javascripts/phonenumber.html" %}
+          					</div>
+                    <div class="form-group">
+                      <label for="id_username">Username</label>
+                      <input type="text" name="username" maxlength="30" autofocus="" class="form-control" placeholder="Username" title="Required. Unique username" required="" id="id_username">
+                      <small class="form-text text-muted">Required. Unique username</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="id_email">Email</label>
+                      <input type="email" name="email" maxlength="254" class="form-control" placeholder="Email" title="Required. Inform a valid email address." required="" id="id_email">
+                      <small class="form-text text-muted">Required. Enter a valid email address.</small>
+                  
+                  </div>
+                  <div class="form-group">
+                    <label for="id_password1">Password</label>
+                    <div class="input-group">
+                      <input type="password" name="password1" autocomplete="new-password" class="form-control" placeholder="Password" title="Your password can’t be too similar to your other personal information.Your password must contain at least 8 characters.Your password can’t be a commonly used password.Your password can’t be entirely numeric." required="" id="id_password">
+                      <div class="input-group-append">
+                        <span href="#" class="btn btn-md bg-gray" id="show_password" onclick="togglePassword()"><i class="fa fa-eye"></i></span>
+                      </div>
+                    </div>
+                    <small class="form-text text-muted"><ul><li>Your password can’t be too similar to your other personal information.</li><li>Your password must contain at least 8 characters.</li><li>Your password can’t be a commonly used password.</li><li>Your password can’t be entirely numeric.</li></ul>
+                    </small>
+                    <label>Password Confirmation</label>
+                    <input type="password" class="form-control" name="password2" id="id_password2" />
+                  </div>
+                    <div class="form-group">
+                        {% if referral %}
+                        <label for="refferal">Reffered by</label>
+                        <input id='refferal' name='refferal' placeholder="{{referral}}" class='form-control'disabled>
+                        <input type="hidden" id="refferal" name="refferal" value="{{refferal}}" class="form-control">
+                        {% endif %}
+                    </div>
+                    {% buttons %}
+                    <button id="submit" class="btn btn-primary btn-user btn-block" type="submit">Register</button>
+                    <script>
+                      {% comment %} document.querySelector("#id_password").addEventListener("onkeyup", function(){
+                        document.querySelector("#id_password2").value = document.querySelector("#id_password").value
+                      }) {% endcomment %}
+                    </script>
+                    {% include "javascripts/account.html" %}
+                    {% endbuttons %}
+                  </form>
+                  <hr>
+                  <div class="text-center">
+                    <a class="small" href="{% url 'smsangosend:password_reset' %}">Reset Password</a>
+                  </div>
+                  <div class="text-center">
+                    <a class="small" href="{% url 'smsangosend:login' %}">Already Registered? Login!</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+{% endblock %}

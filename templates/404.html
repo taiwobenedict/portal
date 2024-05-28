@@ -1,0 +1,53 @@
+{% extends "base2.html" %} {% load bootstrap4 %} {# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}{% block title_block %} 404 ERROR {% endblock %} {% block head_block %} {% endblock %} {% block content %}
+
+  <div class="container">
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+
+      <div class="col-xl-12 col-lg-12 col-md-12">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+          <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+              <div class="col-md-12">
+                <h4 class="text-center">
+                <span style='font-size:100px;'>&#128543;</span>
+                <br/>
+                 Oop!!! This page you seek exists not
+                 <br/>
+                 <br/>
+                 What exactly are you seeking?
+                 <select id="quickmenu" class="form-control">
+                   <option></option>
+                   <option value="{% url 'rechargeapp:airtimetemplate' %}">Airtime TopUp</option>
+                   <option value="{% url 'rechargeapp:datatemplate' %}">Data TopUp</option>
+                   <option value="{% url 'rechargeapp:cabletv' %}">Bill Payments</option>
+                 </select>
+                 <button class="btn btn-primary btn-large" onclick="goBack()">< Go Back</button>                 
+                </h4>
+
+                 <script type="text/javascript">
+                    function goBack() {
+                      window.history.back();
+                    }
+
+                    let select = document.querySelector("#quickmenu");
+                    const goTo = () => {
+                      window.location=select.value;
+                    }
+                    select.addEventListener('change', goTo, false)
+                 </script>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+{% endblock %}

@@ -1,0 +1,78 @@
+<script>
+  //Nigerian mobile number prefixes from the four major telcos - MTN, GLO, AIRTEL & ETISALAT
+  var telcoPrefixes = [703, 704, 706, 803, 806, 810, 813, 814, 816, 903, 705, 805, 811, 815, 905, 701, 708, 802, 808, 812, 902, 809, 817, 818, 909, 804, 903, 906, 904, 908, 907, 917, 911, 912, 913, 914, 915, 916, 918, 919, 702, 707, 709];
+
+  //search array for specific values
+  function in_array(value, array){
+    var index = array.indexOf(value);
+    if(index == -1){
+      return false;
+    }else{
+      return index;
+    }
+  }
+
+  //error div
+  var errorDiv = document.getElementById("error");
+  
+  //phone number text field
+  var phoneInput = document.getElementById("id_phone");
+  var dialingCode, mobilePrefix, checkArray;
+
+  phoneInput.addEventListener("change",function(){
+
+    //get value from textbox
+    phoneInputValue = phoneInput.value;
+
+    //get value length
+    var inputLength = phoneInputValue.length;
+
+    //if length is less than the required length of 14
+    if(inputLength < 13){
+
+      errorDiv.innerHTML = "Invalid phone number";
+      errorDiv.classList.remove("text-success");												
+      errorDiv.classList.add("text-danger");
+      console.log("invalid phone number");
+
+    //if length is equal to 13 (23470xxxxxxxx)
+    }else if(inputLength === 13){
+
+          //get mobile number prefix - 706 or 703 - depending on telco
+          mobilePrefix = Number(phoneInputValue.substr(3,3));
+
+          //get dialling code from mobile number
+          dialingCode = Number(phoneInputValue.substr(0,3));
+
+          //check if mobile prefix exists in telcoPrefixes array		
+          checkArray = in_array(mobilePrefix, telcoPrefixes);
+          if(checkArray === false){
+            
+            errorDiv.innerHTML = "Invalid phone number";
+            errorDiv.classList.remove("text-success");												
+            errorDiv.classList.add("text-danger");					
+            console.log("invalid phone number");
+
+          }else if((checkArray >= 0) && (dialingCode === 234)){
+
+            errorDiv.innerHTML = "Valid phone number";
+            errorDiv.classList.remove("text-danger");				
+            errorDiv.classList.add("text-success");												
+            console.log("Valid phone number");
+
+          }else{
+
+            errorDiv.innerHTML = "Invalid phone number";
+            errorDiv.classList.remove("text-success");												
+            errorDiv.classList.add("text-danger");			
+            console.log("invalid phone number");
+
+          }
+    }else if(inputLength >= 14){
+      errorDiv.innerHTML = "invalid phone number";
+      errorDiv.classList.remove("text-success");												
+      errorDiv.classList.add("text-danger");				
+      console.log("invalid phone number");
+    }
+  });
+</script>

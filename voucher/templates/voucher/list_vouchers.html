@@ -1,0 +1,68 @@
+{% extends "basenew.html" %}{% load humanize %} {% block title %}VOUCHERS{% endblock %}{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">VOUCHERS</h6>
+        </div>
+        <div class="card-body">
+          <form role="form" action="{% url 'voucher:listVoucher' %}">
+            <div class="row">
+              <div class="col-lg-3 form-group">
+                <label>Filter Vouchers ==></label>
+              </div>
+              <div class='col-lg-4 form-group'>
+                  <select class="form-control" name="voucherType">
+                    <option value="all">ALL</option>
+                    <option value="used">USED</option>
+                    <option value="unused">UN-USED</option>
+                  </select>
+              </div>
+              <div class="col-lg-4 form-group">
+                  <button type="submit" class="btn btn-danger btn-ljg btn-block">Filter</button>
+              </div>
+            </div>
+          </form>
+            <div class="table-responsive">
+                <table width="100%" class="table table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr width="100%">
+                                <th>S/N</th>
+                                <th>Voucher</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% if getVouchers %}
+                            {% for i in getVouchers %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.voucher}}</td>
+                                <td>{{i.voucher_amount}}</td>
+                                <td>{{i.status}}</td>
+                                <td>{{i.date}}</td>
+                            </tr>
+                           {% endfor %}
+                        {% else %}
+                        <tr class="">
+                            <td>Sorry, no voucher yet.</td>
+                        </tr>
+                        {% endif %}
+
+
+                    </tbody>
+                </table>
+<!--                 {% include "partials/paginations.html" %} -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+{% endblock %}
+{% block footer_scripts %}
+{% include 'partials/table_scripts.html' %}
+{% endblock footer_scripts %}

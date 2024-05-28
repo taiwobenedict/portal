@@ -1,0 +1,38 @@
+<script type="text/javascript">
+//var apikey = {{user.token.key}}
+
+function pinPurchase(event){
+  event.preventDefault()
+  var pin_type = document.querySelector("#pin_type").value;
+  var stringParams = 'pin_type='+pin_type
+  document.querySelector("#pinSubmit").textContent = "Processing";
+  var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "/api/v1/resultCheckers?api-token={{user.auth_token.key}}&"+stringParams,
+        "method": "POST",
+        "processData": false,
+    };
+    //use label tag to get the firstElementchild and change the attribute of the firstElementChild
+  $.ajax(settings).done(function (response) {
+    var data = response
+    if(response.status !== 201){
+      document.querySelector("#notific").innerHTML = '<li class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>' + data.message +'</li>'
+      console.log(data)
+    } else {
+      console.log(data)
+      var res = data.details
+      document.querySelector("#notific").innerHTML = '<li class="alert alert-success alert-dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button>' + data.message + ' <a href="/customer/education/educationTransactions">check here for details</a>' +'</li>'
+      //$("#resultResult").html('<h5>Find your Pin Below</h5>')
+      //$.each(res, (key, value)=>{
+        //$("#resultResult").append(`<div class="form-control">${key}: ${value}</div><br/>`)
+      //});
+    }
+    //get data from the api and split into object and keys
+    //localStorage.setItem("address", data.address)
+    document.querySelector("#pinSubmit").textContent = "Process";
+
+  });
+
+}
+</script>

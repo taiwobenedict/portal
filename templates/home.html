@@ -1,0 +1,229 @@
+{% load notifications %}
+{% load dashboardconfig %}
+{% DashboardConfigs as config %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="{{ config.keywords }}"/>
+	<meta name="description" content="{{config.content_field}}" />
+  <meta name="author" content="OLA-EST INTEGRATED RESOURCES LIMITED">
+
+  <title>{% block title %}{% endblock %} | {{ config.site_name }}</title>
+    <!-- Custom CSS -->
+  {% if 'png' in config.site_logo.url %}
+  <link rel="icon" type="image/png" href="{{config.site_logo.url}}" />
+  {% elif 'jpg' in config.site_logo.url %}
+  <link rel="icon" type="image/jpeg" href="{{config.site_logo.url}}" />
+  {% else %}
+  <link rel="icon" type="image/jpeg" href="" />
+  {% endif %}
+  <!-- Bootstrap core CSS -->
+  <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link rel="stylesheet" href="/static/vendor/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/static/vendor/simple-line-icons/css/simple-line-icons.css">
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
+
+  <!-- Plugin CSS -->
+  <link rel="stylesheet" href="/static/device-mockups/device-mockups.min.css">
+
+  <!-- Custom styles for this template -->
+  <link href="/static/css/new-age.min.css" rel="stylesheet">
+  <style>
+    @media (min-width: 992px){
+      header.masthead {
+          height: 40vh;
+          min-height: 400px;
+          padding-top: 0;
+          padding-bottom: 0;
+      }
+
+      header.masthead .header-content {
+          margin-bottom: 0;
+          /* text-align: left; */
+      }
+
+      header.masthead .header-content {
+          max-width: 100%;
+          margin-bottom: 100px;
+          text-align: center;
+      }
+    }
+    @media (min-width: 990px){
+      .addspace{
+        padding-top: 100px;
+      }
+    }
+  </style>
+
+</head>
+
+<body id="page-top">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse" style="border-radius:0px!important;margin-bottom: 0px !important; ">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>                        
+          </button>
+                <a class="navbar-brand" href="/">{{ config.site_name }}</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="active"><a href="/"><span class="glyphicon glyphicon-home"></span>&nbsp;Home</a></li>
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url 'smsangosend:customer' %}"><span class="glyphicon glyphicon-dashboard"></span>&nbsp;Dashboard</a></li>
+                    <li><a href="{% url 'smsangosend:logout' %}"><span class="glyphicon glyphicon-log-in"></span>&nbsp;Logout</a></li>
+                    {% else %}
+                    <li><a href="{% url 'smsangosend:register' %}"><span class="glyphicon glyphicon-user"></span>&nbsp;Sign Up</a></li>
+                    <li><a href="{% url 'smsangosend:login' %}"><span class="glyphicon glyphicon-log-in"></span>&nbsp;Login</a></li>
+                    {% endif %}
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Contact Us<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="tel:08065516726"><h4><strong>08065516726</strong></h4></a></li>
+                            <li><a href="#">email@gmail.com</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="masthead">
+        <div class="container h-100">
+              <div class="col-lg-12 my-auto">
+                  <div class="header-content mx-auto addspace">
+                    <h1 class="mb-5">Best VTU Site Join Now and Enjoy !!!</h1>
+                    <a href="{% url 'smsangosend:register' %}" class="btn btn-outline btn-xl js-scroll-trigger">Start Now for Free!</a>
+                  </div>
+              </div>
+        </div>
+    </header>
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-heading text-center">
+                <h2>Unlimited Features, Unlimited Fun</h2>
+                <p class="text-muted">Check out what you can do with this app theme!</p>
+                <hr>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 my-auto">
+                    <div class="device-container">
+                        <div class="device-mockup iphone6_plus portrait white">
+                            <div class="device">
+                                <div class="screen">
+                                    <!-- Demo image for screen mockup, you can put an image here, some HTML, an animation, video, or anything else! -->
+                                    <img src="/static/img/demo-screen-1.jpg" class="img-fluid" alt="">
+                                </div>
+                                <div class="button">
+                                    <!-- You can hook the "home button" to some JavaScript events or just remove it -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 my-auto">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="feature-item">
+                                    <i class="icon-screen-smartphone text-primary"></i>
+                                    <h3>Device Mockups</h3>
+                                    <p class="text-muted">Ready to use HTML/CSS device mockups, no Photoshop required!</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="feature-item">
+                                    <i class="icon-camera text-primary"></i>
+                                    <h3>Flexible Use</h3>
+                                    <p class="text-muted">Put an image, video, animation, or anything else in the screen!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="feature-item">
+                                    <i class="icon-present text-primary"></i>
+                                    <h3>Free to Use</h3>
+                                    <p class="text-muted">As always, this theme is free to download and use for any purpose!</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="feature-item">
+                                    <i class="icon-lock-open text-primary"></i>
+                                    <h3>Open Source</h3>
+                                    <p class="text-muted">Since this theme is MIT licensed, you can use it commercially!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="cta-content">
+            <div class="container">
+                <h2>Stop waiting.<br>Start Recharging.</h2>
+                <a href="{% url 'smsangosend:register' %}" class="btn btn-outline btn-xl js-scroll-trigger">Let's Get Started!</a>
+            </div>
+        </div>
+        <div class="overlay"></div>
+    </section>
+
+    <section class="contact bg-primary" id="contact">
+        <div class="container">
+            <h2>We
+                <i class="fa fa-heart"></i> new friends!</h2>
+            <ul class="list-inline list-social">
+                <li class="list-inline-item social-twitter">
+                    <a href="#">
+                        <i class="fa fa-twitter"></i>
+                    </a>
+                </li>
+                <li class="list-inline-item social-facebook">
+                    <a href="#">
+                        <i class="fa fa-facebook"></i>
+                    </a>
+                </li>
+                <li class="list-inline-item social-google-plus">
+                    <a href="#">
+                        <i class="fa fa-google-plus"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; {{ config.site_name }} {% now 'Y' %}. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="/static/vendor/jquery/jquery.min.js"></script>
+    <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="/static/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for this template -->
+    <script src="/static/js/new-age.min.js"></script>
+
+</body>
+
+</html>

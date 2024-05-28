@@ -1,0 +1,17 @@
+{% extends "base.html" %} {% block content %}
+<h3 class='panel'>Proceed to Pay to Recharge {{phone}}</h3>
+<form action="{% url 'rechargeapp:paymentdatatpup' %}" method="POST">
+    <input name="network" type="hidden" value="{{network}}">
+    <input name="amt" type="hidden" value="{{amt}}">
+    <input name="phone" type="hidden" value="{{phone}}">
+    {% csrf_token %}
+  <script
+    src="https://js.paystack.co/v1/inline.js" 
+    data-key="pk_live_60c93325678f56c292887ccc4a462e80b9b81441"
+    data-email="{{user.email}}"
+    data-amount="{{amt}}"
+    data-ref="{{ordernumber}}"
+  >
+  </script>
+</form>
+{% endblock %}

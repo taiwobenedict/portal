@@ -1,0 +1,22 @@
+<script type="text/javascript">
+  const togglePassword = () => {
+      var password = document.getElementById("id_password");
+      var button = document.getElementById("show_password");
+      if (password.type == "password") {
+          button.innerHTML = '<i class="fa fa-eye-slash"></i>';
+          password.type = "text";
+      }
+      else {
+          button.innerHTML = '<i class="fa fa-eye"></i>';
+          password.type = "password";
+      }
+  }
+
+  $(function(){
+      $(".alert-message").alert();
+      $('#mainForm').submit(function(){
+          $('#submit').button('loading');
+      })
+  });
+  document.forms[1].elements[2].focus();
+</script>

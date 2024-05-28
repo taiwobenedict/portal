@@ -1,0 +1,22 @@
+{% load dashboardconfig %}
+{% DashboardConfigs as config %}
+{% autoescape off %}
+Hi {{ user.username }},
+
+Thanks for Registering {{config.site_name}}!!!
+
+Please Copy and Paste the link below in your browser to confirm your registration:
+
+{{config.site_domain}}/customer/activate/{{ uid }}/{{ token }}/activate
+
+If clicking the link above doesn't work, please copy and paste the URL in a new browser
+window instead.
+
+Enjoy the Experience and Reffer your Friends and Family.
+
+If you have any issue activating your account, kindly call {{config.phone}} for quick response.
+
+Best Regards
+
+{{config.site_name}}!!!
+{% endautoescape %}

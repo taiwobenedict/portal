@@ -1,0 +1,20 @@
+{% extends "basenew.html" %}{% load humanize %} {% block content %}
+<div class="container">
+	<div class="row justify-content-left">
+	    <div class="col-lg-7">
+	      <!-- Dropdown Card Example -->
+		    <div class="card shadow mb-4">
+		        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+			        <h4 class="m-0 font-weight-bold text-success"><strong>Payment successful</strong></h4>
+		        </div>
+		        <div class="card-body">
+					<p>Your Order ID/Transacton ID is : <strong>{{ reference }}</strong></p>
+					<p>Purchased Amount is :<strong>{{ amountfrompayst|intcomma }}</strong></p>
+					<p>Amount of Credits credited is :<strong>{{ amountfrompayst }}</strong></p>
+					<p>Your new Balance :<strong>{{ updatesmscredit }}</strong></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

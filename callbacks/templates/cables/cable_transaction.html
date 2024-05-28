@@ -1,0 +1,143 @@
+{% extends "basenew.html" %} {% load humanize %} {% block title %}CABLE PAYMENTS{% endblock %}
+    {% block extracss %}
+ {% endblock extracss %}
+{% block content %}
+<style>
+/* Important part */
+.modal-dialog{
+    overflow-y: initial !important
+}
+.modal-body{
+    height: 500px;
+    overflow-y: auto;
+}
+</style>
+<script>
+function closeUp(){
+    $('#myModal').hide();
+}
+
+function getDetails(event, transId){
+  event.preventDefault()
+  var stringParams = 'transId='+transId
+
+  var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "/api/v1/cabletransactiondetails?api-token={{user.auth_token.key}}&"+stringParams,
+        "method": "GET",
+        "processData": false,
+    };
+    $('#modal_title_id').html('')
+    $('#mode-body').html('')
+    $.ajax(settings).done(function (response) {
+      data = response
+      //console.log(data)
+      if(response.status !== 201){
+        //console.log(data.details)
+        $('#myModal').show();
+        $('#modal_title_id').html('Cable Tv')
+        deTails = $('#mTable').html('')
+        $.each(data.details, function( key, value ) {
+          deTails.append(`<tr><th>${key}</th><td>${value}</td></tr>`)
+        })
+      } else {
+        //console.log(data.details)
+        $('#myModal').show()
+        $('#modal_title_id').html('Cable Tv')
+        $('#mTable').html(data.details)
+      }
+    });
+}
+</script>
+
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">CABLE PAYMENTS</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table width="100%" class="table table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr width="100%">
+                                <th>S/N</th>
+                                <th>Smart No</th>
+                                <th>Order ID</th>
+                                <th>Amount</th>
+                                <th>Invoice</th>
+                                <th>Bill Type</th>
+                                <th>Customer Number</th>
+                                <th>Customer Name</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% if historys %}
+                            {% for i in historys %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.smart_no}}</td>
+                                <td>{{i.ordernumber}} <a class="btn btn-md btn-secondary" href="javascript:void(0);" onclick="getDetails(event,'{{i.ordernumber}}');">Details</a></td>
+                                <td>{{i.sub_amount|intcomma}}</td>
+                                <td>{{i.invoice}}</td>
+                                <td>{{i.billtype}}</td>
+                                <td>{{i.customernumber}}</td>
+                                <td>{{i.customername}}</td>
+                                <td>{{i.phone}}</td>
+                                <td>{{i.status}}</td>
+                                <td>{{i.purchased_date}}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                        <tr class="">
+                            <td>Sorry, no history Yet.</td>
+                        </tr>
+                        {% endif %}
+
+
+                    </tbody>
+                </table>
+<!--                 {% include "partials/paginations.html" %} -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+<!-- Modal -->
+
+<div class="modal" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content" style="overflow-y: scroll;">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal_title_id"></h4>
+        <button type="button" class="close" data-dismiss="modal" onclick="closeUp();">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body" id="modal-body">
+        <table class="table table-bordered">
+            <thead id="mTable">
+            </thead>
+        </table>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeUp();">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block footer_scripts %}
+{% include 'partials/table_scripts.html' %}
+{% endblock footer_scripts %}

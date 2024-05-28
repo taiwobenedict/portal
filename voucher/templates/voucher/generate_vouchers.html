@@ -1,0 +1,86 @@
+{% extends "basenew.html" %} {% block title %}GENERATE VOUCHERS{% endblock %}
+ {% block content %}
+<script>
+function copyVoucher() {
+  var copyText = '{% for i in generated %} {{i.voucher}},{% endfor %}';
+  var copy = $('<input>').val(copyText).appendTo('body').select()
+  document.execCommand("copy");
+  swal('Copied', 'Voucher Copied!!!');
+}
+</script>
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">GENERATE VOUCHERS </h6>
+            <div class="drpdown no-arrow show">
+                <a class="font-weight-bold text-danger d-md-none" href="#note">Must Read</a>
+            </div>
+        </div>            
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-8">
+                    {% if generated %}
+                    <div class="alert alert-success" role="alert"> <strong>{{ generated|length }} Vouchers was generated</strong> </div>
+                    {% endif %}
+                    {% if not generated %}
+                    <form role="form" method="GET" action="{% url 'voucher:generateVoucher' %}">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class='col-lg-6 form-group'>
+                                <label>Voucher Amount</label>
+                                <input type="Number" class="form-control" name="amountOfVoucher" required="" >
+                            </div>
+                            <div class='col-lg-6 form-group'>
+                                <label>Number of Voucher</label>
+                                <input type="Number" class="form-control" name="numberOfVoucher" required="" >
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">Generate Vouchers</button>
+                            </div>
+                        </div>
+                    </form>
+                    {% else %}
+                    <div class="table-responsive">
+                        <table width="100%" class="table table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr width="100%">
+                                        <th>S/N</th>
+                                        <th>Voucher</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% if generated %}
+                                    {% for i in generated %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{i.voucher}}</td>
+                                        <td>{{i.voucher_amount}}</td>
+                                    </tr>
+                                  {% endfor %}
+                                {% else %}
+                                <tr class="">
+                                    <td>Sorry, no voucher generated.</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-group col-lg-12">
+                        <button type="submit" class="copy btn btn-primary btn-lg btn-block" onclick="copyVoucher();">
+                          Copy Vouchers
+                        </button>
+                    </div>
+                    <div class="form-group col-lg-12">
+                        <a href="{% url 'voucher:gVoucher' %}" class="btn btn-info btn-lg btn-block">Back</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+{% endblock %}

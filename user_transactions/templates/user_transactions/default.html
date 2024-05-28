@@ -1,0 +1,35 @@
+{% extends "basenew.html" %}{% block title %}ALL USERS HISTORIES{% endblock %} 
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">YOUR PAYMENT AIRTIME TRANSACTIONS</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-2">
+                    <a href="/customer/users_transactions/all_transactions/?type=airtime" class="btn btn-primary">Airtime</a>
+                </div>
+                <div class="col-lg-2">
+                    <a href="/customer/users_transactions/all_transactions/?type=data" class="btn btn-primary">Data</a>
+                </div>
+                <div class="col-lg-2">
+                    <a href="/customer/users_transactions/all_transactions/?type=cable" class="btn btn-primary">Cable Tv</a>
+                </div>
+                <div class="col-lg-2">
+                    <a href="/customer/users_transactions/all_transactions/?type=electricity" class="btn btn-primary">Electricity</a>
+                </div>
+                <div class="col-lg-2">
+                    <a href="/customer/users_transactions/all_transactions/?type=result_checkers" class="btn btn-primary">Result Checkers</a>
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+{% endblock %}
+{% block footer_scripts %}
+{% endblock footer_scripts %}

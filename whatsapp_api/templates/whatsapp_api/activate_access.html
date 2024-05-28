@@ -1,0 +1,46 @@
+{% extends "basenew.html" %} {% load bootstrap4 %}
+{% block title %}USER TO USER WALLET TRANSFER Money{% endblock %}
+{% block content %}
+{% include 'transferApp/scriptTransfer.html' %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">USER TO USER WALLET TRANSFER</h6>
+            <div class="drpdown no-arrow show">
+                <a class="font-weight-bold text-danger d-md-none" href="#note">Must Read</a>
+            </div>
+        </div>            
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-6">
+                  {%  bootstrap_messages %}
+                    <form role="form" id="vTransferApp" method="POST" action={% url 'user_to_user_transfer:initUserTransfer' %}>
+                      {% csrf_token %}
+                      <div class="form-group">
+                          <label for="pin_type">Enter Amount</label>
+                          <input type="number" class="form-control" name="amount" id="amount" placeholder="", required>
+                      </div>
+                      <div class="form-group">
+                          <label for="bank">Recipient (Username or email)</label>
+                          <input  class="form-control" name="recipient" id="recipient" placeholder="Username or Email", required>
+
+                      </div>
+                      <div class="form-group">
+                          <button class="btn btn-primary btn-lg btn-block">Transfer</button>
+                      </div>
+                    </form>               
+                </div>
+                <div class="col-lg-6">
+                  <p>
+                    <strong>How it works:</strong>
+                    Transfer from your wallet to another user. 
+                  </p>
+                </div>
+            </div>
+            <!-- /.row (nested) -->
+        </div>
+
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% if gen_obj == "transactions" %}
+    {% include "transactions/index.html" %}
+{% elif gen_obj == "result_checkers"  %}
+    {% include "education/pinHistory.html" %}
+{% else %}
+    {% include "user_transactions/default.html" %}
+{% endif %}

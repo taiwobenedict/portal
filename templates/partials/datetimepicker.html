@@ -1,0 +1,28 @@
+
+<head>
+    <link href="/datetime/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/static/datetime/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+</head>
+    <label for="dtp_input1" class="control-label">Schedule Date/Time</label>
+    <div class="input-group date form_datetime"  data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
+        <input class="form-control" size="16" type="text" value="" readonly required>
+        <span class="input-group-addon"><span class="fa fa-calendar fa-fw fa-2x"></span></span>
+		<!-- <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span> -->
+    </div>
+	<input type="hidden" id="dtp_input1" name="time_to_send" value="" />
+
+<script type="text/javascript" src="/static/datetime/jquery/jquery-1.8.3.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="/static/datetime/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/datetime/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript">
+    $('.form_datetime').datetimepicker({
+        //language:  'fr',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+        showMeridian: 1
+    });
+</script>

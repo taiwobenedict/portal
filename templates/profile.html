@@ -1,0 +1,92 @@
+{% extends "basenew.html" %}{% load bootstrap4 %} {# Display django.contrib.messages as Bootstrap alerts #} {% bootstrap_messages %}{% block title %}PROFILE EDIT{% endblock %} {% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">{{ user.username }}' PROFILE</h6>
+            <div>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#profileedit">
+                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> Edit
+                </a>
+            </div>
+
+        </div>
+        <div class="card-body">
+            {% if not user.userprofile.phone %}
+            <center class='alert-warning'>You need to update your profile to Send SMS</center>
+            {% endif %} {% if messages %}
+            <ul class="messages list-unstyled">
+                {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{{ user.username }}'s Profile Edits</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    {% if get_profile.profile_image %}
+                    <img src="{{get_profile.profile_image.url}}" class="rounded-circle" width="100%"> {% endif %}
+                    <center>{{get_profile.user.first_name}} {{get_profile.user.last_name}}
+                    </center>
+
+                </div>
+                <div class="col-md-6">
+                    {% if get_profile %}
+                    <p>Username: {{get_profile.user.username}}</p>
+                    <p>Phone: {{get_profile.phone}}</p>
+                    <p>Email: {{get_profile.user.email}}</p>
+                    <!--                 <p>Firstname:   {{get_profile.user.first_name}}</p>
+                <p>Lastname:    {{get_profile.user.last_name}}</p> -->
+                    <p>Country: {{get_profile.location}}</p>
+                    <p>Date of Birth: {{get_profile.date_of_birth}}</p>
+                    <p>You were Reffered by: {% if get_profile.refferal %}{{get_profile.refferal}}{% else %} Nobody {% endif %}</p>
+                    <br/>
+                    <label><h4><strong>Share Your Refferal Link</strong><br/><small>(Invite your Friends and Family with the Link above)</small></h4></label>
+                    <input readonly class="form-control mr-1" value="" id="id_cpy">
+                    <button class="btn btn-secondary btn-block" onclick="myFunction()">Copy text</button>
+                    <script>
+                        document.querySelector('#id_cpy').value = `${window.location.origin}/customer/registerpage?refferal={{user.username}}`
+
+                        function myFunction() {
+                            var copyText = document.getElementById("id_cpy");
+                            copyText.select();
+                            document.execCommand("copy");
+                            //alert("Copied the text: " + copyText.value);
+                            alert("Referral Link Copied");
+                        }
+                    </script>
+                    <br /> {% include "partials/sharethis.html" %} {% else %} You are yet to Update your profile {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="profileedit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Profile</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+                </div>
+                <div class="modal-body">
+                    <form role="form" method="post" enctype="multipart/form-data">
+                        {% comment %} {% csrf_token %} {% endcomment %} {% if form.errors.non_field_errors %} {{ form.errors.non_field_errors }} {% endif %}
+                        <form method='POST'>
+                            {% csrf_token %} {% bootstrap_form user_form %} {% bootstrap_form profile_form %} {% buttons %}
+                            <button class="btn btn-lg btn-success btn-block" type="submit">Save</button> {% endbuttons %}
+                        </form>
+                        <div id="error"></div>
+                        {% include "javascripts/phonenumber.html" %}
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary btn-user" type="button" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

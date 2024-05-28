@@ -1,0 +1,25 @@
+{% if historys.has_other_pages %}
+<div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
+    <ul class="pagination">
+        {% if users.has_previous %}
+        <li class="paginate_button page-item"><a class="page-link" href="?page={{ historys.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+        <li class="paginate_button page-item page-link disabled"><span>&laquo;</span></li>
+        {% endif %} {% for i in historys.paginator.page_range %} {% if users.number == i %}
+        <li class="paginate_button page-item page-link active"><span>{{ i }} <span class="sr-only">(current)</span></span>
+        </li>
+        {% else %}
+        <li class="paginate_button page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %} {% endfor %} {% if historys.has_next %}
+        <li class="paginate_button page-item"><a class="page-link" href="?page={{ users.next_page_number }}">&raquo;</a></li>
+        {% else %}
+        <li class="paginate_button page-item page-link disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+{% else %}
+<div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
+    <ul class="pagination">
+        <li class="disabled">Page 1 of 1</li>
+    </ul>
+</div>
+{% endif %}

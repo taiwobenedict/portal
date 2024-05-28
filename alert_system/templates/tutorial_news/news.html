@@ -1,0 +1,33 @@
+{% extends "basenew.html" %} {% load bootstrap5 dashboardconfig humanize %}{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+      <!-- Card Header - Dropdown -->
+      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between text-center">
+        <h6 class="m-0 font-weight-bold text-primary text-center">News and Tutorials</h6>
+      </div>
+      <!-- Card Body -->
+      <div class="card-body">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <div>
+              {% for i in get_pinned_news %}
+                <a class="link " href="{{i.url}}" target="_blank">{{i.title}} <span class="badge badge-primary">Pinned</span></a><br/>
+              {% endfor %}
+            </div><hr/>
+            {% if historys %}
+              {% for i in historys %}
+                {% if i.pin_to_top == False %}
+                  <a class="link " href="{{i.url}}" target="_blank">{{i.title}}</a><br/>
+                {% endif %}
+              {% endfor %}
+              <div class="text-center">
+                {% include "partials/paginations.html" %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+{% endblock %}
+

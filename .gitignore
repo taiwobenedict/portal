@@ -1,0 +1,56 @@
+/migrations/
+/migrations/*
+
+
+/__pycache__/*
+/__pycache__
+__pycache__
+
+vbp
+/vbp/*
+/vbp
+static.zip
+mail rave_payment universal.zip
+VBP V2 WITHOUT ADDONS __.zip
+VBP V2 WITHOUT ADDONS.zip
+VBP V2 WITHOUT ADDON --.zip
+VBP V2 WITHOUT ADDONS.zip
+gateway/*
+gateway
+VBP V3 WITH ADDONS 04-12-2021.zip
+VBP V3 WITH ADDONS.zip
+VBP V3 WITH statics.zip
+media/500_fZJ2oPt.png
+monnify_app.zip
+static/jazzmin.zip
+static/vendor/adminlte.zip
+user_transactions.zip
+*.zip
+.htaccess
+rea.txt
+req.txt
+# requirements.txt
+requirementss.txt
+res.html
+runtime.txt
+scripts.py
+x.txt
+xc.txt
+VBP with Reseller.code-workspace
+dbbk.json
+clearmigrations.py
+custom_templates
+venv
+env
+insurance
+user_to_user_transfer
+universal_rcp
+transferApp
+sage_app
+rubiesng_app
+recharge_printing
+investments
+insurance
+django_watch_bugging-0.1
+africatalking
+staticfiles

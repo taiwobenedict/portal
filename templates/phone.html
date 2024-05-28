@@ -1,0 +1,26 @@
+{% extends "base2.html" %} {% load bootstrap4 %} {% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="login-panel panel panel-default">
+                <center><h2>SMSANGO</h2></center>
+                <div class="panel-heading">
+                    <center><h3 class="panel-title">Enter Phone Number</h3></center>
+                </div>
+                {% if form.errors.non_field_errors %} {{ form.errors.non_field_errors }} {% endif %}
+                <form role="form" method="POST">
+                    <div style="padding:20px;">
+
+                        {% csrf_token %}
+                        <label>Phone Number</label>
+                        <input class="form-control" name="phone" placeholder="Format Example 234818133224455" required="True" maxlength="15" type="number">
+                        <p class="help-block"> Please Enter your Phone number Correctly </p><br/>
+                        <button class="btn btn-lg btn-success btn-block" type="submit">Save</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

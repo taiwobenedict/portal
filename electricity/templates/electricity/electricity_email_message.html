@@ -1,0 +1,31 @@
+{% load dashboardconfig %}
+{% DashboardConfigs as config %}
+{% autoescape off %}
+
+Hi {{ user.username }},
+
+Electricity bill payment was successful on www.etopup.ng
+
+Transaction ID: {{transactionId}}
+
+Product Name: {{product_name}}
+
+Customer Name: {{customerName}}
+
+Customer Address: {{customerAddress}}
+
+Meter Number: {{meterNo}}
+
+Amount: {{amount}}
+
+Token: {{purchased_code}}
+
+Token Amount: {{token_amount}}
+
+Units: {{mainTokenUnits}}
+
+Tariff: {{tariffIndex}}
+
+Best Regards
+{{config.site_name}}!!!
+{% endautoescape %}

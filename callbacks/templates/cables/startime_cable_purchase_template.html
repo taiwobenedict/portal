@@ -1,0 +1,114 @@
+{% extends "base.html" %} {# Display django.contrib.messages as Bootstrap alerts #}    
+{% block head %}{% endblock head %}
+{% load bootstrap5 %}{% bootstrap_messages %}{% block content %}
+<script type="text/javascript">
+function populate(s1,s2, s3){
+    var s1 = document.getElementById(s1);
+    var s2 = document.getElementById(s2);
+    var s3 = document.getElementById(s3);
+    s2.innerHTML = "";
+    if(s1.value == "15") {
+        var optionArray = ["|", "100|50MB-1day = N100", "500|750MB-14days = N500", "1000|1GB-30days = N1000", "1200|1.5GB-30days = N1200", "2000|2.5GB-30days = N2000", "5000|10GB-30days = N5000", "10000|22GB-30days = N10000"]
+    } else if (s1.value == "1") {
+        var optionArray = ["|", "100|50MB-1day = N100", "200|100MB-3days = N200", "500|750MB-14days = N500", "1000|1.5GB-30days = 1000", "2000|3.5GB-30days = 2000", "2500|5GB-30days = 2500"]
+    } else if (s1.value == "2") {
+        var optionArray = ["|", "200|150MB-7days = N200", "1000|1GB-30days = N1000", "1200|1.5GB-30days = N1200", "2000|2.5GB-30days = N2000", "2500|3.5GB-30days = N2500"]
+    }
+    for (var option in optionArray) {
+        var pair = optionArray[option].split("|");
+        var newOption = document.createElement("option");
+        newOption.value = pair[0];
+        newOption.innerHTML = pair[1];
+        s2.options.add(newOption);        
+    }
+}
+</script>
+<div class="row" style="margin-top:20px;">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Recharge Your STARTIMES Here          
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-4">
+                        {% if messages %}
+                        <ul class="messages list-unstyled">
+                            {% for message in messages %}
+                            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        <form role="form" method="POST" enctype="multipart/form-data" action="{% url 'rechargeapp:startimes_recharging' %}">
+                            {% csrf_token %}
+
+                            <div class='row'>
+                                <div class="col-lg-12">
+                                <div class='form-group'>
+                                    <label for='Network'>Cable (STARTIMES)</label>
+                                </div>
+                                <div class='form-group'>
+                                    <label for='smartno'>Smart No</label>
+                                    <input id='smartno' class="form-control" name="smart_no" required>
+                                </div>
+                                <div class='form-group'>
+                                    <label for='amt'>Amount to Recharge</label>
+                                    <select id='amt' class="form-control" name="amt" required>
+					<option></option>
+                                        <option value="1000">Nova N900 + N100 convinience fee</option>
+                                        <option value="1400">Basic N1300 + N100 convinience fee</option>
+                                        <option value="2000">Smart N1900 + N100 convinience fee</option>
+                                        <option value="2700">Classic N2600 + N100 convinience fee</option>
+                                        <option value="3900">Unique N3800 + N100 convinience fee</option>
+                                    </select>                                </div>
+                                <div class='form-group'>
+                                    <label for='r_phone'>Phone Number to Receive Notification </label>
+                                    <input  class="form-control" name="phone" id="phone" placeholder="E.g 08163524890", required>
+                                    <small id="PhoneHelp" class="form-text text-muted">Phone Number to receive Notification After successful operation</small>
+                                </div>
+                                <div class='form-group'>
+                                    <label for='use_credit'>Deduct Payment From Your Credits ?</label>
+                                    <select class="form-control" name="usecredit" id="use_credit" required>
+                                        <option></option>
+                                        <option value="YES">Yes</option>
+                                        <option value="NO"disabled>Direct Purchase Disabled Use credits to purchase</option>
+                                    </select>
+                                </div>
+                                <div class='form-group'>
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block">Proceed to Recharge STARTIMES</button>
+                                </div>
+                            </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-8">
+                        <p>
+                            <strong>STARTIMES Plans<br>
+                                
+				<li><strong>NOVA Bouquet: </strong>Price:<strong> N900 per month </strong></li>
+				<li><strong>Basic Bouquet: </strong><strong>Price: N1,300 per month. </strong></li>
+				<li><strong>Classic Bouquet: </strong><strong>Price: N2,600 per month</strong></li>
+				<li><strong>Unique Bouquet:</strong><strong>Price: N3,800 Per Month</strong></li>
+								
+                            <a href="https://otextcity.com/2-pages/20-all-startimes-subscription-plans-and-channels.html" target="_blank">Check The details of each plan here</a>
+                       </p>
+                    <h4><strong><u>How to Recharge Startimes</u></strong></h4>
+                    <p>
+                        <li>Enter Smart No</li>
+                        <li>Enter your Recharge Amount (Check above for the STARTIMES plan that suite you and enter the amount there)</li>
+                        <li>Enter the Phone number to Receive Notification After Recharge</li>
+                        <li>Select Payment Mode. <br>Select "YES" to use your <strong>credit</strong> OR Select "NO" to pay by other means</li>
+                    </p>
+		    <p><strong>The more you recharge, the more bonus point you gathered</strong></p>
+
+                    </div>
+                </div>
+                <!-- /.row (nested) -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+{% endblock %}

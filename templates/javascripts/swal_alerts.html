@@ -1,0 +1,56 @@
+
+{% load bootstrap4 %}
+<script>
+    const saveToLocalStorage = (key, value) => {
+        console.log(value, "dsfdsfs---||||||>>>>")
+        return localStorage.setItem(key, value);
+    }
+    const getValue = localStorage.getItem("value");
+
+    const btn = document.querySelector("#btn") || document.querySelector("#purchasePowerButton") || document.querySelector("#pinSubmit") || document.querySelector("#initTransferAppSubmit")
+    const form = document.querySelector("#form") || document.querySelector("#customerPurchasePower") || document.querySelector("#pinPurchase") || document.querySelector("#finalizeTransferApp") || document.querySelector("#InitTransferApp")
+    btn.addEventListener("click", function(){
+        btn.setAttribute("style", "display:none;")
+        if (confirm("Do you want to proceed")) {
+          Swal.fire('Processing', '', 'success')
+          console.log("gothere")
+
+          if (form.id == "customerPurchasePower"){
+            try{
+              purchasePowerForCustomer();
+            } catch(e){}
+          } else if (form.id == "pinPurchase"){
+            try{
+              pinPurchase();
+            } catch(e){
+              console.log(e)
+            }
+          } else {
+            setTimeout(function(){
+              form.submit();
+            }, 2000)
+          }
+
+        } else if (close('Exit')) {
+          btn.removeAttribute("style", "display:block;")
+          Swal.fire('Cancelled', '', 'info')
+        }
+
+    })
+
+    localStorage.removeItem("value");
+
+    {% if messages %}
+        let bs4_msg = {% bootstrap_messages %}
+        console.log(bs4_msg, "lolz")
+        window.addEventListener("onload", function(){
+            console.log("congo")
+            Swal.fire({
+                html: bs4_msg,
+                showConfirmButton: false,
+                timer: 1500
+            })
+        })
+    {% endif %}
+
+</script>

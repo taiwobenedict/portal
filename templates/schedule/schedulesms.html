@@ -1,0 +1,179 @@
+{% extends "basenew.html" %} {% block title %}SCHEDULE SMS{% endblock %}{% load bootstrap4 %}
+{# Load CSS and JavaScript #}
+{% block extracss %}
+{% endblock extracss %}
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">SEND SMS</h6>
+            <div class="drpdown no-arrow show">
+                <a class="font-weight-bold text-danger d-md-none" href="#note">Must Read</a>
+            </div>
+        </div>            
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="col-lg-12">
+                        {% if form.error %} {{ careful }} {% endif%} {% if successdety %}
+                        <div class="alert alert-success" role="alert"> <strong>{{ successdety | safe }}</strong> </div>
+                        {% else %} {% if successde %}
+                        <div class="alert alert-warning" role="alert"> <strong>{{ successde | safe }}</strong> </div>
+                        {% endif %}{% endif %}
+                        {% if messages %}
+                        <ul class="messages list-unstyled">
+                            {% for message in messages %}
+                            <li {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible"{% endif %}><button type="button" class="close" data-dismiss="alert">&times;</button>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+
+                        <form role="form" action="{% url 'smsangosend:savedschedulesms' %}" method="POST" id="sendsms" data-sendsms-url="{% url 'smsangosend:loadnumberforsms' %}">
+                            {% csrf_token %}
+                            <div class="row">
+                              <div class="form-group col-lg-8">
+                                  {% include "partials/datetimepicker.html" %}
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="form-group col-lg-8">
+                                  <label>Sender ID</label>
+                                  <input class="form-control" name="sender" placeholder="Sender id" required="" maxlength="11">
+                                  <p class="help-block">Characters Must Not Be More Than 11 Characters </p>
+                              </div>
+                            </div>
+                            <div class="row"> 
+                                <div class="form-group col-lg-6">
+                                    <label>Send To Phonebook Contacts</label>
+                                    <select class="form-control" name="phonebook" id="phonebook" >
+                                        <option value="">---</option>
+                                        {% if lphc %}
+                                            {% for ph in lphc%}
+                                                <option value="{{ph.id}}">{{ph.name_contacts}}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </div>
+                                <div class="col-lg-6 form-group">
+                                    <label>SELECT ROUTE</label>
+                                    <select class="form-control" name="smsroute" required="" >
+                                        <option value="NON_DND">NON DND</option>
+                                        <option value="DND">DND</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row"> 
+                              <div class="form-group col-lg-12">
+                                  <label>Recipients <small style="color:red;">(Paste contacts here it must be in +2348022222222 or 2348022222222 format separated by comma)</small></label>
+                                  {% comment %} <textarea id="phonemu_id" class="form-control" name="recipients" rows=5 >{% include 'partials/dropdown_option.html' %}</textarea> {% endcomment %}
+                                  <textarea id="phonemu_id" onblur="countNumber(this);" oninput="countNumber(this);" onkeyup="countNumber(this);" class="form-control" name="recipients" rows=5 >{% include 'partials/dropdown_option.html' %}</textarea>
+                                  <span><strong style="color:red;" id="recipient_count"></strong><small> Note: You can only send to 100 recipients at once for now. The capacity will be maximized with time. Thanks </small></span>
+                                  <script>
+                                  //try to count the numbers separated by commas
+                                      function countNumber(field){
+                                      let jon = document.getElementById('phonemu_id').value.split(/[\ \n\r\;\:\,]+/).length - 1;
+                                      document.getElementById('recipient_count').innerHTML = jon + ' Recipients';
+                                      }
+                                  </script>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="form-group col-lg-12">
+                                  <label>Message</label>
+                                  <textarea class="form-control" onblur="count2(this,this.form.countBox2,480);" onkeyup="count2(this,this.form.countBox2,480);" id="message" name="messagecontent" maxlength="480" placeholder="Enter message to be sent here" rows=6 required=""></textarea>
+                                  <input type="hidden" class="form-control" name="textMessagePlus" value="">
+                                  <input class="form-control" readonly="" onfocus="this.blur();" name="countBox2" value="0 Characters Used" id="countBox2" size="50">
+                                  <script>
+                                      //count message lenght 
+                                      function count2(field, countfield, maxlimit) {
+                                          var draftBox = document.getElementById('draftBox');
+                                          var draftRecipient = document.getElementById('draftRecipient');
+                                          var field2 = document.getElementById('recipientList');
+                                          if (field.value.lenght > 480) {
+                                              field.value = field.value.substring(0, 480);
+                                              field.blur();
+                                              return false;
+                                          } else {
+                                              var counted = field.value.length;
+                                              if (counted > 160) {
+                                                  var smslenght = 145;
+                                              } else {
+                                                  var smslenght = 160;
+                                              }
+                                              var pages = field.value.length / smslenght;
+                                              if (pages < 1) {
+                                                  var page = '1';
+                                              }
+                                              if (pages == 1) {
+                                                  var page = '1';
+                                              }
+                                              if (pages > 1) {
+                                                  var page = '2';
+                                              }
+                                              if (pages > 2) {
+                                                  var page = '3';
+                                              }
+                                              if (pages > 3) {
+                                                  var page = '4';
+                                              }
+                                              //if (pages > 4) {
+                                              //   var page = '5';
+                                              //}
+                                              //if (pages > 5) {
+                                              //    var page = '6';
+                                              //}
+                                              //if (pages > 6) {
+                                              //    var page = '7';
+                                              //}
+
+                                              countfield.value = field.value.length + " of 480 Characters Used (" + page + " SMS)";
+                                          }
+                                          draftBox.value = field.value;
+                                          draftRecipient.value = field2.value;
+                                      }
+                                  </script>
+                              </div>
+                            </div>
+                            <div class="row"> 
+                              <div class="form-group col-lg-12">
+                                  <button type="submit" class="btn btn-primary btn-block">Schedule SMS</button>
+                              </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.col-lg-6 (nested) -->
+
+                    <!-- /.col-lg-6 (nested) -->
+                </div>
+                <div class="col-lg-4" id="note">
+                    <p style="color:red">
+                        <strong>PS</strong>: Kindly avoid using these words in your messages; Congrats, congratulations, win, promotion, sex. Messages with these contents are considered to be spam and are not delivered on the network. Also, avoid using the following in your Sender ID; 1, 2, 3,4, 5, 6, 7, 8, 9, &, _, -, %, $, #, @, !, +, =, Facebook, samsung, Sony, Nokia, tecno, Airtel, Etisalat, MTN or other registered brand names. This type of message will be blocked!
+                    </p>
+                </div>
+            </div>
+        </div>
+            <!-- /.card-body -->
+        <!-- /.col-lg-12 -->
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+    $("#phonebook").change(function () {
+      var url = $("#sendsms").attr("data-sendsms-url");  // get the url of the `load_cities` view
+      var phonebookId = $(this).val();  // get the selected country ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'phonebook': phonebookId       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#phonemu_id").html(data);
+          let jon = data.split(/[\ \n\r\;\:\,]+/).length - 1;
+          $('#recipient_count').html(jon + ' Recipients');   // replace the contents of the city input with the data that came from the server
+        }
+      });
+
+    });
+  </script>
+{% endblock %}

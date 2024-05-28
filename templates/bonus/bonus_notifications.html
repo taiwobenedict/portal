@@ -1,0 +1,19 @@
+{% load dashboardconfig %}{% DashboardConfigs as config %}
+{% autoescape off %}
+
+Hi {{ user.username }},
+
+Dear {{username}},
+
+{%  if bonuscre %}
+You have just earned {{bonuscre}} credits referral bonus
+Total Loyalty Point: {{bonusamount}} 
+{% else %}
+You have just Redeemed your Loyalty Bonus {{oldbonus}} credits Successfully.
+{% endif %}
+Continue to enjoy bonus forever while Reffering your Friends and Family.
+Thanks
+
+Best Regards
+{{config.site_name}}!!!
+{% endautoescape %}

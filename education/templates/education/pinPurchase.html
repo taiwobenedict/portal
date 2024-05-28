@@ -1,0 +1,53 @@
+{% extends "basenew.html" %} 
+{% block title %}Purchase Result Pin{% endblock %}
+{% block content %}
+{% include 'education/scriptPin.html' %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Purchase Result Pin Here</h6>
+            <div class="drpdown no-arrow show">
+                <a class="font-weight-bold text-danger d-md-none" href="#note">Must Read</a>
+            </div>
+        </div>            
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-6">
+                    <ul class="messages list-unstyled" id="notific"></ul>
+                    <form role="form" id="pinPurchase" onsubmit="pinPurchase(event)">
+                      <div class="form-group">
+                          <label for="pin_type">Select Pin Type</label>
+                          <select class="form-control" name="pin_type" id="pin_type" required>
+                            <option></option>
+                            <option>waec</option>
+                            <option>neco</option>
+                          </select>
+                      </div>
+                    </form>
+                    <div class='form-group'>
+                        <button class="btn btn-user btn-primary btn-lg btn-block" id="pinSubmit" >Proceed</button>
+                    </div>
+                    {% include "javascripts/swal_alerts.html" %}
+                    <div class="py-3 form-group" id="resultResult"></div>
+                </div>
+                <div class="col-lg-6">
+                  <h4 id="note"><strong>RESULT CHECKER PURCHASE</strong></h4>
+                  <p>
+                    <li>Choose your PIN TYPE</li>
+                  </p>
+                  <p>
+                    <!-- <strong>How it works:</strong>
+                    The data will come as airtime which would be automatically converted to the expected bundle but this is determined by the mobile operator. In case it does not auto-convert then you can manually convert. 
+                    A recipient that has already borrowed airtime will not receive the data top up because the airtime would have been deducted before conversion. 
+                    <br><strong> To Check Data balance: *123*10# or *140#, Etisalat: *228#, MTN: *131*4# GLO: *127*0# </strong>  -->
+                  </p>
+                  <p><strong>The more you purchase, the more bonus point you gathered</strong></p>
+                </div>
+            </div>
+            <!-- /.row (nested) -->
+        </div>
+
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+{% endblock %}

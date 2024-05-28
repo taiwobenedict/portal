@@ -1,0 +1,128 @@
+{% extends "basenew.html" %}{% load humanize dashboardconfig %}
+{% DashboardConfigs as config %}{% block title %}BroadBand TRANSACTIONS{% endblock %}
+{% block head %}
+<style>
+/* Important part */
+.modal-dialog{
+    overflow-y: initial !important
+}
+.modal-body{
+    height: 500px;
+    overflow-y: auto;
+}
+</style>
+{% endblock head %}
+{% block content %}
+<script>
+{% comment %} var smileResArray = {{smileRes|safe}}
+var spectranetResArray = {{spectranetRes|safe}} {% endcomment %}
+{% comment %} console.log(smileResArray, spectranetResArray) {% endcomment %}
+
+function closeUp(){
+    $('#myModal').hide();
+}
+
+function getDetails(event, transId, broadband){
+  event.preventDefault()
+  var stringParams = 'transId='+transId+'&broadband='+broadband
+
+  var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "/api/v1/getDetailsTransactions?api-token={{user.auth_token.key}}&"+stringParams,
+        "method": "GET",
+        "processData": false,
+    };
+    $('#modal_title_id').html('')
+    $('#mode-body').html('')
+    $.ajax(settings).done(function (response) {
+      data = response
+      console.log(data)
+      if(response.status !== 201){
+        //console.log(data.details)
+        $('#myModal').show();
+        $('#modal_title_id').html(broadband)
+        deTails = $('#mTable').html('')
+        $.each(data.details, function( key, value ) {
+          deTails.append(`<tr><th>${key}</th><td>${value}</td></tr>`)
+        })
+      } else {
+        //console.log(data.details)
+        $('#myModal').show()
+        $('#modal_title_id').html(broadband)
+        $('#mTable').html(data.details)
+      }
+    });
+}
+</script>
+
+
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary"> {% if spectranet %}YOUR SPECTRANET TRANSACTIONS{% else %}YOUR SMILE TRANSACTIONS{% endif %}</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table width="100%" class="table table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr width="100%">
+                                <th>S/N</th>
+                                <th>Order ID</th>
+                                <th>Amount</th>
+                                {% if not spectranet %}
+                                <th>Smile Number</th>
+                                {% endif %}
+
+                                <th>Plan</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% if historys %}
+                            {% for i in historys %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.trans_id}}
+                                {% if not spectranet %}
+                                <a class="btn btn-md btn-secondary" href="javascript:void(0);" onclick="getDetails(event,'{{i.trans_id}}', 'smile');">Details</a>
+                                {% else %}
+                                <a class="btn btn-md btn-secondary" href="javascript:void(0);" onclick="getDetails(event,'{{i.trans_id}}', 'spectranet');">Details</a>
+                                {% endif %}
+                                </td>
+                                <td>{{i.amount|intcomma}}</td>
+                                {% if not spectranet %}
+                                <td>{{i.numberRecharged}}</td>
+                                <td>{{i.smileType}}</td>
+                                {% else %}
+                                <td>{{i.api_code}}</td>
+                                {% endif %}
+                                <td>{{i.status}}</td>
+                                <td>{{i.date}}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                        <tr class="">
+                            <td rowspan"7">Sorry, no history Yet.</td>
+                        </tr>
+                        {% endif %}
+
+
+                    </tbody>
+                </table>
+<!--                 {% include "partials/paginations.html" %} -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+{% include 'partials/historyModal.html' %}
+
+{% endblock %}
+{% block footer_scripts %}
+{% include 'partials/table_scripts.html' %}
+{% endblock footer_scripts %}

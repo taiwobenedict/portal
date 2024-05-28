@@ -1,0 +1,303 @@
+{% load dashboardconfig %}
+{% DashboardConfigs as config %}
+<style>
+.sidebar {
+    {% comment %} width: 6.5rem; {% endcomment %}
+    {% comment %} min-height: 92vh!important; {% endcomment %}
+}
+{% comment %} @media only screen and (max-width: 600px) {
+  #accordionSidebar{
+      width:350px!important;
+  }
+} {% endcomment %}
+.sidebar-offcanvas.active {
+    top:40px;
+}
+.nav-link{
+    width: auto!important;
+}
+.nav-link:hover{
+    {% comment %} color: black!important; {% endcomment %}
+    font-weight:700!important;
+}
+
+.nav-link:active{
+    {% comment %} color: black!important; {% endcomment %}
+    font-weight:700!important;
+}
+
+.sidebar .nav-item .collapse {
+    position: initial!important;
+    left: calc(6.5rem + 1.5rem / 2);
+    z-index: 1;
+    top: 2px;
+}
+
+</style>
+<nav class="sidebar sidebar-offcanvas bg-gradient-primary" id="sidebar">
+    <ul class="nav py-5">       
+            <!-- /.navbar-top-links --> 
+            <li class="nav-item nav-profile">
+                <a href="#" class="nav-link">
+                  <div class="nav-profile-image">
+                    <span class="login-status online"></span>
+                    <!--change to offline or busy as needed-->
+                  </div>
+                  <div class="nav-profile-text d-flex flex-column">
+                    <span class="font-weight-bold mb-2">{{user.username}}</span>
+                    <span class="font-weight-bold mb-2">{{user.user_no}}</span>
+                  </div>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'smsangosend:customer' %}">          
+                <span>Dashboard</span>
+                <i class="mdi mdi-home menu-icon"></i></a>
+            </li>
+            <hr/>
+            <li class="nav-item">
+                <a class="bolded nav-link" href="#funds" data-bs-toggle="collapse" aria-expanded="false" aria-controls="funds">
+                  <i class="fa fa-cart-plus fa-fw"></i>
+                  <span>Fund Wallet Now</span>
+                  <i class="menu-arrow"></i>
+                </a>
+                <div id="funds" class="collapse">
+                  <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'smsangosend:toenteramount' %}"> Buy Credits</a><li class="nav-item"><a class="nav-link" href="{% url 'voucher:loadVoucher' %}"> Load Voucher</a><li class="nav-item"><a class="nav-link" href="{% url 'smsangosend:mtnsharensell' %}"> Airtime To Cash</a><li class="nav-item"><a class="nav-link" href="{% url 'smsangosend:payment_history' %}"> Funds Transaction History</a>
+                  </ul>
+                </div>
+            </li>
+            <hr/>
+            <li class="nav-item">
+                <a class="bolded nav-link" href="#smsmenu" data-bs-toggle="collapse" href="#smsmenu" aria-expanded="false" aria-controls="smsmenu">
+                  <i class="fa fa-fw fa-envelope-o"></i>
+                  <span>SMS Menu</span>
+                  <i class="menu-arrow"></i>
+                </a>
+                <div id="smsmenu" class="collapse">
+                  <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'smsangosend:sendsmspage' %}"> Send SMS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'smsangosend:smshistory' %}"> SMS History</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'smsangosend:smsreport' %}"> SMS Report</a></li>
+                    <hr class="sidebar-divider">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'smsangosend:savedschedulesms' %}"> Schedule SMS </a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'smsangosend:schedulesmshistory' %}"> Schedule SMS History</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'smsangosend:schedulesmsreport' %}"> Schedule SMS Report</a></li>
+                  </ul>
+                </div>
+            </li>                      
+            <hr/>
+            <li class="nav-item">
+                <a class="bolded nav-link" href="#airtime" data-bs-toggle="collapse" href="#airtime" aria-expanded="false" aria-controls="airtime"><i class="fa fa-mobile-phone fa-fw"></i><span>Airtime TopUp</span>
+                <i class="menu-arrow"></i>
+                </a>
+                    <div id="airtime" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'rechargeapp:airtimetemplate' %}">Buy Airtime TopUp</a></li>
+                        </ul>
+                    </div>
+            </li>
+            <hr/>
+            <li class="nav-item">
+                <a class="bolded nav-link" href="#directdata" data-bs-toggle="collapse" aria-expanded="false" aria-controls="directdata"><i class="fa fa-mobile-phone fa-fw"></i><span>Data Bundle</span><i class="menu-arrow"></i></a>
+                    <div id="directdata" class="collapse">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'rechargeapp:datatemplate' %}">Buy Data Bundles</a></li>
+                        </ul>
+                    </div>
+                <!-- /.nav-second-level -->
+            </li>
+            <hr/>
+            <li class="nav-item">
+                <a class="bolded nav-link" href="#broadband" data-bs-toggle="collapse" aria-expanded="false" aria-controls="broadband"><i class="fa fa-mobile-phone fa-fw"></i><span>Broadband Internet</span><i class="menu-arrow"></i>
+                </a>
+                    <div id="broadband" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'other_data_services:smilePage' %}">Buy Smile Data</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'other_data_services:smileTransactions' %}">Smile Transactions</a></li>
+                            <!-- <li class="nav-item"><a class="nav-link" href="{% url 'other_data_services:spectranetPage' %}">Buy Spectranet Data</a>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'other_data_services:spectranetTransaction' %}">Spectranet Transactions</a> -->
+                        </ul>
+                    </div>
+                <!-- /.nav-second-level -->
+            </li>
+            <hr/>
+            <li class="nav-item">
+                <a class="bolded nav-link" href="#paybills" data-bs-toggle="collapse" aria-expanded="false" aria-controls="paybills"><i class="fa fa-globe fa-fw"></i><span>Pay Bills</span>
+                <i class="menu-arrow"></i>
+                </a>
+                    <div id="paybills" class="collapse">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'rechargeapp:cabletvtemplate' %}">Gotv/Dstv/Startimes</a></li>
+                            <hr/>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'electricity:eletricityPurchaseTemplate' %}" id="electric">Electricity Bills</a></li>
+                        </ul>
+                    </div>
+                <!-- /.nav-second-level -->
+            </li>
+            <hr/>
+            <!-- <li class="nav-item">
+                <a class="bolded nav-link" data-bs-toggle="collapse" href="#resultcheckers" aria-expanded="false" aria-controls="paybills"><i class="fa fa-globe fa-fw"></i><span>Result Checkers</span></a>
+                    <div id="resultcheckers" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="nav flex-column sub-menu">
+                            <h6 class="collapse-header">Pins</h6>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'education:educationPurchase' %}">Purchase Pin</a>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'education:educationTransactions' %}">Transactions</a>
+                        </div>
+                    </div>
+            </li> -->
+            <li class="nav-item">
+                <a class="bolded nav-link" href="#crytocurrency" data-bs-toggle="collapse" href="#crytocurrency" aria-expanded="false" aria-controls="crytocurrency"><i class="fa fa-btc fa-fw"></i><span>Crypto Currency</span><i class="menu-arrow"></i>
+                </a>
+                    <div id="crytocurrency" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'cryptocurrency:cryptoTemplate' %}">Buy/Sell</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'cryptocurrency:cryptoTransactions' %}">Transactions</a></li>
+                        </ul>
+                    </div>
+                <!-- /.nav-second-level -->
+            </li>
+            <hr/>
+            <li class="nav-item">
+                <a class="bolded nav-link" data-bs-toggle="collapse" href="#moneyTransfer" aria-expanded="false" aria-controls="moneyTransfer"><i class="fa fa-send fa-fw"></i><span>Money Transfer</span><i class="menu-arrow"></i></a>
+                    <div id="moneyTransfer" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'transferApp:verifyAccount' %}">Make Transfer</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'transferApp:check_trans_his' %}">Transfer Transactions</a></li>
+                        </ul>
+                    </div>
+                <!-- /.nav-second-level -->
+            </li>
+            <hr/>
+            <li class="nav-item">
+                <a class="bolded nav-link" data-bs-toggle="collapse" href="#userTouserTransfer" aria-expanded="false" aria-controls="userTouserTransfer"><i class="fa fa-exchange fa-fw"></i><span>User to User Credit Transfer</span><i class="menu-arrow"></i></a>
+                    <div id="userTouserTransfer" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'user_to_user_transfer:userToUserTransfer' %}">Transfer Credit</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'user_to_user_transfer:userTransHistory' %}">Credit Transactions</a></li>
+                        </ul>
+                    </div>
+                <!-- /.nav-second-level -->
+            </li>
+            <hr/>
+
+            <li class="nav-item">
+                <a class="bolded nav-link" data-bs-toggle="collapse" href="#dataPins" aria-expanded="false" aria-controls="userTouserTransfer"><i class="fa fa-exchange fa-fw"></i><span>Data Pins</span><i class="menu-arrow"></i></a>
+                    <div id="dataPins" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'Pin:purchase_page' %}">Purchase</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'Pin:pin_history' %}">Pin Transactions</a></li>
+                        </ul>
+                    </div>
+                <!-- /.nav-second-level -->
+            </li>
+            <hr/>
+
+            <li class="nav-item">
+                <a class="bolded nav-link" data-bs-toggle="collapse" href="#reseller" aria-expanded="false" aria-controls="reseller"><i class="fa fa-user-circle-o fa-fw"></i><span> Resellers</span><i class="menu-arrow"></i></a>
+                        <div id="reseller" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                            <ul class="nav flex-column sub-menu">
+                                {% if user.user_reseller_status.is_reseller is True  %}
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'resellers:upgrade' %}"> Upgrade</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'resellers:history' %}"> History</a></li>
+                                {% else %}
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'resellers:activate' %}"> Get Started</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                <!-- /.nav-second-level -->
+            </li>
+            <hr/>
+
+            <li class="nav-item">
+                <a class="bolded nav-link" data-bs-toggle="collapse" href="#transactions" aria-expanded="false" aria-controls="airtime"><i class="fa fa-mobile-phone fa-fw"></i><span>Transactions</span><i class="menu-arrow"></i></a>
+                    <div id="transactions" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'transactions:list_tranasactions' %}">Transactions</a></li>
+                        </ul>
+                    </div>
+            </li>
+            <hr/>
+            <li class="nav-item">
+				<a class="bolded nav-link" data-bs-toggle="collapse" href="#contacts" aria-expanded="false" aria-controls="contacts"><i class="fa fa-address-book-o fa-fw"></i><span>My Contacts</span><i class="menu-arrow"></i></a>
+						<div id="contacts" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+							<ul class="nav flex-column sub-menu">
+								<li class="nav-item"><a class="nav-link" href="{% url 'smsangosend:phonebooks' %}"> Manage Contacts</a></li>
+                            </ul>
+						</div>
+                <!-- /.nav-second-level -->
+            </li>
+            <hr/>
+            <li class="nav-item">
+                <a class="bolded nav-link" data-bs-toggle="collapse" href="#tools" aria-expanded="false" aria-controls="tools"><i class="fa fa-cog fa-fw"></i><span> Tools</span><i class="menu-arrow"></i></a>
+                    <div id="tools" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'smsangosend:phextractor' %}"> Phone Number Extractor</a></li>
+                        </ul>
+                    </div>
+                <!-- /.nav-second-level -->
+            </li>
+            <hr/>
+            <li class="nav-item">
+                <a class="bolded nav-link" data-bs-toggle="collapse" href="#news" aria-expanded="false" aria-controls="tools"><i class="fa fa-cog fa-fw"></i><span> News/Tutorials</span><i class="menu-arrow"></i></a>
+                    <div id="news" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'alert_system:news' %}">News/Tutorials</a></li>
+                        </ul>
+                    </div>
+                <!-- /.nav-second-level -->
+            </li>
+            <hr/>
+            <li class="nav-item">
+                <a class="bolded nav-link" data-bs-toggle="collapse" href="#profile" aria-expanded="false" aria-controls="profile"><i class="fa fa-user-circle-o fa-fw"></i><span> Profile Management</span><i class="menu-arrow"></i></a>
+                    <div id="profile" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'smsangosend:profile_edit' %}"> Profile Edits</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'smsangosend:myrefferal' %}"> My Refferals</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'smsangosend:rbonushistory' %}">My Earnings</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'smsangosend:change_password' %}"> Change Password</a></li>
+                        </ul>
+                    </div>
+                <!-- /.nav-second-level -->
+            </li>
+            <hr/>
+            <li class="nav-item">
+                <a class="bolded nav-link" data-bs-toggle="collapse" href="#developer" aria-expanded="false" aria-controls="developer"><i class="fa fa-user-circle-o fa-fw"></i><span> Developers Api</span><i class="menu-arrow"></i></a>
+                    <div id="developer" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'api:generate_token' %}"> Generate Token</a></li>
+                            <!-- <li class="nav-item"><a class="nav-link"> Api Docs</a> -->
+                        </ul>
+                    </div>
+                <!-- /.nav-second-level -->
+            </li>
+            <hr/>
+            {% if user.is_superuser %}
+            <li class="nav-item">
+                <a class="bolded nav-link" data-bs-toggle="collapse" href="#admin" aria-expanded="false" aria-controls="admin"><i class="fa fa-user-circle-o fa-fw"></i><span> Admin</span><i class="menu-arrow"></i></a>
+                    <div id="admin" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'su:list_all_users' %}"> Impersonate Users</a></li><hr>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'mailing:send_email' %}"> Send Mail to Users</a></li><hr>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'voucher:gVoucher' %}"> Generate Vouchers</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'voucher:listVoucher' %}"> View Vouchers</a></li><hr>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'recharge_printing:uploadEncodedPin' %}"> Upload E-pins</a></li><hr/>
+                            <h4>Pins</h4>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'Pin:gPin' %}"> Generate Pins</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'Pin:listPin' %}"> View Vouchers</a></li><hr>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'recharge_printing:uploadEncodedPin' %}"> Upload E-pins</a></li><hr/>                            <li class="nav-item"><a class="nav-link" href="{% url 'user_transactions:list_user_tranasactions' %}"> User Transactions</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'user_transactions:list_transaction_statistics' %}">Transactions Statistics</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'user_transactions:all_transactions' %}">All Transactions</a></li>
+                            <hr/>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'restart_queue' %}">Restart Queue Process</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'update_scripts' %}">Update App</a></li>
+                            <hr/>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'load_config' %}"> Load Config </a></li><hr/>
+                            <hr/>
+                        </ul>
+                    </div>
+                <!-- /.nav-second-level -->
+            </li>
+            {% endif %}
+        </ul>
+</nav>

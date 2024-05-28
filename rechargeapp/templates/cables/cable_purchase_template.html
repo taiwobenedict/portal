@@ -1,0 +1,148 @@
+{% extends "base.html" %} {# Display django.contrib.messages as Bootstrap alerts #}    
+{% block head %}{% endblock head %}
+{% load bootstrap5 %}{% bootstrap_messages %}{% block content %}
+<script type="text/javascript">
+function populate(s1,s2){
+    var s1 = document.getElementById(s1);
+    var s2 = document.getElementById(s2);
+    s2.innerHTML = "";
+    if(s1.value == "gotv") {
+        var optionArray = ["|Select Package", "500|N400 - GotvLite + N100 - Convinience Fee", "1350|N1250 - GotvValue + N100 - Convinience Fee", "2000|N1900 - GotvPlus + N100 - Convinience Fee", "3300|N3200 - GotvMax + N100 - Convinience Fee"]
+    } else if (s1.value == "dstv") {
+        var optionArray = ["|Select Package", "2100|N2000 - Dstv Access + N100 Convinience Fee ", "4100|N4000 - Dstv Family + N100 Convinience Fee", "4300|N4200 - Dstv Access HD/Extra + N100 Convinience Fee","6300|N6200 - Dstv Family HD/Extra + N100 Convinience Fee", "6900|N6800- Dstv Compact + N100 Convinience Fee", "9100|N9000- Dstv Compact HD/Extra + N100 Convinience Fee", "10750|N10650- Dstv Compact plus + N100 Convinience Fee", "12950|N12850- Dstv Compact plus HD/Extra + N100 Convinience Fee", "15900|N15800- Dstv Premium + N100 Convinience Fee", "18100|N18000- Dstv Premium HD/Extra + N100 Convinience Fee"]
+    } 
+    for (var option in optionArray) {
+        var pair = optionArray[option].split("|");
+        var newOption = document.createElement("option");
+        newOption.value = pair[0];
+        newOption.innerHTML = pair[1];
+        s2.options.add(newOption);        
+    }
+}
+</script>
+<div class="row" style="margin-top:20px;">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Recharge Your GOTV/DSTV Here          
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-4">
+                        {% if messages %}
+                        <ul class="messages list-unstyled">
+                            {% for message in messages %}
+                            <li {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible"{% endif %}><button type="button" class="close" data-dismiss="alert">&times;</button>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+
+                        <form role="form" method="POST" enctype="multipart/form-data" action="{% url 'rechargeapp:gotvdstvprocess' %}" id="theform">
+                            {% csrf_token %}
+
+                            <div class='row'>
+                                <div class="col-lg-12">
+                                <div class='form-group'>
+                                    <label for='Network'>Cable (GOTV/DSTV)</label>
+                                    <select class="form-control" name="billtype" id="billtype" onchange="populate(this.id, 'amt')" required>
+                                        <option></option>
+                                        <option value="gotv">Gotv</option>
+                                        <option value="dstv">Dstv</option>
+                                    </select>
+                                </div>
+                                <div class='form-group'>
+                                    <label for='smart_no'>Smart Card No</label>
+                                    <input  class="form-control" name="smart_no" id="smart_no" placeholder="Your Decoder Smart Number" required>
+                                    <small id="PhoneHelp" class="form-text text-muted">Please confirm customer information before recharging. <a href="{% url 'rechargeapp:cablecustomercheck' %}">here</a></small>
+                                </div>
+                                <div class='form-group'>
+                                    <label for='r_phone'>Phone Number to Receive Notification </label>
+                                    <input  class="form-control" name="phone" id="phone" placeholder="E.g 08163524890", required>
+                                    <small id="PhoneHelp" class="form-text text-muted">Phone Number to receive Notification After successful operation</small>
+                                </div>
+                                <div class='form-group'>
+                                    <label for='customer_name'>Customer Name</label>
+                                    <input  class="form-control" name="customer_name" id="customer_name" placeholder="Name on check information" required>
+                                    <small id="PhoneHelp" class="form-text text-muted">Please confirm customer information before recharging. <a href="{% url 'rechargeapp:cablecustomercheck' %}" target="_blank">here</a></small>
+                                </div>
+                                <div class='form-group'>
+                                    <label for='customer_number'>Customer Number</label>
+                                    <input  class="form-control" name="customer_number" id="customer_number" placeholder="As on Information Checked" required>
+                                    <small id="PhoneHelp" class="form-text text-muted">Please confirm customer information before recharging. <a href="{% url 'rechargeapp:cablecustomercheck' %}" target="_blank">here</a></small>
+                                </div>
+                                <div class='form-group'>
+                                    <label for='invoice'> Invoice</label>
+                                    <input  class="form-control" name="invoice" id="invoice" placeholder="Invoice from the check customer info" required>
+                                    <small id="PhoneHelp" class="form-text text-muted">Please confirm customer information before recharging. <a href="{% url 'rechargeapp:cablecustomercheck' %}" target="_blank">here</a></small>
+                                </div>
+                                <div class='form-group'>
+                                    <label for='amt'>Amount to Recharge</label>
+	                            <select id='amt' class="form-control" name="amt" required></select>
+                                    <small id="PhoneHelp" class="form-text text-muted">Enter any Gotv/Dstv Plan Amount</small>
+                                </div>
+                                <div class='form-group'>
+                                    <label for='use_credit'>Deduct Payment From Your Credits ?</label>
+                                    <select class="form-control" name="usecredit" id="use_credit" required>
+                                        <option></option>
+                                        <option value="YES">Yes</option>
+                                        <option value="NO"disabled>Direct Purchase Disabled Use credits to purchase</option>
+
+                                    </select>
+                                </div>
+                                <div class='form-group'>
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block">Proceed to Subscribe</button>
+                                </div>
+                            </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-8">
+                        <p>
+                            <strong><u>GOtv Plans</u></strong>
+                               <ul>
+				<li>GOtv Max = N3200</li>
+				<li>GOtv Plus = N1900</li>
+				<li>GOtv Value = N1250</li>
+				<li>GOtv Lite = N400</li>
+				<li>GOtv Lite (Quarterly) = N1,050</li>
+				<li> GOtv Lite (Annual) = N3,100 </li>
+			      </ul>
+ 
+                        </p>
+                    	<p>
+                    		<strong><u>Dstv Plans</u></strong>
+                    	       <ul>
+				<li>Great Wall Africa Bouquet = N1250</li>
+				<li>DStv Indian = N5400</li>
+				<li>DStv FTA Plus = N1600</li>
+				<li>DStv Family = N4000</li>
+				<li>DStv Access = N2000</li>
+				<li>DStv Compact = N6800</li>
+				<li>DStv Compact Plus = N10650</li>
+				<li>DStv Premium = N15800</li>
+			      </ul>
+                    	</p>
+                    <h4><strong><u>How to Recharge GOtv/DStv</u></strong></h4>
+                    <p>
+                        <li>Choose GOtv/DStv</li>
+                        <li>Enter Smart No</li>
+                        <li>Enter Customer Name as seen in your customer Information <a href="{% url 'rechargeapp:cablecustomercheck' %}" target="_blank">here</a></li>
+                        <li>Enter Customer Number as seen in your customer Information <a href="{% url 'rechargeapp:cablecustomercheck' %}" target="_blank">here</a></li>
+                        <li>Enter Invoice as seen in your customer Information <a href="{% url 'rechargeapp:cablecustomercheck' %}" target="_blank">here</a></li>
+                        <li>Enter your Recharge Amount (Check above for the GOtv/DStv plan that suite you and enter the amount there)</li>
+                        <li>Enter the Phone number to Receive Notification After Recharge</li>
+                        <li>Select Payment Mode. <br>Select "YES" to use your <strong>credit</strong> OR Select "NO" to pay by other means</li>
+                    </p>
+		    <p><strong>The more you recharge, the more bonus point you gathered</strong></p>
+
+                    </div>
+                </div>
+                <!-- /.row (nested) -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+{% endblock %}

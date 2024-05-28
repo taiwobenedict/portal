@@ -1,0 +1,102 @@
+{% extends "basenew.html" %} {% load bootstrap5 %}
+{% block title %}Purchase Your DataBundle Here{% endblock %}
+{% block content %}
+<script type="text/javascript">
+function populate(s1,s2){
+    var s1 = document.getElementById(s1);
+    var s2 = document.getElementById(s2);
+    s2.innerHTML = "";
+    {%  if get_active_api %}
+    var dataNet = {{get_active_api|safe}}
+    var optionArray = ['||||']
+    Object.keys(dataNet).forEach((key, index) => {
+        if (key == s1.value.toLowerCase()){
+            optionArray= optionArray.concat(dataNet[key])
+        }
+    })
+    for (var option in optionArray) {
+        var pair = optionArray[option].split("|");
+        var newOption = document.createElement("option");
+        newOption.value = pair[0]+"|"+pair[2];
+        newOption.innerHTML = pair[4];
+        newOption.setAttribute("amtt_size", pair[1]);
+        s2.options.add(newOption);        
+    }
+    {% endif %}
+}
+
+function getsize(s4, s5){
+    var datasiz = document.getElementById(s4).value;
+    var datTxt = document.getElementById(s4);
+    for (i = 0; i < datTxt.length; i++){
+        if (datTxt.options[i].value === datasiz){
+        document.getElementById(s5).value = datTxt.options[i].getAttribute('amtt_size');
+        }
+    }
+}
+</script>
+{% include "javascripts/verify_airtime_data.html" %}
+
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Purchase Your DataBundle Here</h6>
+            <div class="drpdown no-arrow show">
+                <a class="font-weight-bold text-danger d-md-none" href="#note">Must Read</a>
+            </div>
+        </div>            
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-4">
+                    {%  bootstrap_messages %}
+                    <form role="form" method="POST" enctype="multipart/form-data" action="{% url 'rechargeapp:datatopup' %}">
+                        {% csrf_token %}
+                            <div class='form-group'>
+                                <label for='Network'>Network</label>
+                                <select class="form-control" name="network" id="network" onchange="populate(this.id, 'amt')" required>
+                                    <option>Choose Plan</option>
+                                    {% if network_json is not None %}
+                                        {% for key, value in network_json.items %}
+                                        <option value="{{key}}">{{key}}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class='form-group'>
+                                <label for='amt'>Amount of Data Plan</label>
+                                <select id='amt' class="form-control" name="amt" onchange="getsize(this.id, 'amtt_size')" required></select>
+                            </div>
+                            <input id='amtt_size' class="form-control" name="amtt_size" value="" type="hidden">
+                            <div class='form-group'>
+                                <label for='r_phone'>Phone Number to Recharge </label>
+                                <input  class="form-control" name="phone" id="phone" placeholder="E.g 08163524890", required>
+                                <small id="error" class="form-text"></small>
+                            </div>
+                            <div class='form-group'>
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">Proceed to Topup Data </button>
+                            </div>
+                    </form>
+                </div>
+                <div class="col-lg-8">
+                    <h4 id="note"><strong>DATA BUNDLE TOP-UP</strong></h4>
+                    <p>
+                        <li>Choose your Network</li>
+                        <li>Enter your Recharge Amount</li>
+                        <li>Enter the Phone number to recharge</li>
+                    </p>
+                    <p>
+                        <strong>How it works:</strong>
+                        The data will come as airtime which would be automatically converted to the expected bundle but this is determined by the mobile operator. In case it does not auto-convert then you can manually convert. 
+                        A recipient that has already borrowed airtime will not receive the data top up because the airtime would have been deducted before conversion. 
+                        <br><strong> To Check Data balance: *123*10# or *140#, Etisalat: *228#, MTN: *131*4# GLO: *127*0# </strong> 
+                    </p>
+                    <p><strong>The more you recharge, the more bonus point you gathered</strong></p>
+                </div>
+            </div>
+            <!-- /.row (nested) -->
+        </div>
+
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% load bootstrap3 %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-panel panel panel-default">
+                    <div class="panel-heading">
+                    
+                    </div>
+                    {% if form.errors.non_field_errors %}
+                    {{ form.errors.non_field_errors }}
+                    {% endif %}
+
+                     <form role="form" method="post">
+                        <div  style="padding:20px;" >
+
+                        {% csrf_token %}
+                        
+                        {% bootstrap_form form %}
+
+                        </div>
+                        <button class="btn btn-lg btn-success btn-block" type="submit">Save</button>
+                        
+                        
+                      </form>
+                
+                </div>
+            </div>
+        </div>
+    </div>
+

@@ -1,0 +1,80 @@
+{% extends "basenew.html" %} 
+{% block title %}Save Contacts Here {% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Manage and Save Contacts Here </h6>
+        </div>            
+        <div class="card-body">
+            <div class="row">
+                <div class='col-lg-6'>
+                    <h3>Save Phone Books</h3>
+                        {% if messages %}
+                        <ul class="messages list-unstyled">
+                            {% for message in messages %}
+                            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        <div class="table-responsive">
+                            <table width="100%" class="table table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Group name</th>
+                                        <th>Contacts</th>
+                                        <th>Manage Group</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i, j, k in phk %}
+                                    <tr>
+                                        <td><h4><!--{{k}}--> {{i}}</h4></td>
+                                        <td>{{j}}</td>
+                                        <td><a href="{% url 'smsangosend:editphonebooks' pk=k %}" class='btn btn-primary'>Edit</a>
+                                        <a href="{% url 'smsangosend:deletephonebooks'  pk=k %}" class='btn btn-danger'>Delete</a></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-6">
+                        {% if messages %}
+                        <ul class="messages list-unstyled">
+                            {% for message in messages %}
+                            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        <form role="form" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class='form-group'>
+                                <label for='name_contacts'>Phone Book Name</label>
+                                <input type='text' name='name_contacts' class="form-control" id='name_contacts'  required>
+                            </div>
+                            <div class='form-group'>
+                                <label for='uploadcontacts'>Upload Contacts ('.txt format please')</label>
+                                <input type='file' class="form-control" name='uploadcontacts' id='uploadcontacts'>
+                            </div>
+                            <h3>OR</h3>
+                            <div class='form-group'>
+                                <label for='contact_numbers'>Paste Contacts </label>
+                                <textarea class="form-control" name="contact_numbers" placeholder="Paste Data THAT CONTAINS THE NUMBERS TO BE SAVED SEPARATED BY COMMA" rows=20 ></textarea>
+                            </div>
+                            <div class='form-group'>
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">SAVE</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row (nested) -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+</div>
+{% endblock %}
+{% block footer_scripts %}
+{% include 'partials/table_scripts.html' %}
+{% endblock footer_scripts %}

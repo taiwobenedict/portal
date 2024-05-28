@@ -1,0 +1,68 @@
+{% extends "basenew.html" %} {% load humanize %} {% block title %}PIN PURCHASE HISTORY{% endblock %}
+    {% block extracss %}
+ {% endblock extracss %}
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">PIN PURCHASE HISTORY</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table width="100%" class="table table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr width="100%">
+                                <th>S/N</th>
+                                <th>Order ID</th>
+                                <th>Amount</th>
+                                <th>Pin</th>
+                                <th>Serial Number</th>
+                                <th>Pin Type</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                {% if "result_checkers" in request.GET.type %}
+                                <th>Admin Action</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% if historys %}
+                            {% for i in historys %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.trans_id}}</td>
+                                <td>{{i.amount|intcomma}}</td>
+                                <td>{{i.pin}}</td>
+                                <td>{{i.serial_number}}</td>
+                                <td>{{i.pin_type}}</td>
+                                <td>{{i.status}}</td>
+                                <td>{{i.date}}</td>
+                                {% if "result_checkers" in request.GET.type and i.status != "REFUNDED" %}
+                                <td><a href="{% url 'user_transactions:refund_transaction' %}?type=result_checkers&order_id={{i.trans_id}}" class="btn btn-primary">Refund</a></td>
+                                {% else %}
+                                <td>REFUNDED</tr>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                        <tr class="">
+                            <td>Sorry, no history Yet.</td>
+                        </tr>
+                        {% endif %}
+
+
+                    </tbody>
+                </table>
+<!--                 {% include "partials/paginations.html" %} -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+{% endblock %}
+{% block footer_scripts %}
+{% include 'partials/table_scripts.html' %}
+{% endblock footer_scripts %}

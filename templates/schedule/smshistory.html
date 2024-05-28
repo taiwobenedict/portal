@@ -1,0 +1,58 @@
+{% extends "basenew.html" %} {% block title %}SCHEDULE SMS HISTORY{% endblock %}
+    {% block extracss %}
+ {% endblock extracss %}
+{% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">SCHEDULE SMS HISTORY</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table width="100%" class="table table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr width="100%">
+                            <th>Schedule Date, Time</th>
+                            <th>Sender</th>
+                            <th>Message</th>
+                            <th>Recipients</th>
+                            <th>Status</th>
+<!--                             <th>Date</th> -->
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if historys %}
+                            {% for object in historys %}
+                            <tr class="">
+                                <td>{{ object.time_to_send }}</td>
+                                <td>{{ object.sender }}</td>
+                                <td>{{ object.messagecontent | linebreaksbr }}</td>
+                                <td>{{ object.recipients | linebreaksbr}} </td>
+                                <td class="center">{{ object.status | safe }}</td>
+                                <!-- <td class="center">{{ object.date }}</td> -->
+                                <td class="center"><a class="btn btn-danger btn-block" href ="{% url 'smsangosend:smsindivireportsched' schedule=object.scheduleidnum %}">Details</a></td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                        <tr class="">
+                            <td>Sorry, no history Yet.</td>
+                        </tr>
+                        {% endif %}
+
+
+                    </tbody>
+                </table>
+<!--                 {% include "partials/paginations.html" %} -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+{% endblock %}
+{% block footer_scripts %}
+{% include 'partials/table_scripts.html' %}
+{% endblock footer_scripts %}

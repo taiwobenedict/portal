@@ -1,0 +1,113 @@
+{% extends "basenew.html" %} 
+{% block title %}DSTV/GOTV/STARTIMES{% endblock %}
+{#% load toloadjson %#}
+{% block content %}
+<script type="text/javascript">
+function populate(s1,s2){
+    var s1 = document.getElementById(s1);
+    var s2 = document.getElementById(s2);
+    s2.innerHTML = "";
+    if(s1.value.toLowerCase() == "gotv") {
+        var optionArray = {{gotv_data_price|safe}}
+        document.getElementById('smart_no').removeAttribute('disabled')
+    }   else if (s1.value.toLowerCase() == "startimes") {
+        var optionArray = {{startimes_price|safe}}
+        document.getElementById('smart_no').removeAttribute('disabled')
+    }  else if (s1.value.toLowerCase() == "dstv") {
+        var optionArray = {{dstv_price|safe}}
+        document.getElementById('smart_no').removeAttribute('disabled')
+    }  
+    {% comment %} else if (s1.value == "SMILE_DATA") {
+        var optionArray = ["|Select Package", "4000|N3980-Smile 5GB Night & Weekend Data Bundle|3940|3980", "3000|N2990-Smile 3GB Data Bundle|2955|2990", "5000|N4980-Smile 5GB Data Bundle|4925|4980", "7500|N7450-Smile 10GB Night & Weekend Data Bundle|7388|7450", "9000|N8900-Smile 10GB Data Bundle|8865|8900", "14000|N13900-Smile 20GB Night & Weekend Data Bundle|13790|13900", "17000|N16900-Smile 20GB Data Bundle|16745|16900", "36000|N35800-Smile 50GB Data Bundle|35460|35800"]
+        document.getElementById('smart_no').removeAttribute('disabled')
+    }  else if (s1.value == "SPECTRANET") {
+        var optionArray = ["|Select Package", "1000|#1000 Spectranet Pin|980|1000", "2000|#2000 Spectranet Pin|1960|2000", "5000|#5000 Spectranet Pin|4900|5000", "7000|#7000 Spectranet Pin|6860|6980", "10000|#10000 Spectranet Pin|9800|9950"]
+        document.getElementById('smart_no').setAttribute('disabled', 'disabled')
+        document.getElementById('edform').action = "{% url 'rechargeapp:bills_process_check_spectranet' %}"
+    }  {% endcomment %}
+    for (var option in optionArray) {
+        var pair = optionArray[option].split("|");
+        var newOption = document.createElement("option");
+        newOption.value = pair[0];
+        newOption.innerHTML = pair[1];
+        newOption.setAttribute('amtt', pair[2]);
+        newOption.setAttribute('amt_to_deduct', pair[3]);
+        s2.options.add(newOption);        
+    }
+}
+function getamt(s4, s5, s6){
+    let datasiz = document.getElementById(s4).value;
+    let datTxt = document.getElementById(s4);
+    for (i = 0; i < datTxt.length; i++){
+        if (datTxt.options[i].value === datasiz){
+        document.getElementById(s5).value = datTxt.options[i].getAttribute('amtt');
+        document.getElementById(s6).value = datTxt.options[i].getAttribute('amt_to_deduct');
+        }
+    }
+}
+</script>
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">DSTV/GOTV/STARTIMES</h6>
+            <div class="drpdown no-arrow show">
+                <a class="font-weight-bold text-danger d-md-none" href="#note">Must Read</a>
+            </div>
+        </div>         
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-6">
+                    {% if messages %}
+                    <ul class="messages list-unstyled">
+                        {% for message in messages %}
+                        <li {% if message.tags %} class="alert-{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}                    
+                    <form id ="edform" role="form" method="POST" enctype="multipart/form-data" action="{% url 'rechargeapp:customer_check' %}">
+                        {% csrf_token %}
+                        <div class='form-group'>
+                            <label for='Network' style='color:red;'>Enter Smart card no or ICU Info Below</label>
+                        </div>
+                        <div class='form-group'>
+                            <label for='cable_bill'>SELECT BILL TO PAY</label>
+                            <select id='cable_bill' class="form-control" name="cable_bill" onchange="populate(this.id, 'product_code')" required>
+                                <option>-----</option>
+                                {% for key,value in cable_code_json.items %}
+                                    <option value="{{key}}">{{key}}</option>
+                                {% endfor %}
+<!--                                 <option value="SMILE_DATA">SMILE DATA</option>
+                                <option value="SPECTRANET">SPECTRANET</option> -->
+                            </select>
+                        </div>
+                        <div class='form-group'>
+                            <label for='smart_no'>Smart No</label>
+                            <input id='smart_no' class="form-control" name="smart_no" required>
+                        </div>
+                        <div class='form-group'>
+                            <label for='product_code'></label>
+                            <select id='product_code' class="form-control" name="product_code" onchange="getamt(this.id, 'amt', 'amt_to_deduct')" required> </select>
+                            <input type="hidden" id='amt' class="form-control" name="amt" required>
+                            <input type="hidden" id='amt_to_deduct' class="form-control" name="amt_to_deduct" required>
+                        </div>
+                        <div class='form-group'>
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Confirm Customer</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-6" id="note">
+                    <h4><strong><u>How To?</u></strong></h4>
+                    <p>
+                        <ul>
+                            <li> Select Bill to Pay</li>
+                            <li> Enter Smart No if Need be <strong>It is need for DSTV/GOTV/STARTIMES/SMILE/SPECTRANET</strong></li>
+                            <li> Select Package Then Click on the Button</li>
+                        </ul>
+                         
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

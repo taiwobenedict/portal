@@ -1,0 +1,55 @@
+{% extends "basenew.html" %}{% load humanize %}{% block title %}YOUR PAYMENT AIRTIME TRANSACTIONS{% endblock %} {% block content %}
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">YOUR PAYMENT AIRTIME TRANSACTIONS</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table width="100%" class="table table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr width="100%">
+                                <th>S/N</th>
+                                <th>Order ID</th>
+                                <th>Amount</th>
+                                <th>Network</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% if historys %}
+                            {% for i in historys %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.ordernumber}}</td>
+                                <td>{{i.recharge_amount|intcomma}}</td>
+                                <td>{% if i.recharge_network == '15' %} MTN {% elif i.recharge_network == '1' %}Airtel{% elif i.recharge_network == '2' %}9mobile{% elif i.recharge_network == '6' %}Glo{% else %}{{i.recharge_network}}{% endif %}</td>
+                                <td>{{i.recharge_number}}</td>
+                                <td>{{i.status}}</td>
+                                <td>{{i.purchased_date}}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                        <tr class="">
+                            <td>Sorry, no history Yet.</td>
+                        </tr>
+                        {% endif %}
+
+
+                    </tbody>
+                </table>
+<!--                 {% include "partials/paginations.html" %} -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+{% endblock %}
+{% block footer_scripts %}
+{% include 'partials/table_scripts.html' %}
+{% endblock footer_scripts %}

@@ -1,0 +1,123 @@
+{% extends "basenew.html" %}{% load humanize dashboardconfig %}
+{% DashboardConfigs as config %}{% block title %}Electricity TRANSACTIONS{% endblock %}
+{% block head %}
+<style>
+/* Important part */
+.modal-dialog{
+    overflow-y: initial !important
+}
+.modal-body{
+    height: 500px;
+    overflow-y: auto;
+}
+</style>
+{% endblock head %}
+{% block content %}
+<script>
+function closeUp(){
+    $('#myModal').hide();
+}
+
+function getDetails(event, transId){
+  event.preventDefault()
+  var stringParams = 'transId='+transId
+
+  var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "/api/v1/singleElectrictyTransaction?api-token={{user.auth_token.key}}&"+stringParams,
+        "method": "GET",
+        "processData": false,
+    };
+    $('#modal_title_id').html('')
+    $('#mode-body').html('')
+    $.ajax(settings).done(function (response) {
+      data = response
+      if(response.status !== 201){
+        console.log(data.details)
+        $('#myModal').show();
+        $('#modal_title_id').html('Electricity')
+        deTails = $('#mTable').html('')
+        $.each(data.details, function( key, value ) {
+          deTails.append(`<tr><th>${key}</th><td>${value}</td></tr>`)
+        })
+      } else {
+        //console.log(data.details)
+        $('#myModal').show()
+        $('#modal_title_id').html('Electricity')
+        $('#mTable').html(data.details)
+      }
+    });
+}
+</script>
+
+
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary"> Electricity TRANSACTIONS</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table width="100%" class="table table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr width="100%">
+                                <th>S/N</th>
+                                <th>Order ID</th>
+                                <th>Amount</th>
+                                <th>Old Balance</th>
+                                <th>New Balance</th>
+                                <th>Meter No</th>
+                                <th>Service</th>
+                                <th>Date</th>
+                                {% if "electricity" in request.GET.type %}
+                                <th>Admin Action</th>
+                                {% endif %}
+                              </tr>
+                        </thead>
+                        <tbody>
+                        {% if historys %}
+                            {% for i in historys %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.trans_id}}<a class="btn btn-md btn-secondary" href="javascript:void(0);" onclick="getDetails(event,'{{i.trans_id}}');">Details</a></td>
+                                <td>{{i.amount}}</td>
+                                <td>{{i.old_balance|intcomma}}</td>
+                                <td>{{i.new_balance|intcomma}}</td>
+                                <td>{{i.meter_no}}</td>
+                                <td>{{i.service}}</td>
+                                <td>{{i.date}}</td>
+                                <td>{{i.status}}</td>
+                                {% comment %}
+                                {% if "electricity" in request.GET.type and i.status != "REFUNDED" %}
+                                <td><a href="{% url 'user_transactions:refund_transaction' %}?type=electricity&order_id={{i.trans_id}}" class="btn btn-primary">Refund</a></td>
+                                {% else %}
+                                <td>REFUNDED</td>
+                                {% endif %}{% endcomment %}
+                              </tr>
+                            {% endfor %}
+                        {% else %}
+                        <tr class="">
+                            <td rowspan"6">Sorry, no history Yet.</td>
+                        </tr>
+                        {% endif %}
+
+
+                    </tbody>
+                </table>
+<!--                 {% include "partials/paginations.html" %} -->
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+
+{% include 'partials/historyModal.html' %}
+
+{% endblock %}
+{% block footer_scripts %}
+{% include 'partials/table_scripts.html' %}
+{% endblock footer_scripts %}

@@ -1,0 +1,550 @@
+{% load notifications %}
+{% load dashboardconfig ravepayconfig alert_system %}
+{% DashboardConfigs as config %}
+{% RavePayConfigs as raveconfig %}
+{% getNoteReadNotification as listNotification %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="{{ config.keywords }}"/>
+	<meta name="description" content="{{config.content_field}}" />
+  <meta name="author" content="OLA-EST INTEGRATED RESOURCES LIMITED">
+
+    <title>{% block title %}{% endblock %} | {{ config.site_name }}</title>
+
+    <!-- Custom CSS -->
+  {% comment %} <link href="/static/css/sb-admin-2.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/assets/vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="/static/assets/vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" href="/static/assets/css/style.css">
+  <!-- START -->
+  <link rel="stylesheet" href="/static/vendors/feather/feather.css">
+  <link rel="stylesheet" href="/static/vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" href="/static/vendors/typicons/typicons.css">
+  <link rel="stylesheet" href="/static/vendors/simple-line-icons/css/simple-line-icons.css"> {% endcomment %}
+  <link rel="icon" href="/static/assets/img/icon.ico" type="image/x-icon"/>
+
+	<!-- Fonts and icons -->
+	<script src="/static/assets/js/plugin/webfont/webfont.min.js"></script>
+	<script>
+		WebFont.load({
+			google: {"families":["Lato:300,400,700,900"]},
+			custom: {"families":["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ['/static/assets/css/fonts.min.css']},
+			active: function() {
+				sessionStorage.fonts = true;
+			}
+		});
+	</script>
+
+	<!-- CSS Files -->
+	<link rel="stylesheet" href="/static/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/static/assets/css/atlantis.css">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <link rel="stylesheet" href="/static/vendors/js/select.dataTables.min.css">
+  <!-- END -->
+ 
+  {% if 'png' in config.get_logo_url %}
+  <link rel="icon" type="image/png" href="{{config.get_logo_url}}" />
+  {% else %}
+  <link rel="icon" type="image/jpeg" href="{{config.get_logo_url}}" />
+  {% endif %}
+    <script>
+    const channel = new BroadcastChannel('tab');
+    console.log(channel, "channel")
+    channel.postMessage('another-tab');
+    // note that listener is added after posting the message
+
+    channel.addEventListener('message', (msg) => {
+      if (msg.data === 'another-tab') {
+        // message received from 2nd tab
+        alert('Cannot open multiple instances');
+        const redirectUrl = "{% url 'smsangosend:logout' %}";
+        location.href = redirectUrl;
+      }
+    });
+  </script>
+  <noscript><!--<h3> You must have JavaScript enabled in order to use this order form. Please 
+    enable JavaScript and then reload this page in order to continue. </h3>-->
+    <meta HTTP-EQUIV="refresh" content=0;url="{% url 'smsangosend:logout' %}">
+  </noscript>
+
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+  <link href="https://printjs-4de6.kxcdn.com/print.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Custom Fonts -->
+  <link href="/static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    {% block head %}
+    {% endblock head %}
+    {% block extracss %}
+    {% endblock extracss %}
+<style>
+    @media only screen and (min-width:360px) and (max-width:768px){
+        .hideshow{
+          display: block!important;
+        }
+        .hiddn{
+          display: none!important;
+        }
+    }
+    .navbar-default {
+        background-color: rgba(240, 173, 78, 0.49);
+        border-color: #e7e7e7;
+    }
+    .sidebar ul li a.active {
+        background-color: #1f0606;
+        color: #f0ad4e;
+    }
+
+    .nav>li>a:focus, .nav>li>a:hover {
+        text-decoration: none;
+        background-color: #6A6161;
+        color: white;
+    }
+    .bolded {
+        font-weight:bolder;
+    }
+    .sidebar .nav-item.active .nav-link {
+      color: {{config.menu_color}}!important;
+    }
+    .sidebar .nav.sub-menu .nav-item .nav-link{
+      color: {{config.menu_color}}!important;
+    }
+    .sidebar .nav.sub-menu .nav-item::before{
+      color: {{config.menu_color}}!important;
+    }
+    .sidebar .nav-item .nav-link i{
+      color: {{config.menu_color}}!important;
+    }
+    .sidebar .nav-item .nav-link {
+      color: {{config.menu_color}}!important;
+    }
+    .sidebar .nav .nav-item .nav-link{
+      color: {{config.menu_color}}!important;
+    }
+    .sidebar .sidebar-brand .text-warning{
+      color: {{config.menu_color}}!important;
+    }
+    .sidebar .nav.sub-menu .nav-item .nav-link::before{
+      color: {{config.menu_color}}!important;
+    }
+    .text-warning{
+      color: {{config.menu_color}}!important;
+    }
+        /* width */
+        ::-webkit-scrollbar {
+      width: 10px;
+    }
+    
+    /* Track */
+    ::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 5px grey; 
+      border-radius: 10px;
+    }
+     
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: grey; 
+      border-radius: 10px;
+    }
+    
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: {{config.menu_color}}!important; 
+    }
+    /*f6c23e*/
+    {% comment %} @media only screen and (max-width: 768px){
+      .hideshow{
+        display: none;
+      }
+    } {% endcomment %}
+        .form-control, .asColorPicker-input, .dataTables_wrapper select, .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--single .select2-search__field, .typeahead, .tt-query, .tt-hint {
+      border: 1px solid #dee2e6;
+      font-weight: 400;
+      font-size: 0.875rem;
+      border-radius: 4px;
+      height: 3rem;
+  }
+
+  .bg-gradient-primary {
+      background-color: {{config.gradient_background_color1}}!important;
+      background-image: -webkit-gradient(linear,left top,left bottom,color-stop(10%,{{config.gradient_background_color1}}),to({{config.gradient_background_color2}}))!important;
+      background-image: linear-gradient(180deg,{{config.gradient_background_color1}} 10%,{{config.gradient_background_color2}} 100%)!important;
+      background-size: cover;
+  }
+
+  .btn-primary {
+      color: #fff;
+      background-color: {{config.button_color1}}!important;
+      border-color: {{config.button_color1}}!important;
+  }
+
+  .btn-secondary {
+      color: #fff;
+      background-color: {{config.button_color2}}!important;
+      border-color: {{config.button_color2}}!important;
+  }
+
+  .navbar .navbar-menu-wrapper{
+    height: 50px!important;
+  }
+
+  .navbar .navbar-brand-wrapper{
+    height: 50px!important;
+  }
+
+  .nav-link:hover, .nav-item:hover{
+    background-color: {{config.button_color1}}!important;
+    width: 100%;
+  }
+
+  .nav-link:active, .nav-item:active{
+    background-color: {{config.button_color1}}!important;
+  }
+
+  .sidebar .nav .nav-item.active {
+    background-color: {{config.button_color1}}!important;
+  }
+
+  .sidebar .nav .nav-item.hover {
+    background-color: {{config.button_color1}}!important;
+  }
+
+  .sidebar .nav .nav-item a {
+    background-color: transparent!important;
+  }
+
+  @media only screen and (min-width: 769px){
+    .hideshow{
+      display: none!important;
+    }
+    .hiddn{
+      display: block!important;
+    }
+  }
+  #UserDropdown:hover{
+    background-color: #fff!important;
+    width: 70px!important;
+    padding-left:0px!important;
+    padding-right:0px!important;
+  }
+  #countDropdown:hover{
+    background-color: #fff!important;
+    width: 70px!important;
+    padding-left:0px!important;
+    padding-right:0px!important;
+  }
+  {% comment %} li:hover, li:active{
+    background-color: {{config.button_color1}}!important;
+  } {% endcomment %}
+</style>
+<script>
+  const buttonDisable = (id) => {
+    btn = document.querySelector(`${id}`)
+    btn.setAttribute('disabled', 'disabled')
+  }
+
+  const hideOffCanvas = () => {
+    let f_sidebar = document.querySelector("#sidebar");
+    let state = f_sidebar.getAttribute("style")
+    console.log(state, "::::::")
+    if (state && state.includes("display:none")){
+      console.log(state, ":::||:::")
+      document.querySelector("#sidebar").setAttribute("style", "")
+    } else {
+      console.log(state, ":::there")
+      document.querySelector("#sidebar").setAttribute("style", "display:none")
+    }
+  }
+</script>
+</head>
+
+<body data-background-color="dark">
+  <div class="container-scroller">
+    <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center hiddn">
+        {% if config.site_logo %}<a href="/" class="navbar-brand brand-logo"><img src="{{config.get_logo_url}}" alt="{{config.site_name}}" title="{{config.site_name}}" width="100%"></a>{% endif %}
+        {% if config.site_logo %}<a href="/" class="navbar-brand brand-logo-mini" ><img src="{{config.get_logo_url}}" alt="{{config.site_name}}" title="{{config.site_name}}" width="30%"></a>{% endif %}
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-stretch">
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center hideshow">
+          {% if config.site_logo %}<a href="/" class="navbar-brand brand-logo"><img src="{{config.get_logo_url}}" alt="{{config.site_name}}" title="{{config.site_name}}" class="img-fluid"></a>{% endif %}
+          {% if config.site_logo %}<a href="/" class="navbar-brand brand-logo-mini" ><img src="{{config.get_logo_url}}" alt="{{config.site_name}}" title="{{config.site_name}}" width="30%" class="img-fluid"></a>{% endif %}
+        </div>
+        <button class="navbar-toggler navbar-toggler align-self-center" onclick="hideOffCanvas()" type="button" data-bs-toggle="minimize">
+          <span class="icon-menu"></span>
+        </button>
+        <ul class="navbar-nav navbar-nav-right">
+          <li class="nav-item dropdown">
+            <a class="btn btn-primary nav-link nav-link-text" style="padding: 0.5rem!important; height: 2.137rem !important; top: 25%; color:#fff; font-size:13px;" href="{% url 'smsangosend:toenteramount' %}"><i class="fas fa-bank fa-fw"></i> Fund Wallet !!!</a>
+          </li>
+          <li class="nav-item dropdown"> 
+            <a class="nav-link count-indicator" id="countDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="icon-bell"></i>
+              {% if not listNotification.count == 0 %}
+              <span class="count">{{listNotification.count}}</span>
+              {% endif %}
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="countDropdown">
+              <a class="dropdown-item py-3">
+                <p class="mb-0 font-weight-medium float-left">Alerts Center </p>
+                <span class="badge badge-pill badge-primary float-right"><a class="dropdown-item text-center small text-gray-500" href="{% url 'notificationapp:list_alert' %}">View All</a>  </span>
+              </a>
+              <div class="dropdown-divider"></div>
+              {% if listNotification %}
+              {% for i in listNotification %}
+                <a class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <img src="images/faces/face10.jpg" alt="image" class="img-sm profile-pic">
+                  </div>
+                  <div class="preview-item-content flex-grow py-2">
+                    <p class="preview-subject ellipsis font-weight-medium text-dark">{{i.createdAt}}-{{i.title}}</p>
+                    <p class="fw-light small-text mb-0">{{i.content |truncatewords:10 | safe}}</p>
+                  </div>
+                </a>
+              {% endfor %}
+              {% else %}
+                <div class="mx-3 text-center">
+                  <div class="font-weight-bold">No New Alert(s)
+                  </div>
+                </div>
+              {% endif %}
+                          
+            </div>
+          </li>
+          <li class="nav-item dropdown user-dropdown" style="/* position: sticky; */width: auto!important;">
+            <a class="nav-link" id="UserDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+              {% if user.userprofile.profile_image %}
+                <img src="{{user.userprofile.profile_image.url}}"  class="img-profile rounded-circle" width="30">
+              {% else %}
+                <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60" width="30">
+              {% endif %}
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
+              <div class="dropdown-header text-center">
+                {% if user.userprofile.profile_image %}
+                  <img src="{{user.userprofile.profile_image.url}}"  class="img-profile rounded-circle" width="30">
+                {% else %}
+                  <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60" width="30">
+                {% endif %}
+                <p class="mb-1 mt-3 font-weight-semibold">{{ user.username }}</p>
+                <p class="fw-light text-muted mb-0">{{ user.email }}</p>
+              </div> 
+              <a class="dropdown-item" href="{% url 'smsangosend:profile_edit' %}"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile</a>
+              <a class="dropdown-item" href="{% url 'smsangosend:profile_edit' %}">
+                <i class="fas fa-money-bill-wave fa-sm fa-fw mr-2"></i> {{ user.smsbulkcredit.smscredit }} credits
+              </a>
+              {% if user.userprofile.phone %}
+              <a class="dropdown-item" href="#">
+                <i class="fas fa-phone fa-sm fa-fw mr-2 text-primary"></i>
+                {{ user.userprofile.phone }} 
+              </a>
+              {% else %}
+              <a class="dropdown-item" href="{% url 'smsangosend:profile_edit' %}" style="color:red;">
+                <i class="fas fa-phone fa-sm fa-fw mr-2 text-red-300"></i>
+                Update Phone
+              </a>
+              {% endif %}
+              <a class="dropdown-item" href="{% url 'smsangosend:logout' %}"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
+            </div>
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
+          <span class="mdi mdi-menu"></span>
+        </button>
+      </div>
+    </nav>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        {% include 'partials/sidebar.html' %}
+    <!-- End of Sidebar -->
+        <!-- Page Content -->
+        <div id="content-wrapper" class="d-flex flex-column pt-5 mt-3">
+            <div id="content">
+                <!-- Topbar -->
+
+
+                <!-- /.row -->
+                {% block content %} {% endblock content %}
+
+            </div>
+            <!-- /.container-fluid -->
+
+            <!--Footer-->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                  <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; {{ config.site_name }} {% now 'Y' %} Developed By <a href="https://vtubusinessportal.com">VTU BUSINESS PORTAL</a></span>
+                  </div>
+                </div>
+            </footer>
+            <!-- end footer -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+
+    <script src="/static/vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+
+    <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootbox -->
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
+    {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/3.0.4/metisMenu.min.js"></script> {% endcomment %}
+    {% comment %} <script src="/static/vendor/jquery-easing/jquery.easing.min.js"></script> {% endcomment %}
+    <!-- Custom Theme JavaScript -->
+    {% comment %} <script src="/static/js/sb-admin-2.js"></script> {% endcomment %}
+    <!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
+      <!-- Page level plugins -->
+
+      
+      <!-- Star Start -->
+      <script src="/static/vendors/js/vendor.bundle.base.js"></script>
+      <!-- endinject -->
+      <!-- Plugin js for this page -->
+      <script src="/static/vendors/chart.js/Chart.min.js"></script>
+      <script src="/static/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+      <script src="/static/vendors/progressbar.js/progressbar.min.js"></script>
+    
+      <!-- End plugin js for this page -->
+      <!-- inject:js -->
+      <script src="/static/vendors/js/off-canvas.js"></script>
+      <script src="/static/vendors/js/hoverable-collapse.js"></script>
+      <script src="/static/vendors/js/template.js"></script>
+      <script src="/static/vendors/js/settings.js"></script>
+      <script src="/static/vendors/js/todolist.js"></script>
+      <!-- endinject -->
+      <!-- Custom js for this page-->
+      <script src="/static/vendors/js/jquery.cookie.js" type="text/javascript"></script>
+      <script src="/static/vendors/js/dashboard.js"></script>
+      <!-- Star End -->
+
+
+    {% block footer_scripts %}
+    <script src="/static/vendor/chart.js/Chart.min.js"></script>
+    
+      <!-- Page level custom scripts -->
+    {% endblock footer_scripts %}
+    <script type="text/javascript" id="cookieinfo"
+      src="//cookieinfoscript.com/js/cookieinfo.min.js"
+      data-bg="#645862"
+      data-fg="#FFFFFF"
+      data-link="#F1D600"
+      data-cookie="CookieInfoScript"
+      data-text-align="left"
+        data-close-text="Got it!">
+    </script>
+<script>
+var x = document.querySelector('#sidebarToggleTop');
+const hideShow = () => {
+    let toggle = document.querySelector("#accordionSidebar.hideshow");
+    // console.log(toggle)
+    if (toggle !== null){
+        toggle.classList.remove('hideshow')
+        toggle.classList.remove('toggled')
+    } else {
+        document.querySelector("#accordionSidebar").classList.add('hideshow')
+    }
+}
+
+const togGle = (x) => {
+    if (x === null){
+        console.log('not seen')
+    } else{
+        x.addEventListener("click", hideShow, false)
+    }
+}
+
+togGle(x);
+</script>
+
+<script>
+//logout after inactivity
+{% if user.is_authenticated %}
+(function() {
+    const idleDurationSecs = 900;
+    const redirectUrl = "{% url 'smsangosend:logout' %}";
+    let idleTimeout;
+
+    const resetIdleTimeout = function() {
+        if(idleTimeout) clearTimeout(idleTimeout);
+        idleTimeout = setTimeout(() => location.href = redirectUrl, idleDurationSecs * 1000);
+    };
+	
+	  //Key events for reset time
+    resetIdleTimeout();
+    window.onmousemove = resetIdleTimeout;
+    window.onkeypress = resetIdleTimeout;
+    window.click = resetIdleTimeout;
+    window.onclick = resetIdleTimeout;
+    window.touchstart = resetIdleTimeout;
+    window.onfocus = resetIdleTimeout;
+    window.onchange = resetIdleTimeout;
+    window.onmouseover = resetIdleTimeout;
+    window.onmouseout = resetIdleTimeout;
+    window.onmousemove = resetIdleTimeout;
+    window.onmousedown = resetIdleTimeout;
+    window.onmouseup = resetIdleTimeout;
+    window.onkeypress = resetIdleTimeout;
+    window.onkeydown = resetIdleTimeout;
+    window.onkeyup = resetIdleTimeout;
+    window.onsubmit = resetIdleTimeout;
+    window.onreset = resetIdleTimeout;
+    window.onselect = resetIdleTimeout;
+    window.onscroll = resetIdleTimeout;
+})();
+
+{% endif %}
+
+</script>
+
+
+<script>
+  const confirmForm = (formsId, buttonId) => {
+    var r = confirm("Do you want to proceed?");
+    if (r == true) {
+      if (formsId.includes('airtime')){
+        buttonDisable('#airtime_button');
+        let form = document.querySelector("#"+formsId).setAttribute("action", "{% url 'rechargeapp:airtimetopup' %}")
+        form.submit()
+      }
+    }
+  }
+
+  //dismisible
+  const dismiss = document.querySelector('[data-dismiss="alert"]')
+  try{
+    dismiss.addEventListener("click", function(){
+      const alert = document.querySelector(".alert-dismissible")
+      alert.remove();
+      {% comment %} dismiss.remove(); {% endcomment %}
+    })
+  } catch(e){
+
+  }
+
+</script>
+
+{% block footer_javascript %}
+{% endblock footer_javascript %}
+</div>
+</body>
+
+</html>
